@@ -4,6 +4,7 @@ build:
   artifacts:
     paths:
       - pocket-reform-sysctl-fw/build/sysctl.uf2
+      - scripts/update-sysctl-fw.sh
   script: |
     set -x
     apt update

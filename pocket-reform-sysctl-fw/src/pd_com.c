@@ -274,6 +274,7 @@ void handle_pd_state(battery_info_s *battery_info, pd_state_s *pd_state)
         // TODO:
         // move to a seperate state for waiting?
         // move to reset state instead?
+
         union pd_msg rx_msg;
         int res = 0;
         for (int i = 0; i < 10; i++)
@@ -366,18 +367,23 @@ void handle_pd_state(battery_info_s *battery_info, pd_state_s *pd_state)
             printf("# [pd] msg type: 0x%x numobj: %d\n", msgtype, numobj);
         }
 
-        for (int s = 0; s < 10; s++)
+        // wait for up to 5 seconds for a response
+        for (int i = 0; i < 500; i++)
         {
-            int res = fusb_read_message(&rx_msg);
+            res = fusb_read_message(&rx_msg);
 
             if (!res)
             {
+                uint8_t msgtype = PD_MSGTYPE_GET(&rx_msg);
                 printf("# [pd] charger responded\n");
 
-                uint8_t msgtype = PD_MSGTYPE_GET(&rx_msg);
-                if (msgtype == PD_MSGTYPE_PS_RDY)
+                if (msgtype == PD_MSGTYPE_ACCEPT)
                 {
-                    printf("# [pd] power supply ready\n");
+                    printf("# [pd] power supply accepted, t:%d\n", i);
+                }
+                else if (msgtype == PD_MSGTYPE_PS_RDY)
+                {
+                    printf("# [pd] power supply ready, t:%d\n", i);
                     pd_state->next_state = PD_STATE_CHARGER_POWERED;
                     return;
                 }
@@ -402,6 +408,8 @@ void handle_pd_state(battery_info_s *battery_info, pd_state_s *pd_state)
 
         if (battery_info->input_volts != -1)
         {
+
+            // FIXME: sometimes this reads as zero? collision between max update and charger powered states not aligning?
             if (battery_info->input_volts < 6
                 //  && battery_info->charge_percentage < 98
             )

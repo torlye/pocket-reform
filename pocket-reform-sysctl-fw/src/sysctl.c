@@ -630,7 +630,7 @@ void loop()
 
   // query gauge and charger, update battery status
   battery_info.ticks++; 
-  if (battery_info.ticks > 200) // every 2000 ms
+  if (battery_info.ticks > 100) // every 2000 ms
   {
     battery_info.ticks = 0;
     if (gauge_identify(&battery_info))

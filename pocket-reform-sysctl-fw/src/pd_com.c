@@ -334,13 +334,13 @@ void handle_pd_state(battery_info_s *battery_info, pd_state_s *pd_state)
             tx.hdr |= (pd_state->tx_id_count % 8) << PD_HDR_MESSAGEID_SHIFT;
 
             // MP2650 charger data sheet says 45 watts max total power input
-            // battery charger max wattage is is 4.2v * 2 * 2000 ma (configurable) = 16.8 watts 
+            // battery charger max wattage is is 4.2v * 2 * 2000 ma (configurable) = 16.8 watts
             // system load max current can be combination of charger input and available battery current
             // FIXME, assume desired wattage of 45 watts
 
             uint16_t desired_milliamps = 45 * 1000 / pd_state->power_requested_volts;
             uint16_t amps_pdi = PD_MA2PDI(desired_milliamps);
-            
+
             if (pd_state->power_requested_milliamps < desired_milliamps)
             {
                 printf("# [pd] [WARNING] available power role is less than 45 watts\n");
@@ -403,11 +403,11 @@ void handle_pd_state(battery_info_s *battery_info, pd_state_s *pd_state)
 
         if (battery_info->input_volts != -1)
         {
-            printf("# [pd] input_voltage: %.2fv\n", battery_info->input_volts);
             if (battery_info->input_volts < 6
                 //  && battery_info->charge_percentage < 98
             )
             {
+                printf("# [pd] input_voltage: %.2fv\n", battery_info->input_volts);
                 printf("# [pd] input voltage below 6v, unplugged or charger failed to power\n");
                 pd_state->next_state = PD_STATE_RESET;
             }

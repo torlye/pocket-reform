@@ -19,6 +19,7 @@
 #define PDB_FUSB302B_H
 
 #include <stdint.h>
+
 #include "pdb_msg.h"
 
 /* Device ID register */

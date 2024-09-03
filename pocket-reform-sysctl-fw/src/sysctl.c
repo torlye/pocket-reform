@@ -320,7 +320,7 @@ void charger_dump(battery_info_s *battery_info)
   battery_info->battery_volts = adc_sys_v;
   battery_info->input_volts = adc_input_v;
 
-  // if (battery_info->print_pack_info)
+  if (battery_info->print_pack_info)
   {
     printf("[charger_info]\n");
     printf("status = 0x%x\n", status);

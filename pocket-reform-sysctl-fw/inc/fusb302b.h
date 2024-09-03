@@ -19,7 +19,6 @@
 #define PDB_FUSB302B_H
 
 #include <stdint.h>
-
 #include "pdb_msg.h"
 
 /* Device ID register */
@@ -256,5 +255,15 @@ union fusb_status {
         uint8_t interrupt;
     };
 };
+
+
+/* FUSB functions */
+
+uint8_t fusb_read_byte(uint8_t addr);
+void fusb_read_buf(uint8_t addr, uint8_t size, uint8_t *buf);
+void fusb_write_byte(uint8_t addr, uint8_t byte);
+void fusb_write_buf(uint8_t addr, uint8_t size, const uint8_t *buf);
+void fusb_send_message(const union pd_msg *msg);
+uint8_t fusb_read_message(union pd_msg *msg);
 
 #endif /* PDB_FUSB302B_H */

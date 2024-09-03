@@ -107,6 +107,12 @@ void charger_configure()
   mps_write_byte(0x01, (1 << 6));
   // set charge current limit to 2000mA (1600+400)
   mps_write_byte(0x02, (1 << 5) | (1 << 3));
+
+  // enable PSYS (which contains the ADC) in battery only mode
+  // otherwise the charger reports no discharge and voltage values
+  // TODO: save power by disabling this if system is powered off?
+  mps_write_byte(0x0b, 0b11);
+
 }
 
 void gauge_dump(battery_info_s *battery_info)
@@ -301,6 +307,7 @@ void charger_dump(battery_info_s *battery_info)
   float adc_sys_pwr = mps_word_to_w(mps_read_word(0x26));
   float adc_discharge_c = mps_word_to_6400(mps_read_word(0x28)) / 1000.0;
   float adc_ntc_v = mps_word_to_ntc(mps_read_word(0x40)) / 1000.0;
+  float adc_otg_current_c = mps_word_to_6400(mps_read_word(0x22)) / 1000.0;
 
   uint8_t input_c_limit = mps_read_byte(0x00);
   uint8_t input_v_limit = mps_read_byte(0x01);
@@ -328,6 +335,7 @@ void charger_dump(battery_info_s *battery_info)
     printf("adc_sys_pwr = %f\n", adc_sys_pwr);
     printf("adc_discharge_c = %f\n", adc_discharge_c);
     printf("adc_ntc_v = %f\n", adc_ntc_v);
+    printf("adc_otg_current_c = %f\n", adc_otg_current_c);
 
     printf("input_c_limit = 0x%x\n", input_c_limit);
     printf("input_v_limit = 0x%x\n", input_v_limit);
@@ -597,10 +605,6 @@ void handle_usb_commands()
 int factory_turn_on_once = 1;
 #endif
 
-// void on_uart_rx() {
-//   handle_uart_commands(&battery_info);
-// }
-
 void loop()
 {
   // handle commands from keyboard
@@ -615,13 +619,13 @@ void loop()
 #endif
 
   handle_pd_state(&battery_info, &pd_state);
-  pd_state.ticks++; 
+  pd_state.ticks++;
 
 #ifdef FACTORY_MODE
   // in factory mode, turn on power immediately after pd charger is found
   // to flash the keyboard
-  if (factory_turn_on_once && 
-      pd_state.state == PD_STATE_CHARGER_POWERED && 
+  if (factory_turn_on_once &&
+      pd_state.state == PD_STATE_CHARGER_POWERED &&
       battery_info->input_volts > 6)
   {
     turn_som_power_on();
@@ -629,14 +633,14 @@ void loop()
 #endif
 
   // query gauge and charger, update battery status
-  battery_info.ticks++; 
-  if (battery_info.ticks > 100) // every 2000 ms
+  battery_info.ticks++;
+  if (battery_info.ticks > 200) // every 2000 ms
   {
     battery_info.ticks = 0;
     if (gauge_identify(&battery_info))
     {
-      charger_dump(&battery_info);
       gauge_dump(&battery_info);
+      charger_dump(&battery_info);
     }
     else
     {

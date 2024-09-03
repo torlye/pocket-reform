@@ -177,15 +177,18 @@ void handle_pd_state(battery_info_s *battery_info, pd_state_s *pd_state)
     }
     else if (pd_state->state == PD_STATE_CHARGER_VBUS_DETECT)
     {
+        /**
+         * set pulldowns and measure vbus, pd chargers must send 5 volts
+         * it might take a second before the charger sends power in response to the CC pull downs being set
+         *    -> on fail try USB detection
+         */
         pd_state->cycles_in_charger_vbus_detect++;
         fusb_write_byte(FUSB_SWITCHES0, FUSB_SWITCHES0_PDWN_2 | FUSB_SWITCHES0_PDWN_1);
 
-        // Measure VBUS
+        // measure VBUS
         uint8_t vbus_ok = 0;
 
         // wait for VBUS to become powered
-        // FIXME: put this in its own update loop to not block comms
-
         fusb_write_byte(FUSB_MEASURE, (FUSB_MEASURE_MEAS_VBUS) | 0b110001);
         vbus_ok = (fusb_read_byte(FUSB_STATUS0) & FUSB_STATUS0_VBUSOK) > 0;
 
@@ -196,7 +199,6 @@ void handle_pd_state(battery_info_s *battery_info, pd_state_s *pd_state)
 
         fusb_write_byte(FUSB_MEASURE, 0b110001);
 
-        
         if (!vbus_ok && pd_state->cycles_in_charger_vbus_detect > 5)
         {
             printf("# [pd] charger not up, vbus %d\n", vbus_ok);
@@ -210,8 +212,6 @@ void handle_pd_state(battery_info_s *battery_info, pd_state_s *pd_state)
         /**
          * 1. try to reach the fusb302b
          *    -> on fail reset
-         * 2. set pulldowns and measure vbus, pd chargers must send 5 volts
-         *    -> on fail try USB detection
          * 3. measure CC lines to determine orientation
          *    -> on fail try USB detection
          * 4. flush and reset pd controller
@@ -387,6 +387,10 @@ void handle_pd_state(battery_info_s *battery_info, pd_state_s *pd_state)
                 else if (msgtype == PD_MSGTYPE_PS_RDY)
                 {
                     printf("# [pd] power supply ready, t:%d\n", i);
+
+                    // force update of battery gauge before going to powered state
+                    battery_info->ticks = 1000;
+
                     pd_state->next_state = PD_STATE_CHARGER_POWERED;
                     return;
                 }
@@ -411,11 +415,7 @@ void handle_pd_state(battery_info_s *battery_info, pd_state_s *pd_state)
 
         if (battery_info->input_volts != -1)
         {
-
-            // FIXME: sometimes this reads as zero? collision between max update and charger powered states not aligning?
-            if (battery_info->input_volts < 6
-                //  && battery_info->charge_percentage < 98
-            )
+            if (battery_info->input_volts < 6)
             {
                 printf("# [pd] input_voltage: %.2fv\n", battery_info->input_volts);
                 printf("# [pd] input voltage below 6v, unplugged or charger failed to power\n");

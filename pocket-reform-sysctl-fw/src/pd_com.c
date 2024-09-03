@@ -215,7 +215,6 @@ void handle_pd_state(battery_info_s *battery_info, pd_state_s *pd_state)
         {
             fusb_write_byte(FUSB_MEASURE, (FUSB_MEASURE_MEAS_VBUS) | 0b110001);
             vbus_ok = (fusb_read_byte(FUSB_STATUS0) & FUSB_STATUS0_VBUSOK) > 0;
-            printf("# [pd] vbusok: %d\n", vbus_ok);
 
             if (vbus_ok > 0)
             {
@@ -227,7 +226,7 @@ void handle_pd_state(battery_info_s *battery_info, pd_state_s *pd_state)
 
         if (!vbus_ok)
         {
-            printf("# [pd] [ERROR]: charger not up, vbus %d\n", vbus_ok);
+            printf("# [pd] charger not up, vbus %d\n", vbus_ok);
             pd_state->next_state = PD_STATE_USB_DETECT;
             return;
         }

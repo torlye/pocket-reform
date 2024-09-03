@@ -18,7 +18,7 @@
 #include "hardware/structs/vreg_and_chip_reset.h"
 
 // #define FACTORY_MODE // turn device on immediately after starting sysctl
-#define ACM_ENABLED // usb serial control for debugging
+// #define ACM_ENABLED // usb serial control for debugging
 // #define PREF_DISPLAY_V2 // backlight control for second type of display, TOP070F01A (not LT070ME05000)
 
 #define FW_STRING1 "PREF1SYS"

@@ -9,17 +9,17 @@ typedef struct pd_state_s
   uint8_t state;
   uint8_t next_state;
 
-  bool request_sent;
-
   uint32_t tx_id_count;
 
   uint8_t power_object_index;
+  uint16_t power_requested_volts;
+  uint16_t power_requested_milliamps;
+
 } pd_state_s;
 
 
-// Enter: Host idle low power
-#define PD_STATE_IDLE 0
-#define PD_STATE_RESET_IDLE 1
+#define PD_STATE_NONE 0
+#define PD_STATE_RESET 1
 
 #define PD_STATE_USB_DETECT 2
 #define PD_STATE_USB_ATTACHED 3

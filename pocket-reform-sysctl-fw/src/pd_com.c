@@ -67,9 +67,9 @@ void print_src_fixed_pdo(int number, uint32_t pdo)
 
 void handle_pd_state(battery_info_s *battery_info, pd_state_s *pd_state)
 {
-    (void)battery_info;
     pd_state->ticks++;
 
+    // enable a state evaluation every 3000 ms
     if (pd_state->ticks > 300)
     {
         pd_state->ticks = 0;
@@ -85,16 +85,16 @@ void handle_pd_state(battery_info_s *battery_info, pd_state_s *pd_state)
         pd_state->state = pd_state->next_state;
     }
 
-    if (pd_state->state == PD_STATE_RESET_IDLE)
+    if (pd_state->state == PD_STATE_RESET)
     {
         printf("# [pd] resetting pd port\n");
         gpio_put(PIN_LED_R, 0);
-        
+
         // turn off vbus power
         gpio_put(PIN_USB_SRC_ENABLE, 0);
         sleep_us(10);
 
-        // reset
+        // soft reset
         fusb_write_byte(FUSB_RESET, FUSB_RESET_SW_RES);
         sleep_us(10);
 
@@ -123,12 +123,17 @@ void handle_pd_state(battery_info_s *battery_info, pd_state_s *pd_state)
         if (cc1 == cc2)
         {
             printf("# [pd] invalid CC state \n");
-            pd_state->next_state = PD_STATE_RESET_IDLE;
+            pd_state->next_state = PD_STATE_RESET;
         }
     }
     else if (pd_state->state == PD_STATE_USB_DETECT)
     {
-        printf("# [pd] trying usb detection\n");
+        /**
+         * 1. if VBUS is already powered than this has to be a charger
+         * 2. enable pullups and test CC lines to see if there is a device attached
+         * 3. if CC lines are valid, power VBUS and
+         */
+        printf("# [pd] searching for usb device\n");
 
         // is VBUS already powered?
         fusb_write_byte(FUSB_SWITCHES0, FUSB_SWITCHES0_PU_EN2 | FUSB_SWITCHES0_PU_EN1);
@@ -138,23 +143,12 @@ void handle_pd_state(battery_info_s *battery_info, pd_state_s *pd_state)
 
         if (vbus_ok)
         {
-            // must actually be PD, switch to charger detect.
+            // must actually be PD device, switch to charger detect.
             printf("# [pd] [ERROR] toggle wrong: %d\n", vbus_ok);
             pd_state->next_state = PD_STATE_CHARGER_DETECT;
         }
         fusb_write_byte(FUSB_MEASURE, 0b110001);
-
-        sleep_us(10);
-
-        /**
-            Host software utilizes I_COMP and
-            I_BC_LVL interrupts to determine an
-            attach
-
-            FUSB302B I_COMP interrupt alerts
-            host software that a detach has
-            occurred
-        */
+        sleep_us(250);
 
         // Measure CC1
         fusb_write_byte(FUSB_SWITCHES0, FUSB_SWITCHES0_MEAS_CC1 | FUSB_SWITCHES0_PU_EN2 | FUSB_SWITCHES0_PU_EN1); //  MEAS_CC1|PDWN2   |PDWN1
@@ -180,37 +174,50 @@ void handle_pd_state(battery_info_s *battery_info, pd_state_s *pd_state)
             printf("# [pd] invalid CC state \n");
             pd_state->next_state = PD_STATE_CHARGER_DETECT;
         }
-
-        // BC_LVL
-        // Current voltage status of the measured CC pin interpreted as host current levels as follows
-
-        // COMP
-        // Measured CC* input is higher than reference level driven from the MDAC
-
-        /*
-            Host software configures
-            FUSB302B based on insertion
-            orientation and enables VBUS
-            and VCONN
-         */
     }
     else if (pd_state->state == PD_STATE_CHARGER_DETECT)
     {
-        printf("# [pd] trying charger \n");
+        /**
+         * 1. try to reach the fusb302b
+         *    -> on fail reset
+         * 2. set pulldowns and measure vbus, pd chargers must send 5 volts
+         *    -> on fail try USB detection
+         * 3. measure CC lines to determine orientation
+         *    -> on fail try USB detection
+         * 4. flush and reset pd controller
+         * 5. wait for capabilities message
+         *    -> no message, retry charger detect state
+         * 6. send power request
+         * 7. wait for ready message
+         *    -> no message, retry charger detect state
+         *    -> ready response, go to charger powered state
+         */
+        printf("# [pd] searching for pd charger\n");
+
+        // probe FUSB302BMPX
+        uint8_t rxdata[2];
+        if (!i2c_read_timeout_us(i2c0, FUSB_ADDR, rxdata, 1, false, I2C_TIMEOUT))
+        {
+            printf("# [pd] [ERROR] fusb302b not reachable\n");
+            // not reachable, skip any charger logic
+            pd_state->next_state = PD_STATE_RESET;
+            return;
+        }
 
         fusb_write_byte(FUSB_SWITCHES0, FUSB_SWITCHES0_PDWN_2 | FUSB_SWITCHES0_PDWN_1);
 
         // Measure VBUS
         uint8_t vbus_ok = 0;
 
-        // wait a bit for VBUS to become powered
-        for(int s = 0; s < 10; s++)
+        // wait for VBUS to become powered
+        // FIXME: put this in its own update loop to not block comms
+        for (int s = 0; s < 10; s++)
         {
             fusb_write_byte(FUSB_MEASURE, (FUSB_MEASURE_MEAS_VBUS) | 0b110001);
             vbus_ok = (fusb_read_byte(FUSB_STATUS0) & FUSB_STATUS0_VBUSOK) > 0;
             printf("# [pd] vbusok: %d\n", vbus_ok);
 
-            if(vbus_ok > 0)
+            if (vbus_ok > 0)
             {
                 break;
             }
@@ -220,8 +227,8 @@ void handle_pd_state(battery_info_s *battery_info, pd_state_s *pd_state)
 
         if (!vbus_ok)
         {
-            printf("# [pd] [WARN]: charger not up, vbus %d\n", vbus_ok);
-            pd_state->next_state = PD_STATE_RESET_IDLE;
+            printf("# [pd] [ERROR]: charger not up, vbus %d\n", vbus_ok);
+            pd_state->next_state = PD_STATE_USB_DETECT;
             return;
         }
 
@@ -260,12 +267,14 @@ void handle_pd_state(battery_info_s *battery_info, pd_state_s *pd_state)
             return;
         }
 
-
+        // flush and reset pd controller
         fusb_write_byte(FUSB_CONTROL0, FUSB_CONTROL0_TX_FLUSH);
         fusb_write_byte(FUSB_CONTROL1, FUSB_CONTROL1_RX_FLUSH);
         fusb_write_byte(FUSB_RESET, FUSB_RESET_PD_RESET);
 
-        //TODO: wait some number of times before giving up
+        // TODO:
+        // move to a seperate state for waiting?
+        // move to reset state instead?
         union pd_msg rx_msg;
         int res = 0;
         for (int i = 0; i < 10; i++)
@@ -280,7 +289,8 @@ void handle_pd_state(battery_info_s *battery_info, pd_state_s *pd_state)
 
         if (res)
         {
-            printf("# [pd] no response, resetting\n");
+            // no response from charger, retry state
+            printf("# [pd] [ERROR] no response from charger\n");
             return;
         }
 
@@ -303,8 +313,10 @@ void handle_pd_state(battery_info_s *battery_info, pd_state_s *pd_state)
 
                     if (voltage > max_voltage && voltage <= 20)
                     {
-                        pd_state->power_object_index = i + 1;
                         max_voltage = voltage;
+                        pd_state->power_object_index = i + 1;
+                        pd_state->power_requested_milliamps = PD_PDO_SRC_FIXED_CURRENT_GET(pdo) * 10;
+                        pd_state->power_requested_volts = voltage;
                     }
                 }
                 else
@@ -321,11 +333,27 @@ void handle_pd_state(battery_info_s *battery_info, pd_state_s *pd_state)
             tx.hdr &= ~PD_HDR_MESSAGEID;
             tx.hdr |= (pd_state->tx_id_count % 8) << PD_HDR_MESSAGEID_SHIFT;
 
-            // FIXME: incorrect - charger config and requested amps should match
-            // update charger based on amps that input can provide?
+            // MP2650 charger data sheet says 45 watts max total power input
+            // battery charger max wattage is is 4.2v * 2 * 2000 ma (configurable) = 16.8 watts 
+            // system load max current can be combination of charger input and available battery current
+            // FIXME, assume desired wattage of 45 watts
 
-            int amps_pdi = PD_MA2PDI(1500); // PDI amps are units of 10 MA
+            uint16_t desired_milliamps = 45 * 1000 / pd_state->power_requested_volts;
+            uint16_t amps_pdi = PD_MA2PDI(desired_milliamps);
+            
+            if (pd_state->power_requested_milliamps < desired_milliamps)
+            {
+                printf("# [pd] [WARNING] available power role is less than 45 watts\n");
+                printf("# [pd] [WARNING] volts: %d want: %d ma found: %d ma\n",
+                       pd_state->power_requested_volts,
+                       desired_milliamps,
+                       pd_state->power_requested_milliamps);
 
+                amps_pdi = PD_MA2PDI(pd_state->power_requested_milliamps);
+            }
+
+            // TODO, if power is less than 45 watts set the PD_RDO_CAP_MISMATCH flag on the request
+            // I don't know what the charger is supposed to do about that
             tx.obj[0] = PD_RDO_FV_MAX_CURRENT_SET(amps_pdi) | PD_RDO_FV_CURRENT_SET(amps_pdi) | PD_RDO_NO_USB_SUSPEND | PD_RDO_OBJPOS_SET(pd_state->power_object_index);
 
             fusb_send_message(&tx);
@@ -333,15 +361,13 @@ void handle_pd_state(battery_info_s *battery_info, pd_state_s *pd_state)
             printf("# [pd] request sent\n");
 
             pd_state->tx_id_count++;
-
-            pd_state->request_sent = true;
         }
         else
         {
             printf("# [pd] msg type: 0x%x numobj: %d\n", msgtype, numobj);
         }
 
-        for (int s = 0; s < 20; s++)
+        for (int s = 0; s < 10; s++)
         {
             int res = fusb_read_message(&rx_msg);
 
@@ -352,7 +378,6 @@ void handle_pd_state(battery_info_s *battery_info, pd_state_s *pd_state)
                 uint8_t msgtype = PD_MSGTYPE_GET(&rx_msg);
                 if (msgtype == PD_MSGTYPE_PS_RDY)
                 {
-                    // power supply is ready
                     printf("# [pd] power supply ready\n");
                     pd_state->next_state = PD_STATE_CHARGER_POWERED;
                     return;
@@ -362,27 +387,39 @@ void handle_pd_state(battery_info_s *battery_info, pd_state_s *pd_state)
                     printf("# [pd] unexpected message %d\n", msgtype);
                 }
             }
-            sleep_ms(100);
+            else
+            {
+                sleep_ms(10);
+            }
         }
 
+        // retry state
         printf("# [pd] [ERROR] no response from charger\n");
     }
     else if (pd_state->state == PD_STATE_CHARGER_POWERED)
     {
-        gpio_put(PIN_LED_R, 1);
+        // Validate with power gauge that pd is sending a voltage over 6 volts
+        // TODO: validate that PD charger is sending requested voltage within some tolerance
 
         if (battery_info->input_volts != -1)
         {
             printf("# [pd] input_voltage: %.2fv\n", battery_info->input_volts);
-            if (battery_info->input_volts < 6)
+            if (battery_info->input_volts < 6
+                //  && battery_info->charge_percentage < 98
+            )
             {
                 printf("# [pd] input voltage below 6v, unplugged or charger failed to power\n");
-                pd_state->next_state = PD_STATE_RESET_IDLE;
+                pd_state->next_state = PD_STATE_RESET;
+            }
+            else
+            {
+                gpio_put(PIN_LED_R, 1);
             }
         }
         else
         {
-            printf("# [pd] charger not available, max17320_devname: %x\n", battery_info->max17320_devname);
+            printf("# [pd] gauge not available, max17320_devname: %x\n", battery_info->max17320_devname);
+            pd_state->next_state = PD_STATE_RESET;
         }
     }
 }

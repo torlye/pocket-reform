@@ -531,37 +531,9 @@ void setup()
     gpio_put(PIN_PWREN_LATCH, 0);
   }
 
-  // gpio_init(PIN_FUSB_INT);
-  // gpio_set_dir(PIN_FUSB_INT, GPIO_IN);
-  // gpio_pull_up(PIN_FUSB_INT);
-
-  // gpio_set_irq_callback(gpio_callback);
-  // gpio_set_irq_enabled(PIN_FUSB_INT, GPIO_IRQ_EDGE_FALL, true);
-  // irq_set_enabled(IO_IRQ_BANK0, true);
-
   charger_configure();
 
-  // clear interrupt registers
-  // fusb_read_byte(FUSB_INTERRUPT);
-  // fusb_read_byte(FUSB_INTERRUPTA);
-  // fusb_read_byte(FUSB_INTERRUPTB);
-  // sleep_ms(10);
-
-  // // reset
-  // fusb_write_byte(FUSB_RESET, FUSB_RESET_SW_RES);
-  // sleep_us(10);
-
-  // // enable dac for measuring CC lines
-  // fusb_write_byte(FUSB_POWER, 0x0F);
-
-  // // global interrupt mask enabled by default, remove it
-  // // keep default for host current to port (500 ma)
-  // // fusb_write_byte(FUSB_CONTROL0, (0x01 << FUSB_CONTROL0_HOST_CUR_SHIFT));
-
-  // // default pull down resistors
-  // fusb_write_byte(FUSB_SWITCHES0, FUSB_SWITCHES0_PDWN_2 | FUSB_SWITCHES0_PDWN_1);
-
-  pd_state.next_state = PD_STATE_RESET_IDLE;
+  pd_state.next_state = PD_STATE_RESET;
 }
 
 void handle_usb_commands()
@@ -584,11 +556,11 @@ void handle_usb_commands()
     }
     else if (usb_c == 'r')
     {
-      pd_state.next_state = PD_STATE_RESET_IDLE;
+      pd_state.next_state = PD_STATE_RESET;
     }
     else if (usb_c == 'R')
     {
-      pd_state.next_state = PD_STATE_RESET_IDLE;
+      pd_state.next_state = PD_STATE_RESET;
       fusb_write_byte(FUSB_CONTROL3,
                       FUSB_CONTROL3_SEND_HARD_RESET |
                           FUSB_CONTROL3_AUTO_HARDRESET |
@@ -643,9 +615,22 @@ void loop()
 #endif
 
   handle_pd_state(&battery_info, &pd_state);
+  pd_state.ticks++; 
 
-  battery_info.ticks++;
-  if (battery_info.ticks > 200)
+#ifdef FACTORY_MODE
+  // in factory mode, turn on power immediately after pd charger is found
+  // to flash the keyboard
+  if (factory_turn_on_once && 
+      pd_state.state == PD_STATE_CHARGER_POWERED && 
+      battery_info->input_volts > 6)
+  {
+    turn_som_power_on();
+  }
+#endif
+
+  // query gauge and charger, update battery status
+  battery_info.ticks++; 
+  if (battery_info.ticks > 200) // every 2000 ms
   {
     battery_info.ticks = 0;
     if (gauge_identify(&battery_info))
@@ -662,7 +647,6 @@ void loop()
   }
 
   sleep_ms(10); // one tick is effectively 10 ms
-  pd_state.ticks++;
 }
 
 int main()

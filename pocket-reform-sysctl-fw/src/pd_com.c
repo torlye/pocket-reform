@@ -172,7 +172,37 @@ void handle_pd_state(battery_info_s *battery_info, pd_state_s *pd_state)
         else
         {
             printf("# [pd] invalid CC state \n");
+            pd_state->next_state = PD_STATE_CHARGER_VBUS_DETECT;
+        }
+    }
+    else if (pd_state->state == PD_STATE_CHARGER_VBUS_DETECT)
+    {
+        pd_state->cycles_in_charger_vbus_detect++;
+        fusb_write_byte(FUSB_SWITCHES0, FUSB_SWITCHES0_PDWN_2 | FUSB_SWITCHES0_PDWN_1);
+
+        // Measure VBUS
+        uint8_t vbus_ok = 0;
+
+        // wait for VBUS to become powered
+        // FIXME: put this in its own update loop to not block comms
+
+        fusb_write_byte(FUSB_MEASURE, (FUSB_MEASURE_MEAS_VBUS) | 0b110001);
+        vbus_ok = (fusb_read_byte(FUSB_STATUS0) & FUSB_STATUS0_VBUSOK) > 0;
+
+        if (vbus_ok > 0)
+        {
             pd_state->next_state = PD_STATE_CHARGER_DETECT;
+        }
+
+        fusb_write_byte(FUSB_MEASURE, 0b110001);
+
+        
+        if (!vbus_ok && pd_state->cycles_in_charger_vbus_detect > 5)
+        {
+            printf("# [pd] charger not up, vbus %d\n", vbus_ok);
+            pd_state->cycles_in_charger_vbus_detect = 0;
+            pd_state->next_state = PD_STATE_USB_DETECT;
+            return;
         }
     }
     else if (pd_state->state == PD_STATE_CHARGER_DETECT)
@@ -201,33 +231,6 @@ void handle_pd_state(battery_info_s *battery_info, pd_state_s *pd_state)
             printf("# [pd] [ERROR] fusb302b not reachable\n");
             // not reachable, skip any charger logic
             pd_state->next_state = PD_STATE_RESET;
-            return;
-        }
-
-        fusb_write_byte(FUSB_SWITCHES0, FUSB_SWITCHES0_PDWN_2 | FUSB_SWITCHES0_PDWN_1);
-
-        // Measure VBUS
-        uint8_t vbus_ok = 0;
-
-        // wait for VBUS to become powered
-        // FIXME: put this in its own update loop to not block comms
-        for (int s = 0; s < 10; s++)
-        {
-            fusb_write_byte(FUSB_MEASURE, (FUSB_MEASURE_MEAS_VBUS) | 0b110001);
-            vbus_ok = (fusb_read_byte(FUSB_STATUS0) & FUSB_STATUS0_VBUSOK) > 0;
-
-            if (vbus_ok > 0)
-            {
-                break;
-            }
-            sleep_ms(100);
-        }
-        fusb_write_byte(FUSB_MEASURE, 0b110001);
-
-        if (!vbus_ok)
-        {
-            printf("# [pd] charger not up, vbus %d\n", vbus_ok);
-            pd_state->next_state = PD_STATE_USB_DETECT;
             return;
         }
 

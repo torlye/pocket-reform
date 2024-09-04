@@ -69,8 +69,8 @@ void handle_pd_state(battery_info_s *battery_info, pd_state_s *pd_state)
 {
     pd_state->ticks++;
 
-    // enable a state evaluation every 3000 ms
-    if (pd_state->ticks > 300)
+    // enable a state evaluation every 1000 ms
+    if (pd_state->ticks > 100)
     {
         pd_state->ticks = 0;
     }

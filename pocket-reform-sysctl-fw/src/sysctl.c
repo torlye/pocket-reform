@@ -107,12 +107,6 @@ void charger_configure()
   mps_write_byte(0x01, (1 << 6));
   // set charge current limit to 2000mA (1600+400)
   mps_write_byte(0x02, (1 << 5) | (1 << 3));
-
-  // enable PSYS (which contains the ADC) in battery only mode
-  // otherwise the charger reports no discharge and voltage values
-  // TODO: save power by disabling this if system is powered off?
-  mps_write_byte(0x0b, 0b11);
-
 }
 
 void gauge_dump(battery_info_s *battery_info)
@@ -389,6 +383,10 @@ void turn_som_power_on()
 #endif
 
   battery_info.som_is_powered = true;
+
+  // enable PSYS (which contains the ADC) in battery only mode
+  // otherwise the charger reports no discharge and voltage values
+  mps_write_byte(0x0b, 0b11);
 }
 
 void turn_som_power_off()
@@ -426,6 +424,9 @@ void turn_som_power_off()
 
   // Power latch end
   gpio_put(PIN_PWREN_LATCH, 0);
+
+  // Disable charger discharge current recording while powered off
+  mps_write_byte(0x0b, 0);
 
   battery_info.som_is_powered = false;
 }
@@ -532,6 +533,10 @@ void setup()
   {
     printf("# [reset] watchdog scratch had valid on magic, not latching power.\n");
     battery_info.som_is_powered = true;
+
+    // enable PSYS (which contains the ADC) in battery only mode
+    // otherwise the charger reports no discharge and voltage values
+    mps_write_byte(0x0b, 0b11);
   }
   else
   {

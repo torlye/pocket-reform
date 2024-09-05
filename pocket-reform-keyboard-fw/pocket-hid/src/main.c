@@ -19,6 +19,7 @@
 #include "hardware/gpio.h"
 #include "hardware/i2c.h"
 #include "hardware/irq.h"
+#include "hardware/pio.h"
 
 #include "usb_descriptors.h"
 #include "oled.h"

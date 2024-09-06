@@ -637,7 +637,7 @@ void led_bitmap(uint8_t row, const uint8_t* row_rgb) {
       if (y==5) w = 4;
       uint8_t* bitmap = &led_rgb_buf[y*3*12];
       for (int x=0; x<w; x++) {
-        uint32_t pixel_grb = (bitmap[1]<<16u) | (bitmap[2]<<8u) | bitmap[0];
+        uint32_t pixel_grb = (uint32_t)((bitmap[1]<<16u) | (bitmap[2]<<8u) | bitmap[0]);
         pio_sm_put_blocking(pio0, 0, pixel_grb << 8u);
         bitmap+=3;
       }
@@ -761,7 +761,7 @@ void led_set_hsv() {
   hsv.v = (unsigned char)led_brightness;
 
   rgb = HsvToRgb(hsv);
-  led_set((rgb.r<<16)|(rgb.g<<8)|(rgb.b));
+  led_set((uint32_t)((rgb.r<<16u)|(rgb.g<<8u)|(rgb.b)));
 }
 
 void led_mod_brightness(int d) {
@@ -898,7 +898,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
         led_bitmap(buffer[4], &buffer[5]);
       }
       else if (cmd == strnstr(cmd, CMD_RGB_BACKLIGHT, 4)) {
-        uint32_t pixel_grb = (buffer[5]<<16u) | (buffer[6]<<8u) | buffer[4];
+        uint32_t pixel_grb = (uint32_t)((buffer[5]<<16u) | (buffer[6]<<8u) | buffer[4]);
         led_set(pixel_grb);
       }
       else if (cmd == strnstr(cmd, CMD_LOGO, 4)) {

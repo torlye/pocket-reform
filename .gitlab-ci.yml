@@ -7,7 +7,7 @@ build:
       - scripts/update-sysctl-firmware.sh
       - pocket-reform-keyboard-fw/pocket-hid/build/pocket-hid.uf2
   script: |
-    set -x
+    set -euxo pipefail
     export SOURCE_ROOT="$PWD"
     ./install-fw-dependencies.sh
     # use the timestamp of the latest git commit to set reproducible S_D_E
@@ -21,11 +21,16 @@ build:
       VERSION="g$(git rev-parse --short=7 HEAD)"
     fi
     export PICO_SDK_PATH="$SOURCE_ROOT/pico-sdk"
+    #
+    echo "Building sysctl firmware"
     cd "$SOURCE_ROOT/pocket-reform-sysctl-fw"
     mkdir -p build
     cd build
     cmake ..
     make -j $(nproc)
+    python3 -c 'import sys; open("sysctl.bin", "rb").read().find(b"Raspberry Pi\x00\x00\x00\x00Pico\x00\x00\x00\x00Board CDC\x00\x00\x00Reset\x00\x00\x00") == -1 and print("Expected USB descriptor strings not found") and sys.exit(1)'
+    #
+    echo "Building keyboard firmware"
     cd "$SOURCE_ROOT/pocket-reform-keyboard-fw/pocket-hid"
     mkdir -p build
     cd build

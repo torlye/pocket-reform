@@ -6,33 +6,29 @@ build:
       - pocket-reform-sysctl-fw/build/sysctl.uf2
       - scripts/update-sysctl-firmware.sh
       - pocket-reform-keyboard-fw/pocket-hid/build/pocket-hid.uf2
-  script: |
-    set -euxo pipefail
-    export SOURCE_ROOT="$PWD"
-    ./install-fw-dependencies.sh
-    # use the timestamp of the latest git commit to set reproducible S_D_E
-    if [ -z ${SOURCE_DATE_EPOCH:+x} ] && git -C . rev-parse 2>/dev/null; then
-      SOURCE_DATE_EPOCH=$(git log -1 --format=%ct)
-    fi
-    # check if the current commit is tagged or otherwise use the git hash
-    if git describe >/dev/null 2>&1 && [ "$(git describe --abbrev=0)" = "$(git describe)" ]; then
-      VERSION="$(git describe --abbrev=0 | tr -d -)"
-    else
-      VERSION="g$(git rev-parse --short=7 HEAD)"
-    fi
-    export PICO_SDK_PATH="$SOURCE_ROOT/pico-sdk"
+  script:
+    - ./install-fw-dependencies.sh
+    - export SOURCE_ROOT="$PWD"
+    - |
+      # use the timestamp of the latest git commit to set reproducible S_D_E
+      if [ -z ${SOURCE_DATE_EPOCH:+x} ] && git -C . rev-parse 2>/dev/null; then
+        SOURCE_DATE_EPOCH=$(git log -1 --format=%ct)
+      fi
+      # check if the current commit is tagged or otherwise use the git hash
+      if git describe >/dev/null 2>&1 && [ "$(git describe --abbrev=0)" = "$(git describe)" ]; then
+        VERSION="$(git describe --abbrev=0 | tr -d -)"
+      else
+        VERSION="g$(git rev-parse --short=7 HEAD)"
+      fi
+    - export PICO_SDK_PATH="$SOURCE_ROOT/pico-sdk"
     #
-    echo "Building sysctl firmware"
-    cd "$SOURCE_ROOT/pocket-reform-sysctl-fw"
-    mkdir -p build
-    cd build
-    cmake ..
-    make -j $(nproc)
-    python3 -c 'import sys; open("sysctl.bin", "rb").read().find(b"Raspberry Pi\x00\x00\x00\x00Pico\x00\x00\x00\x00Board CDC\x00\x00\x00Reset\x00\x00\x00") == -1 and print("Expected USB descriptor strings not found") and sys.exit(1)'
+    - echo "Building sysctl firmware"
+    - cd "$SOURCE_ROOT/pocket-reform-sysctl-fw"
+    - mkdir -p build && cd build
+    - cmake .. && make -j $(nproc)
+    - python3 -c 'import sys; open("sysctl.bin", "rb").read().find(b"Raspberry Pi\x00\x00\x00\x00Pico\x00\x00\x00\x00Board CDC\x00\x00\x00Reset\x00\x00\x00") == -1 and print("Expected USB descriptor strings not found") and sys.exit(1)'
     #
-    echo "Building keyboard firmware"
-    cd "$SOURCE_ROOT/pocket-reform-keyboard-fw/pocket-hid"
-    mkdir -p build
-    cd build
-    cmake -DFAMILY=rp2040 ..
-    make -j $(nproc)
+    - echo "Building keyboard firmware"
+    - cd "$SOURCE_ROOT/pocket-reform-keyboard-fw/pocket-hid"
+    - mkdir -p build && cd build
+    - cmake -DFAMILY=rp2040 .. && make -j $(nproc)

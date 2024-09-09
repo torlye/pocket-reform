@@ -27,6 +27,7 @@ build:
     git submodule update --init
     cd ..
     git clone --branch sdk-1.5.1 --depth 1 https://github.com/raspberrypi/pico-extras
+    git clone --depth 1 https://github.com/hathach/tinyusb
     export PICO_SDK_PATH="$SOURCE_ROOT/pico-sdk"
     cd "$SOURCE_ROOT/pocket-reform-sysctl-fw"
     mkdir -p build
@@ -36,5 +37,5 @@ build:
     cd "$SOURCE_ROOT/pocket-reform-keyboard-fw/pocket-hid"
     mkdir -p build
     cd build
-    cmake ..
+    cmake -DFAMILY=rp2040 ..
     make -j $(nproc)

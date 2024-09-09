@@ -5,8 +5,10 @@ build:
     paths:
       - pocket-reform-sysctl-fw/build/sysctl.uf2
       - scripts/update-sysctl-firmware.sh
+      - pocket-reform-keyboard-fw/pocket-hid/build/pocket-hid.uf2
   script: |
     set -x
+    export SOURCE_ROOT="$PWD"
     apt update
     apt-get --no-install-recommends -y install ca-certificates git build-essential avr-libc gcc-avr gcc-arm-none-eabi libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib libusb-1.0-0-dev cmake python3
     # use the timestamp of the latest git commit to set reproducible S_D_E
@@ -25,8 +27,13 @@ build:
     git submodule update --init
     cd ..
     git clone --branch sdk-1.5.1 --depth 1 https://github.com/raspberrypi/pico-extras
-    export PICO_SDK_PATH="$(pwd)/pico-sdk"
-    cd pocket-reform-sysctl-fw
+    export PICO_SDK_PATH="$SOURCE_ROOT/pico-sdk"
+    cd "$SOURCE_ROOT/pocket-reform-sysctl-fw"
+    mkdir -p build
+    cd build
+    cmake ..
+    make -j $(nproc)
+    cd "$SOURCE_ROOT/pocket-reform-keyboard-fw/pocket-hid"
     mkdir -p build
     cd build
     cmake ..

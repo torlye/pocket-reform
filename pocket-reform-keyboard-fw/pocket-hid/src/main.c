@@ -19,6 +19,7 @@
 #include "hardware/gpio.h"
 #include "hardware/i2c.h"
 #include "hardware/irq.h"
+#include "hardware/pio.h"
 
 #include "usb_descriptors.h"
 #include "oled.h"
@@ -169,7 +170,7 @@ int main(void)
 
   PIO pio = pio0;
   uint sm = 0;
-  uint offset = pio_add_program(pio, &ws2812_program);
+  uint offset = (uint)pio_add_program(pio, &ws2812_program);
 
   ws2812_program_init(pio, sm, offset, PIN_LEDS, 800000, false);
 
@@ -386,8 +387,6 @@ int process_keyboard(uint8_t* resulting_scancodes) {
               hyper_enter_long_press_start_ms = 0;
             }
           }
-        } else if (keycode == KEY_F12) {
-          remote_wake_som();
         } else if (keycode == KEY_COMPOSE) {
           hyper_key = 1;
           active_matrix = matrix_fn;

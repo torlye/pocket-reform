@@ -11,9 +11,9 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "bsp/board_api.h"
 #include "tusb.h"
 
+#include "pico/time.h"
 #include "pico/stdlib.h"
 #include "pico/binary_info.h"
 #include "hardware/gpio.h"
@@ -92,10 +92,12 @@ int process_keyboard(uint8_t* resulting_scancodes);
 // can be used as a global clock, incrementing around every ~10ms
 static int hid_task_counter = 0;
 
+static inline uint32_t board_millis(void) {
+  return to_ms_since_boot(get_absolute_time());
+}
+
 int main(void)
 {
-  board_init();
-
   set_sys_clock_48mhz();
 
   tusb_init();

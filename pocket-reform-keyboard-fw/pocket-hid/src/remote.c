@@ -5,11 +5,13 @@
 */
 
 #include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+
 #include "remote.h"
 #include "oled.h"
 #include "keyboard.h"
 
-#include "bsp/board_api.h"
 #include "pico/stdlib.h"
 
 #define UART_ID uart1

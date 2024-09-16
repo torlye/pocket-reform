@@ -29,7 +29,3 @@ git clone --branch 1.5.1 --depth 1 https://github.com/raspberrypi/pico-sdk || tr
 
 git clone --branch sdk-1.5.1 --depth 1 https://github.com/raspberrypi/pico-extras || true
 (cd pico-extras && git checkout sdk-1.5.1)
-
-git clone https://github.com/hathach/tinyusb || true
-(cd tinyusb && git checkout 3eea46056ea20aa12b73eea7c01d6c6e5b2d490a)
-

@@ -1,4 +1,6 @@
 /*
+ * Forked from stdio_usb. Provides USB setup for Pocket Reform sysctl.
+ *
  * This file is based on a file originally part of the
  * MicroPython project, http://micropython.org/
  *
@@ -26,27 +28,15 @@
  * THE SOFTWARE.
  */
 
-#if !defined(LIB_TINYUSB_HOST) && !defined(LIB_TINYUSB_DEVICE)
-
 #include "tusb.h"
-#include "pico/stdio_usb/reset_interface.h"
+#include "reform_stdio_usb.h"
+#include "pico/usb_reset_interface.h"
 #include "pico/unique_id.h"
 
-#ifndef USBD_VID
 #define USBD_VID (0x2E8A) // Raspberry Pi
-#endif
-
-#ifndef USBD_PID
 #define USBD_PID (0x000a) // Raspberry Pi Pico SDK CDC
-#endif
-
-#ifndef USBD_MANUFACTURER
 #define USBD_MANUFACTURER "Raspberry Pi"
-#endif
-
-#ifndef USBD_PRODUCT
 #define USBD_PRODUCT "Pico"
-#endif
 
 #define TUD_RPI_RESET_DESC_LEN  9
 #if !PICO_STDIO_USB_ENABLE_RESET_VIA_VENDOR_INTERFACE
@@ -172,5 +162,3 @@ const uint16_t *tud_descriptor_string_cb(uint8_t index, __unused uint16_t langid
 
     return desc_str;
 }
-
-#endif

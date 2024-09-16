@@ -1,4 +1,6 @@
 /**
+ * Forked from stdio_usb.
+ *
  * Copyright (c) 2021 Raspberry Pi (Trading) Ltd.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -6,16 +8,15 @@
 #include "tusb.h"
 
 #include "pico/bootrom.h"
-
-#if !defined(LIB_TINYUSB_HOST) && !defined(LIB_TINYUSB_DEVICE)
+#include "reform_stdio_usb.h"
 
 #if PICO_STDIO_USB_ENABLE_RESET_VIA_VENDOR_INTERFACE && !(PICO_STDIO_USB_RESET_INTERFACE_SUPPORT_RESET_TO_BOOTSEL || PICO_STDIO_USB_RESET_INTERFACE_SUPPORT_RESET_TO_FLASH_BOOT)
 #warning PICO_STDIO_USB_ENABLE_RESET_VIA_VENDOR_INTERFACE has been selected but neither PICO_STDIO_USB_RESET_INTERFACE_SUPPORT_RESET_TO_BOOTSEL nor PICO_STDIO_USB_RESET_INTERFACE_SUPPORT_RESET_TO_FLASH_BOOT have been selected.
 #endif
 
 #if PICO_STDIO_USB_ENABLE_RESET_VIA_VENDOR_INTERFACE
-#include "pico/stdio_usb/reset_interface.h"
-#include "hardware/watchdog.h"
+#include "../../pico-sdk/src/common/pico_usb_reset_interface/include/pico/usb_reset_interface.h"
+#include "../../pico-sdk/src/rp2_common/hardware_watchdog/include/hardware/watchdog.h"
 #include "device/usbd_pvt.h"
 
 static uint8_t itf_num;
@@ -110,6 +111,4 @@ void tud_cdc_line_coding_cb(__unused uint8_t itf, cdc_line_coding_t const* p_lin
         reset_usb_boot(gpio_mask, PICO_STDIO_USB_RESET_BOOTSEL_INTERFACE_DISABLE_MASK);
     }
 }
-#endif
-
 #endif

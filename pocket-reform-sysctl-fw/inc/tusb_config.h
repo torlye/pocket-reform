@@ -1,4 +1,6 @@
 /*
+ * Forked from stdio_usb. Requires(!) tinyusb_device to be linked.
+ *
  * The MIT License (MIT)
  *
  * Copyright (c) 2020 Raspberry Pi (Trading) Ltd.
@@ -24,12 +26,9 @@
  *
  */
 
-#ifndef _PICO_STDIO_USB_TUSB_CONFIG_H
-#define _PICO_STDIO_USB_TUSB_CONFIG_H
+#ifndef REFORM_TUSB_CONFIG_H
+#define REFORM_TUSB_CONFIG_H
 
-#include "pico/stdio_usb.h"
-
-#if !defined(LIB_TINYUSB_HOST) && !defined(LIB_TINYUSB_DEVICE)
 #define CFG_TUSB_RHPORT0_MODE   (OPT_MODE_DEVICE)
 
 #define CFG_TUD_CDC             (1)
@@ -38,6 +37,5 @@
 
 // We use a vendor specific interface but with our own driver
 #define CFG_TUD_VENDOR            (0)
-#endif
 
 #endif

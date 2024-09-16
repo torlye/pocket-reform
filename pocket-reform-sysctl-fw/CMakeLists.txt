@@ -17,9 +17,12 @@ add_executable(sysctl
 	src/spi_com.c
 	src/uart_com.c
 	src/pd_com.c
+	src/reset_interface.c
+	src/reform_stdio_usb.c
+	src/usb_descriptors.c
 )
 
-target_include_directories(sysctl PRIVATE 
+target_include_directories(sysctl PRIVATE
 	inc
 )
 
@@ -30,9 +33,13 @@ target_link_libraries(sysctl
 	hardware_rtc 
 	hardware_sleep 
 	hardware_pwm
+	pico_stdio
+	pico_time
+	pico_unique_id
+	pico_usb_reset_interface
+	tinyusb_device
 )
 
-pico_enable_stdio_usb(sysctl 1)
 pico_enable_stdio_uart(sysctl 0)
 pico_add_extra_outputs(sysctl)
 

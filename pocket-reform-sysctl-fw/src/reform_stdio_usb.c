@@ -1,17 +1,13 @@
 /**
+ * Forked from stdio_usb. Provides USB setup and stdio support for Pocket Reform sysctl.
+ *
  * Copyright (c) 2020 Raspberry Pi (Trading) Ltd.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-#ifndef LIB_TINYUSB_HOST
 #include "tusb.h"
-#include "pico/stdio_usb.h"
-
-// these may not be set if the user is providing tud support (i.e. LIB_TINYUSB_DEVICE is 1 because
-// the user linked in tinyusb_device) but they haven't selected CDC
-#if (CFG_TUD_ENABLED | TUSB_OPT_DEVICE_ENABLED) && CFG_TUD_CDC
-#error bar
+#include "reform_stdio_usb.h"
 
 #include "pico/binary_info.h"
 #include "pico/time.h"
@@ -28,7 +24,7 @@ static void *chars_available_param;
 #endif
 
 // when tinyusb_device is explicitly linked we do no background tud processing
-#if !LIB_TINYUSB_DEVICE
+#if 1 //!LIB_TINYUSB_DEVICE
 // if this crit_sec is initialized, we are not in periodic timer mode, and must make sure
 // we don't either create multiple one shot timers, or miss creating one. this crit_sec
 // is used to protect the one_shot_timer_pending flag
@@ -94,7 +90,7 @@ static void stdio_usb_out_chars(const char *buf, int length) {
     if (!mutex_try_enter_block_until(&stdio_usb_mutex, make_timeout_time_ms(PICO_STDIO_DEADLOCK_TIMEOUT_MS))) {
         return;
     }
-    if (stdio_usb_connected()) {
+    if (reform_stdio_usb_connected()) {
         for (int i = 0; i < length;) {
             int n = length - i;
             int avail = (int) tud_cdc_write_available();
@@ -108,7 +104,7 @@ static void stdio_usb_out_chars(const char *buf, int length) {
             } else {
                 tud_task();
                 tud_cdc_write_flush();
-                if (!stdio_usb_connected() ||
+                if (!reform_stdio_usb_connected() ||
                     (!tud_cdc_write_available() && time_us_64() > last_avail_time + PICO_STDIO_USB_STDOUT_TIMEOUT_US)) {
                     break;
                 }
@@ -131,11 +127,11 @@ int stdio_usb_in_chars(char *buf, int length) {
     // tud_task will complete running and we will check the right values the next time.
     //
     int rc = PICO_ERROR_NO_DATA;
-    if (stdio_usb_connected() && tud_cdc_available()) {
+    if (reform_stdio_usb_connected() && tud_cdc_available()) {
         if (!mutex_try_enter_block_until(&stdio_usb_mutex, make_timeout_time_ms(PICO_STDIO_DEADLOCK_TIMEOUT_MS))) {
             return PICO_ERROR_NO_DATA; // would deadlock otherwise
         }
-        if (stdio_usb_connected() && tud_cdc_available()) {
+        if (reform_stdio_usb_connected() && tud_cdc_available()) {
             int count = (int) tud_cdc_read(buf, (uint32_t) length);
             rc = count ? count : PICO_ERROR_NO_DATA;
         } else {
@@ -172,7 +168,7 @@ stdio_driver_t stdio_usb = {
 
 };
 
-bool stdio_usb_init(void) {
+bool reform_stdio_usb_init(void) {
     if (get_core_num() != alarm_pool_core_num(alarm_pool_get_default())) {
         // included an assertion here rather than just returning false, as this is likely
         // a coding bug, rather than anything else.
@@ -183,16 +179,11 @@ bool stdio_usb_init(void) {
     bi_decl_if_func_used(bi_program_feature("USB stdin / stdout"));
 #endif
 
-#if !defined(LIB_TINYUSB_DEVICE)
-    // initialize TinyUSB, as user hasn't explicitly linked it
-    tusb_init();
-#else
     assert(tud_inited()); // we expect the caller to have initialized if they are using TinyUSB
-#endif
 
     mutex_init(&stdio_usb_mutex);
     bool rc = true;
-#if !LIB_TINYUSB_DEVICE
+
 #ifdef PICO_STDIO_USB_LOW_PRIORITY_IRQ
     user_irq_claim(PICO_STDIO_USB_LOW_PRIORITY_IRQ);
 #else
@@ -210,7 +201,7 @@ bool stdio_usb_init(void) {
         // we use initialization state of the one_shot_timer_critsec as a flag
         memset(&one_shot_timer_crit_sec, 0, sizeof(one_shot_timer_crit_sec));
     }
-#endif
+
     if (rc) {
         stdio_set_driver_enabled(&stdio_usb, true);
 #if PICO_STDIO_USB_CONNECT_WAIT_TIMEOUT_MS
@@ -233,7 +224,7 @@ bool stdio_usb_init(void) {
     return rc;
 }
 
-bool stdio_usb_connected(void) {
+bool reform_stdio_usb_connected(void) {
 #if PICO_STDIO_USB_CONNECTION_WITHOUT_DTR
     return tud_ready();
 #else
@@ -241,17 +232,3 @@ bool stdio_usb_connected(void) {
     return tud_cdc_connected();
 #endif
 }
-
-#else
-#warning stdio USB was configured along with user use of TinyUSB device mode, but CDC is not enabled
-bool stdio_usb_init(void) {
-    return false;
-}
-#endif // CFG_TUD_ENABLED && CFG_TUD_CDC
-#else
-#warning stdio USB was configured, but is being disabled as TinyUSB host is explicitly linked
-bool stdio_usb_init(void) {
-    return false;
-}
-#endif // !LIB_TINYUSB_HOST
-

@@ -1,5 +1,7 @@
 # MNT Pocket Reform (Research Project)
 
+This repository contains specifications, schematics, PCB and case designs, and firmware source code for the MNT Pocket Reform laptop.
+
 ## License
 
 Copyright 2021 MNT Research GmbH.

@@ -8,6 +8,8 @@
 */
 #include "sysctl.h"
 #include "pico/divider.h"
+#include "tusb.h"
+#include "reform_stdio_usb.h"
 
 pd_state_s pd_state = {0};
 battery_info_s battery_info = {0};
@@ -438,7 +440,8 @@ void som_wake()
 
 void setup()
 {
-  stdio_init_all();
+  tusb_init();
+  reform_stdio_usb_init();
   init_spi_client();
 
   printf("# [reset] cause: %#.8x\n", (uint16_t)vreg_and_chip_reset_hw->chip_reset);

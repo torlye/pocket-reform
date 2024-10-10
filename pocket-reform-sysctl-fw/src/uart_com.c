@@ -1,4 +1,5 @@
 #include "uart_com.h"
+#include "pd_com.h"
 
 void handle_uart_commands(battery_info_s* battery_info)
 {

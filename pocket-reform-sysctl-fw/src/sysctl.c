@@ -11,7 +11,6 @@
 #include "tusb.h"
 #include "reform_stdio_usb.h"
 
-pd_state_s pd_state = {0};
 battery_info_s battery_info = {0};
 int disp_bl_percent = 100;
 
@@ -103,16 +102,59 @@ void set_display_backlight(int percent)
   }
 }
 
-void charger_configure()
+void charger_tick();
+
+void charger_init()
 {
   // TODO: check all MP2650 registers, esp. 4, 7, b
 
+  // reset all registers
+  mps_reg_config.config0.reg_rst = 1;
+  mps_write_byte(MPS_REG_CONFIG0, mps_reg_config.config0.reg_byte);
+
+  mps_read_buf(MPS_REGSTART_CONFIG, sizeof(mps_reg_config.all_regs), mps_reg_config.all_regs);
+  mps_read_buf(MPS_REGSTART_LIMITS, sizeof(mps_reg_limits.all_regs), mps_reg_limits.all_regs);
+  mps_read_buf(MPS_REGSTART_STATUS, sizeof(mps_reg_status.all_regs), mps_reg_status.all_regs);
+
   // set input current limit to 2000mA
-  mps_write_byte(0x00, (1 << 5) | (1 << 3));
-  // set input voltage limit to 6V (above 5V USB voltage)
-  mps_write_byte(0x01, (1 << 6));
+  mps_reg_limits.input_i_limit = 1<<5 | 1<<3;
+  // // set input voltage limit to 6V (above 5V USB voltage)
+  // mps_write_byte(0x01, (1<<6));
   // set charge current limit to 2000mA (1600+400)
-  mps_write_byte(0x02, (1 << 5) | (1 << 3));
+  mps_reg_limits.charge_current = 1<<5 | 1<<3;
+
+  mps_write_buf(MPS_REGSTART_LIMITS, sizeof(mps_reg_limits.all_regs), mps_reg_limits.all_regs);
+  mps_read_buf(MPS_REGSTART_LIMITS, sizeof(mps_reg_limits.all_regs), mps_reg_limits.all_regs);
+
+  mps_reg_config.config0.chg_en = 0;
+  mps_reg_config.config0.susp_en = 0;
+
+  mps_reg_config.config0.ntc_gcomp_sel = 0;  // disable OTG pin
+  mps_write_byte(MPS_REG_CONFIG0, mps_reg_config.config0.reg_byte);
+
+  mps_write_byte(0x0F, 0x18);  // input limit 2 = 2.4A
+
+  charger_tick();
+}
+
+void charger_tick() {
+  uint8_t old_config3 = mps_reg_config.config3.reg_byte;
+  if (battery_info.som_is_powered) {
+    mps_reg_config.config3.prochot_psys_cfg = 0b11;  // enable PSYS/ADC feature, even on battery
+  } else {
+    mps_reg_config.config3.prochot_psys_cfg = 0;  // save power
+  }
+
+  if (old_config3 != mps_reg_config.config3.reg_byte) {
+    mps_write_byte(MPS_REG_CONFIG3, mps_reg_config.config3.reg_byte);
+  }
+}
+
+void charger_enable_charge() {
+  gpio_put(PIN_LED_R, 1);
+  mps_reg_config.config0.chg_en = 1;
+  mps_reg_config.config0.susp_en = 0;
+  mps_write_byte(MPS_REG_CONFIG0, mps_reg_config.config0.reg_byte);
 }
 
 void gauge_dump(battery_info_s *battery_info)
@@ -169,6 +211,7 @@ void gauge_dump(battery_info_s *battery_info)
   }
   battery_info->cell1_volts = cell1;
   battery_info->cell2_volts = cell2;
+  battery_info->time_to_empty = rep_time_to_empty;
 
   if (battery_info->print_pack_info)
   {
@@ -182,9 +225,9 @@ void gauge_dump(battery_info_s *battery_info)
     printf("therm_cfg = 0x%04x\n", therm_cfg);
     printf("temp = %f\n", temp);
     printf("die temp = %f\n", die_temp);
-    printf("temp1 = %f\n", temp1);
-    printf("temp2 = %f\n", temp2);
-    printf("temp3 = %f\n", temp3);
+    printf("temp1 = %f ", temp1);
+    printf("temp2 = %f ", temp2);
+    printf("temp3 = %f ", temp3);
     printf("temp4 = %f\n", temp4);
 
     printf("prot_status = 0x%04x\n", prot_status);
@@ -254,10 +297,10 @@ void gauge_dump(battery_info_s *battery_info)
 
     printf("vcell = %f\n", vcell);
     printf("avg_vcell = %f\n", avg_vcell);
-    printf("cell1 = %f\n", cell1);
-    printf("cell2 = %f\n", cell2);
-    printf("cell3 = %f\n", cell3);
-    printf("cell4 = %f\n", cell4);
+    printf("cell1 = %f ", cell1);
+    printf("cell2 = %f ", cell2);
+    printf("cell3 = %f ", cell3);
+    printf("cell4 = %f ", cell4);
     printf("vpack = %f\n", vpack);
 
     printf("rep_capacity_mah = %f\n", rep_capacity);
@@ -295,53 +338,47 @@ void charger_dump(battery_info_s *battery_info)
   // can we lower the charging voltage temporarily?
   // alternatively, the current
 
-  uint8_t status = mps_read_byte(0x13);
-  uint8_t fault = mps_read_byte(0x14);
+  mps_read_buf(MPS_REGSTART_STATUS, sizeof(mps_reg_status.all_regs), mps_reg_status.all_regs);
+  mps_read_buf(MPS_REGSTART_ADC, sizeof(mps_reg_adc.all_regs), mps_reg_adc.all_regs);
 
-  float adc_bat_v = mps_word_to_6400(mps_read_word(0x16)) / 1000.0;
-  float adc_sys_v = mps_word_to_6400(mps_read_word(0x18)) / 1000.0;
-  float adc_charge_c = mps_word_to_6400(mps_read_word(0x1a)) / 1000.0;
-  float adc_input_v = mps_word_to_12800(mps_read_word(0x1c)) / 1000.0;
-  float adc_input_c = mps_word_to_3200(mps_read_word(0x1e)) / 1000.0;
-  float adc_temp = mps_word_to_temp(mps_read_word(0x24));
-  float adc_sys_pwr = mps_word_to_w(mps_read_word(0x26));
-  float adc_discharge_c = mps_word_to_6400(mps_read_word(0x28)) / 1000.0;
-  float adc_ntc_v = mps_word_to_ntc(mps_read_word(0x40)) / 1000.0;
-  float adc_otg_current_c = mps_word_to_6400(mps_read_word(0x22)) / 1000.0;
-
-  uint8_t input_c_limit = mps_read_byte(0x00);
-  uint8_t input_v_limit = mps_read_byte(0x01);
-  uint8_t charge_c = mps_read_byte(0x02);
-  uint8_t precharge_c = mps_read_byte(0x03);
-  uint8_t bat_full_v = mps_read_byte(0x04);
+  uint16_t adc_sys_v = mps_word_to_6400(mps_reg_adc.sys_v);
+  uint16_t adc_input_i = mps_word_to_3200(mps_reg_adc.input_i);
+  uint16_t adc_discharge_c = mps_word_to_6400(mps_reg_adc.bat_discharge_i);
+  uint16_t adc_input_v = mps_word_to_12800(mps_reg_adc.input_v);
 
   // carry over to globals for SPI reporting
-  battery_info->battery_amps = -(adc_input_c - adc_discharge_c);
-  battery_info->battery_volts = adc_sys_v;
+  battery_info->battery_amps = -(float)(adc_input_i - adc_discharge_c)/(float)1000.0;
+  battery_info->battery_volts = (float)adc_sys_v/(float)1000.0;
   battery_info->input_volts = adc_input_v;
 
-  if (battery_info->print_pack_info)
-  {
+  if (battery_info->print_pack_info) {
+    uint16_t adc_bat_v = mps_word_to_6400(mps_reg_adc.bat_v);
+    uint16_t adc_charge_c = mps_word_to_6400(mps_reg_adc.bat_charge_i);
+    float adc_temp = mps_word_to_temp(mps_reg_adc.junction_t);
+    float adc_sys_pwr = mps_word_to_watt(mps_reg_adc.sys_p);
+    float adc_ntc_v = mps_word_to_ntc(mps_read_word(0x40));
+
     printf("[charger_info]\n");
-    printf("status = 0x%x\n", status);
-    printf("fault = 0x%x\n", fault);
+    printf("status = 0x%x ", mps_reg_status.status.reg_byte);
+    printf("fault = 0x%x\n", mps_reg_status.fault.reg_byte);
 
-    printf("adc_bat_v = %f\n", adc_bat_v);
-    printf("adc_sys_v = %f\n", adc_sys_v);
-    printf("adc_charge_c = %f\n", adc_charge_c);
-    printf("adc_input_v = %f\n", adc_input_v);
-    printf("adc_input_c = %f\n", adc_input_c);
+    printf("adc_bat_v = %d ", adc_bat_v);
+    printf("adc_sys_v = %d ", adc_sys_v);
+    printf("bat_full_v = 0x%d\n", mps_reg_limits.reg04.v_batt_reg);
+
+    printf("adc_charge_c = %d\n", adc_charge_c);
+    printf("adc_input_v = %d ", adc_input_v);
+    printf("adc_input_c = %d\n", adc_input_i);
     printf("adc_temp = %f\n", adc_temp);
-    printf("adc_sys_pwr = %f\n", adc_sys_pwr);
-    printf("adc_discharge_c = %f\n", adc_discharge_c);
+    printf("adc_sys_pwr = %f ", adc_sys_pwr);
+    printf("adc_discharge_c = %d\n", adc_discharge_c);
     printf("adc_ntc_v = %f\n", adc_ntc_v);
-    printf("adc_otg_current_c = %f\n", adc_otg_current_c);
 
-    printf("input_c_limit = 0x%x\n", input_c_limit);
-    printf("input_v_limit = 0x%x\n", input_v_limit);
-    printf("charge_c = 0x%x\n", charge_c);
-    printf("precharge_c = 0x%x\n", precharge_c);
-    printf("bat_full_v = 0x%d\n", bat_full_v);
+    printf("input_c_limit = 0x%x ", mps_reg_limits.input_i_limit);
+    printf("input_v_limit = 0x%x\n", mps_reg_limits.input_v_limit);
+
+    printf("charge_c = 0x%x ", mps_reg_limits.charge_current);
+    printf("precharge_c = 0x%x\n", mps_reg_limits.reg03.i_pre);
   }
 }
 
@@ -380,10 +417,6 @@ void turn_som_power_on()
   set_display_backlight(100);
 
   battery_info.som_is_powered = true;
-
-  // enable PSYS (which contains the ADC) in battery only mode
-  // otherwise the charger reports no discharge and voltage values
-  mps_write_byte(0x0b, 0b11);
 }
 
 void turn_som_power_off()
@@ -416,9 +449,6 @@ void turn_som_power_off()
   // Power latch end
   gpio_put(PIN_PWREN_LATCH, 0);
   set_display_backlight(0);
-
-  // Disable charger discharge current recording while powered off
-  mps_write_byte(0x0b, 0);
 
   battery_info.som_is_powered = false;
 }
@@ -518,16 +548,18 @@ void setup()
   gpio_set_dir(PIN_USB_SRC_ENABLE, GPIO_OUT);
   gpio_put(PIN_USB_SRC_ENABLE, 0);
 
+  // TODO: [zeha] ...
+  gpio_init(PIN_FUSB_INT);
+  gpio_set_dir(PIN_FUSB_INT, 0);
+  // TODO: figure out why the FUSB_INT irq does not trigger
+  //gpio_set_irq_enabled_with_callback(PIN_FUSB_INT, GPIO_IRQ_EDGE_FALL | GPIO_IRQ_EDGE_RISE, true, &fusb_interrupt);
+
   // if this is a warm boot, then we need to avoid latching the PWR and display
   // pins.
   if (syscon_warm_boot())
   {
     printf("# [reset] watchdog scratch had valid on magic, not latching power.\n");
     battery_info.som_is_powered = true;
-
-    // enable PSYS (which contains the ADC) in battery only mode
-    // otherwise the charger reports no discharge and voltage values
-    mps_write_byte(0x0b, 0b11);
   }
   else
   {
@@ -535,9 +567,9 @@ void setup()
     gpio_put(PIN_PWREN_LATCH, 0);
   }
 
-  charger_configure();
+  charger_init();
 
-  pd_state.next_state = PD_STATE_RESET;
+  pd_init();
 }
 
 void handle_usb_commands()
@@ -558,26 +590,6 @@ void handle_usb_commands()
     {
       battery_info.print_pack_info = !battery_info.print_pack_info;
     }
-    else if (usb_c == 'r')
-    {
-      pd_state.next_state = PD_STATE_RESET;
-    }
-    else if (usb_c == 'R')
-    {
-      pd_state.next_state = PD_STATE_RESET;
-      fusb_write_byte(FUSB_CONTROL3,
-                      FUSB_CONTROL3_SEND_HARD_RESET |
-                          FUSB_CONTROL3_AUTO_HARDRESET |
-                          FUSB_CONTROL3_AUTO_SOFTRESET |
-                          (3 << FUSB_CONTROL3_N_RETRIES_SHIFT) |
-                          FUSB_CONTROL3_AUTO_RETRY);
-      sleep_ms(1);
-      fusb_write_byte(FUSB_CONTROL3,
-                      FUSB_CONTROL3_AUTO_HARDRESET |
-                          FUSB_CONTROL3_AUTO_SOFTRESET |
-                          (3 << FUSB_CONTROL3_N_RETRIES_SHIFT) |
-                          FUSB_CONTROL3_AUTO_RETRY);
-    }
     else if (usb_c == '-')
     {
       // only for PREF_DISPLAY_V2
@@ -597,12 +609,32 @@ void handle_usb_commands()
   }
 }
 
+void usb_host_5v_enable() {
+#ifndef OTG_AS_5V
+  gpio_put(PIN_USB_SRC_ENABLE, 1);
+#else
+  mps_reg_config.config0.otg_en = 1;
+  mps_write_byte(MPS_REG_CONFIG0, mps_reg_config.config0.reg_byte);
+#endif
+}
+
+void usb_host_5v_disable() {
+#ifndef OTG_AS_5V
+  gpio_put(PIN_USB_SRC_ENABLE, 0);
+#else
+  mps_reg_config.config0.otg_en = 0;
+  mps_write_byte(MPS_REG_CONFIG0, mps_reg_config.config0.reg_byte);
+#endif
+}
+
 #ifdef FACTORY_MODE
 int factory_turn_on_once = 1;
 #endif
 
 void loop()
 {
+  bool can_sleep = true;
+
   // handle commands from keyboard
   handle_uart_commands(&battery_info);
 
@@ -614,8 +646,10 @@ void loop()
   handle_usb_commands();
 #endif
 
-  handle_pd_state(&battery_info, &pd_state);
-  pd_state.ticks++;
+  if (!pd_tick(&battery_info)) {
+    can_sleep = false;
+  }
+  charger_tick();
 
 #ifdef FACTORY_MODE
   // in factory mode, turn on power immediately after pd charger is found
@@ -631,13 +665,29 @@ void loop()
 
   // query gauge and charger, update battery status
   battery_info.ticks++;
-  if (battery_info.ticks > 200) // every 2000 ms
+  if (battery_info.ticks > 5000)
   {
     battery_info.ticks = 0;
     if (gauge_identify(&battery_info))
     {
       gauge_dump(&battery_info);
       charger_dump(&battery_info);
+
+      // TODO: print adc_charge_c adc_discharge_c
+      printf("# %s %s %s chg=%1x mps_flt=%02x input=%dmV@%dmA charge=%dmA discharge=%dmA p=%0.2fW ttempty=%umin\n",
+             battery_info.som_is_powered ? "ON" : "OFF",
+             mps_reg_status.status.acok ? "AC" : "BAT",
+             mps_reg_config.config0.chg_en ? "CHG" : "",
+             mps_reg_status.status.chg_stat,
+             mps_reg_status.fault.reg_byte,
+             mps_word_to_12800(mps_reg_adc.input_v),
+             mps_word_to_3200(mps_reg_adc.input_i),
+             mps_word_to_6400(mps_reg_adc.bat_charge_i),
+             mps_word_to_6400(mps_reg_adc.bat_discharge_i),
+             mps_word_to_watt(mps_reg_adc.sys_p),
+             (unsigned int)battery_info.time_to_empty/60
+             );
+
     }
     else
     {
@@ -647,7 +697,9 @@ void loop()
     }
   }
 
-  sleep_ms(10); // one tick is effectively 10 ms
+  if (can_sleep) {
+    sleep_us(100); // one tick is 0.1ms
+  }
 }
 
 int main()

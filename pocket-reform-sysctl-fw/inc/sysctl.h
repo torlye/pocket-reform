@@ -16,6 +16,7 @@
 #include "hardware/structs/watchdog.h"
 #include "hardware/structs/vreg_and_chip_reset.h"
 
+// #define OTG_AS_5V // WARNING: defining this requires the hardware mod described in https://source.mnt.re/reform/pocket-reform/-/issues/3
 // #define FACTORY_MODE // turn device on immediately after starting sysctl
 // #define ACM_ENABLED // usb serial control for debugging
 // #define PREF_DISPLAY_V2 // backlight control for second type of display, TOP070F01A (not LT070ME05000)
@@ -76,6 +77,8 @@
 
 #define BATTERY_CAPACITY_MILLIAMP_HOURS 4000
 
+#include "pd_com.h"
+
 typedef struct battery_info_s
 {
     bool som_is_powered;
@@ -89,6 +92,7 @@ typedef struct battery_info_s
     float cell1_volts;
     float cell2_volts;
     int charge_percentage;
+    float time_to_empty;
 
     // metadata
     bool print_pack_info;
@@ -98,7 +102,6 @@ typedef struct battery_info_s
 
 #include "fusb302b.h"
 #include "pd.h"
-#include "pd_com.h"
 #include "uart_com.h"
 #include "spi_com.h"
 #include "max17320.h"
@@ -109,5 +112,9 @@ void som_wake();
 void turn_som_power_on();
 void turn_som_power_off();
 void set_display_backlight(int percent);
+
+void usb_host_5v_enable();
+void usb_host_5v_disable();
+void charger_enable_charge();
 
 #endif

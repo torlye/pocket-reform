@@ -78,6 +78,9 @@ unsigned int t = 0;
 
 unsigned int pd_state;
 bool pd_sent_soft_reset;
+uint16_t pd_datarole = PD_DATAROLE_UFP;
+uint16_t pd_powerrole = PD_POWERROLE_SINK;
+static bool pd_datarole_changed = false;
 
 int request_sent = 0;
 
@@ -95,6 +98,10 @@ void pd_init() {
 
 unsigned int pd_get_state_for_debug() {
   return pd_state;
+}
+
+inline void pd_set_fusb_switches1() {
+  fusb_write_byte(FUSB_SWITCHES1, FUSB_SWITCHES1_SPECREV_REV2_0| (pd_datarole == PD_DATAROLE_DFP) ? FUSB_SWITCHES1_DATAROLE_SRC_DFP : FUSB_SWITCHES1_DATAROLE_SNK_UFP);
 }
 
 bool pd_tick(battery_info_s* battery_info) {
@@ -219,6 +226,8 @@ bool pd_tick(battery_info_s* battery_info) {
       }
 
       if (pd_state == PD_STATE_UNATTACHED_SNK) {
+        pd_powerrole = PD_POWERROLE_SINK;
+        pd_datarole = PD_DATAROLE_UFP;  // default for powerrole SINK
         usb_host_5v_disable();
         sleep_us(10); // TODO: get rid of this?
 
@@ -230,6 +239,8 @@ bool pd_tick(battery_info_s* battery_info) {
         } else if (ccpin == 2) {
           fusb_write_byte(FUSB_SWITCHES0, FUSB_SWITCHES0_MEAS_CC2|FUSB_SWITCHES0_PDWN_2|FUSB_SWITCHES0_PDWN_1);
         }
+        pd_set_fusb_switches1();
+        pd_datarole_changed = false;
 
         // enable vbus measure for attach
         int v = (3670 / 420) - 1;
@@ -241,9 +252,13 @@ bool pd_tick(battery_info_s* battery_info) {
 
         printf("[pd] PD_STATE_UNATTACHED_SNK enable pulldown, measure, power; measure=0x%02x\n", measure);
       } else {
+        pd_powerrole = PD_POWERROLE_SOURCE;
+        pd_datarole = PD_DATAROLE_DFP;  // default for powerrole SOURCE
         usb_host_5v_enable();
         fusb_write_byte(FUSB_POWER, 0xF);
         fusb_write_byte(FUSB_SWITCHES0, FUSB_SWITCHES0_PU_EN1|FUSB_SWITCHES0_PU_EN2);
+        pd_set_fusb_switches1();
+        pd_datarole_changed = false;
       }
 
       t = 0;
@@ -310,6 +325,10 @@ bool pd_tick(battery_info_s* battery_info) {
       pd_state = PD_STATE_SETUP;
       printf("# [pd] state PD_STATE_ATTACHED_SNK FUSB_INTERRUPT_I_VBUSOK detach \n");
     } else {
+      if (pd_datarole_changed) {
+        pd_set_fusb_switches1();
+        pd_datarole_changed = false;
+      }
       // FIXME: this does not enforce the proper message order. maybe ok as is, maybe not.
       if (fusb_read_message(&rx_msg)) {
         uint8_t msgtype = PD_MSGTYPE_GET(&rx_msg);
@@ -345,7 +364,7 @@ bool pd_tick(battery_info_s* battery_info) {
             }
 
             printf("# [pd] requesting PO %d, %d V\n", power_objects, max_voltage);
-            tx.hdr = PD_MSGTYPE_REQUEST | PD_NUMOBJ(1) | PD_DATAROLE_UFP | (PD_POWERROLE_SINK << PD_HDR_POWERROLE_SHIFT) | PD_SPECREV_2_0;
+            tx.hdr = PD_MSGTYPE_REQUEST | PD_NUMOBJ(1) | pd_datarole | (pd_powerrole << PD_HDR_POWERROLE_SHIFT) | PD_SPECREV_2_0;
 
             tx.hdr &= ~PD_HDR_MESSAGEID;
             tx.hdr |= (tx_id_count % 8) << PD_HDR_MESSAGEID_SHIFT;
@@ -356,7 +375,9 @@ bool pd_tick(battery_info_s* battery_info) {
 
             tx.obj[0] = PD_RDO_FV_MAX_CURRENT_SET(current)
               | PD_RDO_FV_CURRENT_SET(current)
-              | PD_RDO_NO_USB_SUSPEND | PD_RDO_OBJPOS_SET(power_objects); // FIXME
+              | PD_RDO_USB_COMMS
+              | PD_RDO_NO_USB_SUSPEND
+              | PD_RDO_OBJPOS_SET(power_objects); // FIXME
 
             fusb_send_message(&tx);
 
@@ -364,7 +385,7 @@ bool pd_tick(battery_info_s* battery_info) {
           }
           t = 0;
         } else if (msgrole == PD_POWERROLE_SOURCE && msgtype == PD_MSGTYPE_ACCEPT) {
-          printf("# [pd] charger accepted our requested.\n");
+          printf("# [pd] charger accepted our requested PDO.\n");
           t = 0;
         } else if (msgrole == PD_POWERROLE_SOURCE && msgtype == PD_MSGTYPE_PS_RDY) {
           // power supply is ready
@@ -373,11 +394,38 @@ bool pd_tick(battery_info_s* battery_info) {
           charger_enable_charge();
 
           t = 0;
+        } else if (msgrole == PD_POWERROLE_SOURCE && msgtype == PD_MSGTYPE_DR_SWAP) {
+          // other side wants to swap data role.
+          if (pd_datarole == PD_DATAROLE_DFP) {
+            // we cannot switch away from DFP role. reject the message
+            printf("# [pd] rejecting data-role swap\n");
+            tx.hdr = PD_MSGTYPE_REJECT | pd_datarole | (pd_powerrole << PD_HDR_POWERROLE_SHIFT);
+            fusb_send_message(&tx);
+          } else {
+            // we started as UFP. Partner wants to become UFP.
+            if (!battery_info->som_is_powered) {
+              // SOM is not powered, so it will not act as a host. Tell partner to try later.
+              printf("# [pd] replying with wait to data-role swap request\n");
+              tx.hdr = PD_MSGTYPE_WAIT | pd_datarole | (pd_powerrole << PD_HDR_POWERROLE_SHIFT);
+              fusb_send_message(&tx);
+            } else {
+              // Accept. We become the DFP (host).
+              printf("# [pd] accepting data-role swap\n");
+              // TODO: switch pd_dr_role only after GOOD_CRC
+              tx.hdr = PD_MSGTYPE_ACCEPT | pd_datarole | (pd_powerrole << PD_HDR_POWERROLE_SHIFT);
+              fusb_send_message(&tx);
+              pd_datarole = PD_DATAROLE_DFP;
+              pd_datarole_changed = true;
+            }
+          }
+          t = 0;
         } else if (msgrole != PD_POWERROLE_SOURCE) {
           printf("# [pd] discarding non-source msg type: 0x%x numobj: %d\n", msgtype, numobj);
           t = 0;
         } else {
           printf("# [pd] msg type: 0x%x numobj: %d\n", msgtype, numobj);
+          tx.hdr = PD_MSGTYPE_REJECT | pd_datarole | (pd_powerrole << PD_HDR_POWERROLE_SHIFT);
+          fusb_send_message(&tx);
         }
       } else if (t>10000 && !mps_reg_config.config0.chg_en) {
         // for some reason charging did not start.
@@ -395,7 +443,7 @@ bool pd_tick(battery_info_s* battery_info) {
         // TODO: fix timer.
         pd_sent_soft_reset = true;
         printf("# [pd] PD_STATE_ATTACHED_SNK timeout while handshaking, sending soft reset\n");
-        tx.hdr = PD_MSGTYPE_SOFT_RESET | PD_DATAROLE_UFP | (PD_POWERROLE_SINK << PD_HDR_POWERROLE_SHIFT);
+        tx.hdr = PD_MSGTYPE_SOFT_RESET | pd_datarole | (pd_powerrole << PD_HDR_POWERROLE_SHIFT);
         fusb_send_message(&tx);
       }
     }

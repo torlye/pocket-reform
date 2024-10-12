@@ -35,8 +35,8 @@
 
 #define USBD_VID (0x2E8A) // Raspberry Pi
 #define USBD_PID (0x000a) // Raspberry Pi Pico SDK CDC
-#define USBD_MANUFACTURER "Raspberry Pi"
-#define USBD_PRODUCT "Pico"
+#define USBD_MANUFACTURER "MNT"
+#define USBD_PRODUCT "Pocket Reform SysCt"
 
 #define TUD_RPI_RESET_DESC_LEN  9
 #if !PICO_STDIO_USB_ENABLE_RESET_VIA_VENDOR_INTERFACE

@@ -79,7 +79,7 @@
 #define PICO_STDIO_USB_CONNECTION_WITHOUT_DTR 0
 
 // PICO_CONFIG: PICO_STDIO_USB_DEVICE_SELF_POWERED, Set USB device as self powered device, type=bool, default=0, group=pico_stdio_usb
-#define PICO_STDIO_USB_DEVICE_SELF_POWERED 0
+#define PICO_STDIO_USB_DEVICE_SELF_POWERED 1
 
 // PICO_CONFIG: PICO_STDIO_USB_SUPPORT_CHARS_AVAILABLE_CALLBACK, Enable USB STDIO support for stdio_set_chars_available_callback. Can be disabled to make use of USB CDC RX callback elsewhere, type=bool, default=1, group=pico_stdio_usb
 #define PICO_STDIO_USB_SUPPORT_CHARS_AVAILABLE_CALLBACK 1

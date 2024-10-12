@@ -157,8 +157,25 @@ void charger_enable_charge() {
   mps_write_byte(MPS_REG_CONFIG0, mps_reg_config.config0.reg_byte);
 }
 
-void gauge_dump(battery_info_s *battery_info)
+void gauge_tick(battery_info_s *battery_info)
 {
+  // read devname to identify if communication works
+  uint16_t max17320_devname = max_read_word(0x21);
+  if (max17320_devname == 0x4209 || max17320_devname == 0x420a || max17320_devname == 0x420b)
+  {
+    battery_info->max17320_devname = max17320_devname;
+  } else {
+    printf("# [battery] [ERROR] gauge did not respond\n");
+    battery_info->max17320_devname = 0;
+    battery_info->input_volts = -1;
+    battery_info->time_to_empty = 0;
+    battery_info->charge_percentage = 0;
+    battery_info->cell1_volts = 0;
+    battery_info->cell2_volts = 0;
+    battery_info->time_to_empty = 0;
+    return;
+  }
+
   // disable write protection (CommStat)
   max_write_word(0x61, 0x0000);
   max_write_word(0x61, 0x0000);
@@ -320,16 +337,8 @@ void gauge_dump(battery_info_s *battery_info)
   }
 }
 
-int gauge_identify(battery_info_s *battery_info)
-{
-  // read devname to identify if communication works
-  uint16_t max17320_devname = max_read_word(0x21);
-  if (max17320_devname == 0x4209 || max17320_devname == 0x420a || max17320_devname == 0x420b)
-  {
-    battery_info->max17320_devname = max17320_devname;
-    return 1;
-  }
-  return 0;
+void gauge_init() {
+  gauge_tick(&battery_info);
 }
 
 void charger_dump(battery_info_s *battery_info)
@@ -567,6 +576,7 @@ void setup()
     gpio_put(PIN_PWREN_LATCH, 0);
   }
 
+  gauge_init();
   charger_init();
 
   pd_init();
@@ -668,33 +678,23 @@ void loop()
   if (battery_info.ticks > 5000)
   {
     battery_info.ticks = 0;
-    if (gauge_identify(&battery_info))
-    {
-      gauge_dump(&battery_info);
-      charger_dump(&battery_info);
+    gauge_tick(&battery_info);
+    charger_dump(&battery_info);
 
-      // TODO: print adc_charge_c adc_discharge_c
-      printf("# %s %s %s chg=%1x mps_flt=%02x input=%dmV@%dmA charge=%dmA discharge=%dmA p=%0.2fW ttempty=%umin\n",
-             battery_info.som_is_powered ? "ON" : "OFF",
-             mps_reg_status.status.acok ? "AC" : "BAT",
-             mps_reg_config.config0.chg_en ? "CHG" : "",
-             mps_reg_status.status.chg_stat,
-             mps_reg_status.fault.reg_byte,
-             mps_word_to_12800(mps_reg_adc.input_v),
-             mps_word_to_3200(mps_reg_adc.input_i),
-             mps_word_to_6400(mps_reg_adc.bat_charge_i),
-             mps_word_to_6400(mps_reg_adc.bat_discharge_i),
-             mps_word_to_watt(mps_reg_adc.sys_p),
-             (unsigned int)battery_info.time_to_empty/60
-             );
-
-    }
-    else
-    {
-      printf("# [battery] [ERROR] gauge did not respond\n");
-      battery_info.input_volts = -1;
-      battery_info.max17320_devname = 0;
-    }
+    // TODO: print adc_charge_c adc_discharge_c
+    printf("# %s %s %s chg=%1x mps_flt=%02x input=%dmV@%dmA charge=%dmA discharge=%dmA p=%0.2fW ttempty=%umin\n",
+            battery_info.som_is_powered ? "ON" : "OFF",
+            mps_reg_status.status.acok ? "AC" : "BAT",
+            mps_reg_config.config0.chg_en ? "CHG" : "",
+            mps_reg_status.status.chg_stat,
+            mps_reg_status.fault.reg_byte,
+            mps_word_to_12800(mps_reg_adc.input_v),
+            mps_word_to_3200(mps_reg_adc.input_i),
+            mps_word_to_6400(mps_reg_adc.bat_charge_i),
+            mps_word_to_6400(mps_reg_adc.bat_discharge_i),
+            mps_word_to_watt(mps_reg_adc.sys_p),
+            (unsigned int)battery_info.time_to_empty/60
+            );
   }
 
   if (can_sleep) {

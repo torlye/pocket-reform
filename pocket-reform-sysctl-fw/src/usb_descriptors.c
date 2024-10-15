@@ -36,7 +36,7 @@
 #define USBD_VID (0x2E8A) // Raspberry Pi
 #define USBD_PID (0x000a) // Raspberry Pi Pico SDK CDC
 #define USBD_MANUFACTURER "MNT"
-#define USBD_PRODUCT "Pocket Reform SysCt"
+#define USBD_PRODUCT "Pocket Reform SysCtl 1.0"
 
 #define TUD_RPI_RESET_DESC_LEN  9
 #if !PICO_STDIO_USB_ENABLE_RESET_VIA_VENDOR_INTERFACE
@@ -130,7 +130,7 @@ const uint8_t *tud_descriptor_configuration_cb(__unused uint8_t index) {
 
 const uint16_t *tud_descriptor_string_cb(uint8_t index, __unused uint16_t langid) {
 #ifndef USBD_DESC_STR_MAX
-#define USBD_DESC_STR_MAX (20)
+#define USBD_DESC_STR_MAX (25)
 #elif USBD_DESC_STR_MAX > 127
 #error USBD_DESC_STR_MAX too high (max is 127).
 #elif USBD_DESC_STR_MAX < 17

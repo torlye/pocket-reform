@@ -15,8 +15,8 @@
 #endif
 
 #if PICO_STDIO_USB_ENABLE_RESET_VIA_VENDOR_INTERFACE
-#include "../../pico-sdk/src/common/pico_usb_reset_interface/include/pico/usb_reset_interface.h"
-#include "../../pico-sdk/src/rp2_common/hardware_watchdog/include/hardware/watchdog.h"
+#include "pico/usb_reset_interface.h"
+#include "hardware/watchdog.h"
 #include "device/usbd_pvt.h"
 
 static uint8_t itf_num;

@@ -36,7 +36,6 @@ target_link_libraries(sysctl
 	pico_stdio
 	pico_time
 	pico_unique_id
-	pico_usb_reset_interface
 	tinyusb_device
 )
 

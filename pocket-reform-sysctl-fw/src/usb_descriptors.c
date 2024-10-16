@@ -30,8 +30,8 @@
 
 #include "tusb.h"
 #include "reform_stdio_usb.h"
-#include "pico/usb_reset_interface.h"
 #include "pico/unique_id.h"
+#include "mntre_reset_priv.h"
 
 #define USB_VID_PIDCODES     0x1209
 #define USB_VID_RASPBERRYPI  0x2E8A
@@ -57,8 +57,7 @@
 #endif
 
 
-#define TUD_RPI_RESET_DESC_LEN  9
-#define USBD_DESC_LEN (TUD_CONFIG_DESC_LEN + TUD_CDC_DESC_LEN + TUD_RPI_RESET_DESC_LEN)
+#define USBD_DESC_LEN (TUD_CONFIG_DESC_LEN + TUD_CDC_DESC_LEN + MNTRE_RESET_TUD_DESC_LEN)
 #if !PICO_STDIO_USB_DEVICE_SELF_POWERED
 #define USBD_CONFIGURATION_DESCRIPTOR_ATTRIBUTE (0)
 #define USBD_MAX_POWER_MA (250)
@@ -67,9 +66,9 @@
 #define USBD_MAX_POWER_MA (1)
 #endif
 
-#define USBD_ITF_CDC       (0) // needs 2 interfaces
-#define USBD_ITF_RPI_RESET (2)
-#define USBD_ITF_MAX       (3)
+#define USBD_ITF_CDC         (0) // needs 2 interfaces
+#define USBD_ITF_MNTRE_RESET (2)
+#define USBD_ITF_MAX         (3)
 
 #define USBD_CDC_EP_CMD (0x81)
 #define USBD_CDC_EP_OUT (0x02)
@@ -82,7 +81,7 @@
 #define USBD_STR_PRODUCT (0x02)
 #define USBD_STR_SERIAL (0x03)
 #define USBD_STR_CDC (0x04)
-#define USBD_STR_RPI_RESET (0x05)
+#define USBD_STR_MNTRE_RESET (0x05)
 
 // Note: descriptors returned from callbacks must exist long enough for transfer to complete
 
@@ -103,10 +102,6 @@ static const tusb_desc_device_t usbd_desc_device = {
     .bNumConfigurations = 1,
 };
 
-#define TUD_RPI_RESET_DESCRIPTOR(_itfnum, _stridx) \
-  /* Interface */\
-  9, TUSB_DESC_INTERFACE, _itfnum, 0, 0, TUSB_CLASS_VENDOR_SPECIFIC, RESET_INTERFACE_SUBCLASS, RESET_INTERFACE_PROTOCOL, _stridx,
-
 static const uint8_t usbd_desc_cfg[USBD_DESC_LEN] = {
     TUD_CONFIG_DESCRIPTOR(1, USBD_ITF_MAX, USBD_STR_0, USBD_DESC_LEN,
         USBD_CONFIGURATION_DESCRIPTOR_ATTRIBUTE, USBD_MAX_POWER_MA),
@@ -114,7 +109,7 @@ static const uint8_t usbd_desc_cfg[USBD_DESC_LEN] = {
     TUD_CDC_DESCRIPTOR(USBD_ITF_CDC, USBD_STR_CDC, USBD_CDC_EP_CMD,
         USBD_CDC_CMD_MAX_SIZE, USBD_CDC_EP_OUT, USBD_CDC_EP_IN, USBD_CDC_IN_OUT_MAX_SIZE),
 
-    TUD_RPI_RESET_DESCRIPTOR(USBD_ITF_RPI_RESET, USBD_STR_RPI_RESET)
+    MNTRE_RESET_TUD_DESCRIPTOR(USBD_ITF_MNTRE_RESET, USBD_STR_MNTRE_RESET)
 };
 
 static char usbd_serial_str[PICO_UNIQUE_BOARD_ID_SIZE_BYTES * 2 + 1];
@@ -124,7 +119,7 @@ static const char *const usbd_desc_str[] = {
     [USBD_STR_PRODUCT] = USBD_PRODUCT,
     [USBD_STR_SERIAL] = usbd_serial_str,
     [USBD_STR_CDC] = "Board CDC",
-    [USBD_STR_RPI_RESET] = "Reset",
+    [USBD_STR_MNTRE_RESET] = MNTRE_RESET_INTERFACE_NAME_STR,
 };
 
 const uint8_t *tud_descriptor_device_cb(void) {

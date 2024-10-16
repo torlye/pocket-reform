@@ -21,8 +21,6 @@
  *  Note this library is a developer convenience. It is not applicable in all cases; for one it takes full control of the USB device precluding your
  *  use of the USB in device or host mode. For this reason, this library will automatically disengage if you try to using it alongside \ref tinyusb_device or
  *  \ref tinyusb_host. It also takes control of a lower level IRQ and sets up a periodic background task.
- *
- *  This library also includes (by default) functionality to enable the RP2040 to be reset over the USB interface.
  */
 
 // PICO_CONFIG: PICO_STDIO_USB_DEFAULT_CRLF, Default state of CR/LF translation for USB output, type=bool, default=PICO_STDIO_DEFAULT_CRLF, group=pico_stdio_usb
@@ -40,12 +38,6 @@
 // this variable is no longer set by default (one is claimed dynamically), but will be respected if specified
 #endif
 
-// PICO_CONFIG: PICO_STDIO_USB_ENABLE_RESET_VIA_BAUD_RATE, Enable/disable resetting into BOOTSEL mode if the host sets the baud rate to a magic value (PICO_STDIO_USB_RESET_MAGIC_BAUD_RATE), type=bool, default=1, group=pico_stdio_usb
-#define PICO_STDIO_USB_ENABLE_RESET_VIA_BAUD_RATE 1
-
-// PICO_CONFIG: PICO_STDIO_USB_RESET_MAGIC_BAUD_RATE, baud rate that if selected causes a reset into BOOTSEL mode (if PICO_STDIO_USB_ENABLE_RESET_VIA_BAUD_RATE is set), default=1200, group=pico_stdio_usb
-#define PICO_STDIO_USB_RESET_MAGIC_BAUD_RATE 1200
-
 // PICO_CONFIG: PICO_STDIO_USB_CONNECT_WAIT_TIMEOUT_MS, Maximum number of milliseconds to wait during initialization for a CDC connection from the host (negative means indefinite) during initialization, default=0, group=pico_stdio_usb
 #ifndef PICO_STDIO_USB_CONNECT_WAIT_TIMEOUT_MS
 #define PICO_STDIO_USB_CONNECT_WAIT_TIMEOUT_MS 0
@@ -53,9 +45,6 @@
 
 // PICO_CONFIG: PICO_STDIO_USB_POST_CONNECT_WAIT_DELAY_MS, Number of extra milliseconds to wait when using PICO_STDIO_USB_CONNECT_WAIT_TIMEOUT_MS after a host CDC connection is detected (some host terminals seem to sometimes lose transmissions sent right after connection), default=50, group=pico_stdio_usb
 #define PICO_STDIO_USB_POST_CONNECT_WAIT_DELAY_MS 50
-
-// PICO_CONFIG: PICO_STDIO_USB_RESET_RESET_TO_FLASH_DELAY_MS, delays in ms before rebooting via regular flash boot, default=100, group=pico_stdio_usb
-#define PICO_STDIO_USB_RESET_RESET_TO_FLASH_DELAY_MS 100
 
 // PICO_CONFIG: PICO_STDIO_USB_CONNECTION_WITHOUT_DTR, Disable use of DTR for connection checking meaning connection is assumed to be valid, type=bool, default=0, group=pico_stdio_usb
 #define PICO_STDIO_USB_CONNECTION_WITHOUT_DTR 0

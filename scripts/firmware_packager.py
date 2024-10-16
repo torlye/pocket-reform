@@ -24,7 +24,7 @@ def cd(path):
 
 firmware_metainfo_template = """<?xml version="1.0" encoding="UTF-8"?>
 <component type="firmware">
-  <id>org.{developer_name}.guid{firmware_id}</id>
+  <id>{firmware_id}</id>
   <name>{firmware_name}</name>
   <summary>{firmware_summary}</summary>
   <description>
@@ -33,21 +33,26 @@ firmware_metainfo_template = """<?xml version="1.0" encoding="UTF-8"?>
   <provides>
     <firmware type="flashed">{device_guid}</firmware>
   </provides>
-  <url type="homepage">{firmware_homepage}</url>
+  <url type="homepage">{homepage}</url>
   <metadata_license>CC0-1.0</metadata_license>
-  <project_license>proprietary</project_license>
+  <project_license>{firmware_license}</project_license>
   <updatecontact>{contact_info}</updatecontact>
   <developer_name>{developer_name}</developer_name>
   <releases>
     <release version="{release_version}" timestamp="{timestamp}">
+      <url type="source">{release_source_url}</url>
       <description>
         {release_description}
       </description>
     </release>
   </releases>
+  <categories>
+    <category>{category}</category>
+  </categories>
   <custom>
     <value key="LVFS::VersionFormat">{version_format}</value>
     <value key="LVFS::UpdateProtocol">{update_protocol}</value>
+    <value key="LVFS::DeviceIntegrity">{device_integrity}</value>
   </custom>
 </component>
 """
@@ -55,18 +60,12 @@ firmware_metainfo_template = """<?xml version="1.0" encoding="UTF-8"?>
 
 def make_firmware_metainfo(firmware_info, dst):
     local_info = vars(firmware_info)
-    local_info["firmware_id"] = local_info["device_guid"][0:8]
     firmware_metainfo = firmware_metainfo_template.format(
-        **local_info, timestamp=time.time()
+        **local_info, timestamp=int(time.time())
     )
 
     with open(os.path.join(dst, "firmware.metainfo.xml"), "w") as f:
         f.write(firmware_metainfo)
-
-
-def extract_exe(exe, dst):
-    command = ["7z", "x", "-o{}".format(dst), exe]
-    subprocess.check_call(command, stdout=subprocess.DEVNULL)
 
 
 def get_firmware_bin(root, bin_path, dst):
@@ -74,35 +73,21 @@ def get_firmware_bin(root, bin_path, dst):
         shutil.copy(bin_path, os.path.join(dst, "firmware.bin"))
 
 
-def create_firmware_cab(exe, folder):
+def create_firmware_cab(folder):
     with cd(folder):
-        if os.name == "nt":
-            directive = os.path.join(folder, "directive")
-            with open(directive, "w") as wfd:
-                wfd.write(".OPTION EXPLICIT\r\n")
-                wfd.write(".Set CabinetNameTemplate=firmware.cab\r\n")
-                wfd.write(".Set DiskDirectory1=.\r\n")
-                wfd.write("firmware.bin\r\n")
-                wfd.write("firmware.metainfo.xml\r\n")
-            command = ["makecab.exe", "/f", directive]
-        else:
-            command = [
-                "gcab",
-                "--create",
-                "firmware.cab",
-                "firmware.bin",
-                "firmware.metainfo.xml",
-            ]
+        command = [
+            "gcab",
+            "--create",
+            "firmware.cab",
+            "firmware.bin",
+            "firmware.metainfo.xml",
+        ]
         subprocess.check_call(command)
 
 
 def main(args):
     with tempfile.TemporaryDirectory() as d:
         print("Using temp directory {}".format(d))
-
-        if args.exe:
-            print("Extracting firmware exe")
-            extract_exe(args.exe, d)
 
         print("Locating firmware bin")
         get_firmware_bin(d, args.bin, d)
@@ -111,7 +96,7 @@ def main(args):
         make_firmware_metainfo(args, d)
 
         print("Creating cabinet file")
-        create_firmware_cab(args, d)
+        create_firmware_cab(d)
 
         print("Done")
         shutil.copy(os.path.join(d, "firmware.cab"), args.out)
@@ -119,12 +104,21 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Create fwupd packaged from windows executables"
+        description="Create fwupd package"
+    )
+    parser.add_argument(
+        "--firmware-id",
+        help="ID of the firmware package",
+        required=True,
     )
     parser.add_argument(
         "--firmware-name",
-        help="Name of the firmware package can be customized (e.g. DellTBT)",
+        help="Name of the firmware package",
         required=True,
+    )
+    parser.add_argument(
+        "--firmware-license",
+        help="SPDX License Identifier",
     )
     parser.add_argument(
         "--firmware-summary", help="One line description of the firmware package"
@@ -137,7 +131,15 @@ if __name__ == "__main__":
         help="GUID of the device this firmware will run on, this *must* match the output of one of the GUIDs in `fwupdmgr get-devices`",
         required=True,
     )
-    parser.add_argument("--firmware-homepage", help="Website for the firmware provider")
+    parser.add_argument(
+        "--device-integrity",
+        help="Device Integrity key",
+    )
+    parser.add_argument(
+        "--category",
+        help="Update Category",
+    )
+    parser.add_argument("--homepage", help="Website for the firmware provider")
     parser.add_argument(
         "--contact-info", help="Email address of the firmware developer"
     )
@@ -148,6 +150,10 @@ if __name__ == "__main__":
         "--release-version",
         help="Version number of the firmware package",
         required=True,
+    )
+    parser.add_argument(
+        "--release-source-url",
+        help="URL to GPL sources",
     )
     parser.add_argument(
         "--version-format",
@@ -163,11 +169,8 @@ if __name__ == "__main__":
         "--release-description", help="Description of the firmware release"
     )
     parser.add_argument(
-        "--exe", help="(optional) Executable file to extract firmware from"
-    )
-    parser.add_argument(
         "--bin",
-        help="Path to the .bin file (Relative if inside the executable; Absolute if outside) to use as the firmware image",
+        help="Path to the .bin file to use as the firmware image",
         required=True,
     )
     parser.add_argument("--out", help="Output cab file path", required=True)

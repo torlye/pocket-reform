@@ -4,6 +4,7 @@ build:
   artifacts:
     paths:
       - pocket-reform-sysctl-fw/build/sysctl.uf2
+      - pocket-reform-sysctl-fw/build/sysctl.cab
       - scripts/update-sysctl-firmware.sh
       - pocket-reform-keyboard-fw/pocket-hid/build/pocket-hid.uf2
   script:

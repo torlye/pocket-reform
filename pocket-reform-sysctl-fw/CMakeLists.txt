@@ -48,3 +48,49 @@ target_compile_options(sysctl PRIVATE -Wall -Wextra -Werror)
 target_compile_definitions(sysctl PUBLIC
 	PICO_XOSC_STARTUP_DELAY_MULTIPLIER=64
 )
+
+if (DEFINED ENV{MNTRE_FIRMWARE_VERSION} AND (NOT MNTRE_FIRMWARE_VERSION))
+	set(MNTRE_FIRMWARE_VERSION $ENV{MNTRE_FIRMWARE_VERSION})
+    set(FWCAB_DEVELOPER_NAME "MNT Research GmbH")
+    set(FWCAB_RELEASE_SOURCE_URL "https://source.mnt.re/reform/pocket-reform/-/tags/${MNTRE_FIRMWARE_VERSION}")
+    set(FWCAB_FIRMWARE_DESCRIPTION "<p>MNT Research Pocket Reform System Controller Firmware Update (Release Build)</p>")
+    set(FWCAB_RELEASE_DESCRIPTION "<p>Release Build</p>")
+    message("Using MNTRE_FIRMWARE_VERSION from environment ('${MNTRE_FIRMWARE_VERSION}')")
+endif ()
+if (NOT MNTRE_FIRMWARE_VERSION)
+	string(TIMESTAMP TODAY "%m%d")
+	set(MNTRE_FIRMWARE_VERSION "${TODAY}")
+    set(FWCAB_DEVELOPER_NAME "J. Random Hacker")
+    if (DEFINED ENV{CI_COMMIT_BRANCH} AND (NOT MNTRE_FIRMWARE_BRANCH))
+      set(MNTRE_FIRMWARE_BRANCH $ENV{CI_COMMIT_BRANCH})
+    else()
+      set(MNTRE_FIRMWARE_BRANCH "FIXME")
+    endif()
+    set(FWCAB_RELEASE_SOURCE_URL "https://source.mnt.re/reform/pocket-reform/branch/${MNTRE_FIRMWARE_BRANCH}")
+    set(FWCAB_FIRMWARE_DESCRIPTION "<p>Development build for testing</p>")
+    set(FWCAB_RELEASE_DESCRIPTION "<p>Development build for testing</p>")
+    message("Using MNTRE_FIRMWARE_VERSION ${MNTRE_FIRMWARE_VERSION} for debug build")
+    message("Using FWCAB_RELEASE_SOURCE_URL ${FWCAB_RELEASE_SOURCE_URL} for debug build")
+endif ()
+
+target_compile_definitions(sysctl PRIVATE -DMNTRE_FIRMWARE_VERSION=${MNTRE_FIRMWARE_VERSION})
+
+pico_set_program_version(sysctl ${MNTRE_FIRMWARE_VERSION})
+set(FWCAB_RELEASE_VERSION ${MNTRE_FIRMWARE_VERSION})
+set(FWCAB_FIRMWARE_ID "com.mntre.pocket_reform.sysctl10.firmware")
+set(FWCAB_FIRMWARE_NAME "Pocket Reform System Controller 1.0 Firmware")
+set(FWCAB_SUMMARY "MNT Pocket Reform System Controller")
+set(FWCAB_CATEGORY "X-EmbeddedController")
+set(FWCAB_FIRMWARE_LICENSE "GPL-3.0-or-later")
+set(FWCAB_RELEASE_VERSION_FORMAT "number")
+set(FWCAB_DEVICE_GUID "df0c9fc8-88d6-5100-ba66-0f5c436fc522")
+set(FWCAB_DEVICE_INTEGRITY "unsigned")
+set(FWCAB_UPDATE_PROTOCOL "com.microsoft.uf2")
+set(FWCAB_HOMEPAGE "https://mntre.com")
+
+add_custom_command(
+	TARGET sysctl
+	POST_BUILD
+    VERBATIM
+    COMMAND "${CMAKE_CURRENT_LIST_DIR}/../scripts/firmware_packager.py" --bin "${CMAKE_CURRENT_BINARY_DIR}/sysctl.uf2" --out "${CMAKE_CURRENT_BINARY_DIR}/sysctl.cab" --firmware-id "${FWCAB_FIRMWARE_ID}" --firmware-name "${FWCAB_FIRMWARE_NAME}" --firmware-description "${FWCAB_FIRMWARE_DESCRIPTION}" --firmware-license "${FWCAB_FIRMWARE_LICENSE}" --device-guid "${FWCAB_DEVICE_GUID}" --device-integrity "${FWCAB_DEVICE_INTEGRITY}" --homepage "${FWCAB_HOMEPAGE}" --firmware-summary "${FWCAB_SUMMARY}" --category "${FWCAB_CATEGORY}" --version-format "${FWCAB_RELEASE_VERSION_FORMAT}" --release-version "${FWCAB_RELEASE_VERSION}" --release-description "${FWCAB_RELEASE_DESCRIPTION}" --release-source-url "${FWCAB_RELEASE_SOURCE_URL}" --developer-name "${FWCAB_DEVELOPER_NAME}" --update-protocol "${FWCAB_UPDATE_PROTOCOL}"
+)

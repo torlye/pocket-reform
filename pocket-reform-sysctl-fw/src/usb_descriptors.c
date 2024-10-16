@@ -33,10 +33,29 @@
 #include "pico/usb_reset_interface.h"
 #include "pico/unique_id.h"
 
-#define USBD_VID (0x2E8A) // Raspberry Pi
-#define USBD_PID (0x000a) // Raspberry Pi Pico SDK CDC
+#define USB_VID_PIDCODES     0x1209
+#define USB_VID_RASPBERRYPI  0x2E8A
+#define USB_PID_MNT_POCKET_REFORM_SYSCTL_10   0x6D07
+#define USB_PID_RASPBERRYPI_PICO_SDK_CDC      0x000A
+
 #define USBD_MANUFACTURER "MNT"
+
+#if 1
+
+#define USBD_VID USB_VID_PIDCODES
+#define USBD_PID USB_PID_MNT_POCKET_REFORM_SYSCTL_10
 #define USBD_PRODUCT "Pocket Reform System Controller 1.0"
+
+#else
+
+/* useful for debug builds */
+
+#define USBD_VID USB_VID_RASPBERRYPI
+#define USBD_PID USB_PID_RASPBERRYPI_PICO_SDK_CDC
+#define USBD_PRODUCT "pocket-reform-sysctl-debug"
+
+#endif
+
 
 #define TUD_RPI_RESET_DESC_LEN  9
 #if !PICO_STDIO_USB_ENABLE_RESET_VIA_VENDOR_INTERFACE

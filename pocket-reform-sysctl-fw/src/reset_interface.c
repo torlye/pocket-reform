@@ -9,12 +9,6 @@
 
 #include "pico/bootrom.h"
 #include "reform_stdio_usb.h"
-
-#if PICO_STDIO_USB_ENABLE_RESET_VIA_VENDOR_INTERFACE && !(PICO_STDIO_USB_RESET_INTERFACE_SUPPORT_RESET_TO_BOOTSEL || PICO_STDIO_USB_RESET_INTERFACE_SUPPORT_RESET_TO_FLASH_BOOT)
-#warning PICO_STDIO_USB_ENABLE_RESET_VIA_VENDOR_INTERFACE has been selected but neither PICO_STDIO_USB_RESET_INTERFACE_SUPPORT_RESET_TO_BOOTSEL nor PICO_STDIO_USB_RESET_INTERFACE_SUPPORT_RESET_TO_FLASH_BOOT have been selected.
-#endif
-
-#if PICO_STDIO_USB_ENABLE_RESET_VIA_VENDOR_INTERFACE
 #include "pico/usb_reset_interface.h"
 #include "hardware/watchdog.h"
 #include "device/usbd_pvt.h"
@@ -47,29 +41,15 @@ static bool resetd_control_xfer_cb(uint8_t __unused rhport, uint8_t stage, tusb_
 
     if (request->wIndex == itf_num) {
 
-#if PICO_STDIO_USB_RESET_INTERFACE_SUPPORT_RESET_TO_BOOTSEL
         if (request->bRequest == RESET_REQUEST_BOOTSEL) {
-#ifdef PICO_STDIO_USB_RESET_BOOTSEL_ACTIVITY_LED
-            uint gpio_mask = 1u << PICO_STDIO_USB_RESET_BOOTSEL_ACTIVITY_LED;
-#else
-            uint gpio_mask = 0u;
-#endif
-#if !PICO_STDIO_USB_RESET_BOOTSEL_FIXED_ACTIVITY_LED
-            if (request->wValue & 0x100) {
-                gpio_mask = 1u << (request->wValue >> 9u);
-            }
-#endif
-            reset_usb_boot(gpio_mask, (request->wValue & 0x7f) | PICO_STDIO_USB_RESET_BOOTSEL_INTERFACE_DISABLE_MASK);
+            reset_usb_boot(0, (request->wValue & 0x7f));
             // does not return, otherwise we'd return true
         }
-#endif
 
-#if PICO_STDIO_USB_RESET_INTERFACE_SUPPORT_RESET_TO_FLASH_BOOT
         if (request->bRequest == RESET_REQUEST_FLASH) {
             watchdog_reboot(0, 0, PICO_STDIO_USB_RESET_RESET_TO_FLASH_DELAY_MS);
             return true;
         }
-#endif
 
     }
     return false;
@@ -97,18 +77,12 @@ usbd_class_driver_t const *usbd_app_driver_get_cb(uint8_t *driver_count) {
     *driver_count = 1;
     return &_resetd_driver;
 }
-#endif
 
 #if PICO_STDIO_USB_ENABLE_RESET_VIA_BAUD_RATE
 // Support for default BOOTSEL reset by changing baud rate
 void tud_cdc_line_coding_cb(__unused uint8_t itf, cdc_line_coding_t const* p_line_coding) {
     if (p_line_coding->bit_rate == PICO_STDIO_USB_RESET_MAGIC_BAUD_RATE) {
-#ifdef PICO_STDIO_USB_RESET_BOOTSEL_ACTIVITY_LED
-        const uint gpio_mask = 1u << PICO_STDIO_USB_RESET_BOOTSEL_ACTIVITY_LED;
-#else
-        const uint gpio_mask = 0u;
-#endif
-        reset_usb_boot(gpio_mask, PICO_STDIO_USB_RESET_BOOTSEL_INTERFACE_DISABLE_MASK);
+        reset_usb_boot(0, 0);
     }
 }
 #endif

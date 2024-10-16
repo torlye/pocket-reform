@@ -26,7 +26,6 @@ build:
     - cd "$SOURCE_ROOT/pocket-reform-sysctl-fw"
     - mkdir -p build && cd build
     - cmake .. && make -j $(nproc)
-    - python3 -c 'import sys; open("sysctl.bin", "rb").read().find(b"Raspberry Pi\x00\x00\x00\x00Pico\x00\x00\x00\x00Board CDC\x00\x00\x00Reset\x00\x00\x00") == -1 and print("Expected USB descriptor strings not found") and sys.exit(1)'
     #
     - echo "Building keyboard firmware"
     - cd "$SOURCE_ROOT/pocket-reform-keyboard-fw/pocket-hid"

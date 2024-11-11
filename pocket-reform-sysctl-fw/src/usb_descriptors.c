@@ -88,7 +88,7 @@
 static const tusb_desc_device_t usbd_desc_device = {
     .bLength = sizeof(tusb_desc_device_t),
     .bDescriptorType = TUSB_DESC_DEVICE,
-    .bcdUSB = 0x0200,
+    .bcdUSB = 0x0210,  // needed to export a BOS descriptor
     .bDeviceClass = TUSB_CLASS_MISC,
     .bDeviceSubClass = MISC_SUBCLASS_COMMON,
     .bDeviceProtocol = MISC_PROTOCOL_IAD,
@@ -121,6 +121,52 @@ static const char *const usbd_desc_str[] = {
     [USBD_STR_CDC] = "Board CDC",
     [USBD_STR_MNTRE_RESET] = MNTRE_RESET_INTERFACE_NAME_STR,
 };
+
+//------------- DS-20 (fwupd) -------------//
+static const uint8_t desc_ds20[] = {
+    0x50, 0x6c, 0x75, 0x67, 0x69, 0x6e, 0x3d, 0x64, 0x66, 0x75, 0x0a, \
+    0x49, 0x63, 0x6f, 0x6e, 0x3d, 0x63, 0x6f, 0x6d, 0x70, 0x75, 0x74, \
+    0x65, 0x72, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 // output of ./contrib/generate-ds20.py foo.quirk -b 32
+};
+
+#define TUD_BOS_DS_20_DESC_LEN   28
+
+#define DS_20_DESC_LEN  (sizeof(desc_ds20))
+#define BOS_TOTAL_LEN      (TUD_BOS_DESC_LEN + TUD_BOS_DS_20_DESC_LEN)
+
+#define TUD_BOS_DS20_UUID   \
+    0x63, 0xec, 0x0a, 0x01, 0x74, 0xf5, 0xcd, 0x52, \
+    0x9d, 0xda, 0x28, 0x52, 0x55, 0x0d, 0x94, 0xf0
+
+#define TUD_BOS_DS20_DESCRIPTOR(_desc_set_len, _vendor_code) \
+    TUD_BOS_PLATFORM_DESCRIPTOR(TUD_BOS_DS20_UUID, U32_TO_U8S_LE(0x0001090e), U16_TO_U8S_LE(_desc_set_len), _vendor_code, 0)
+
+uint8_t const desc_bos[] = {
+    // total length, number of device caps
+    TUD_BOS_DESCRIPTOR(BOS_TOTAL_LEN, 1),
+
+    // DS-20, as used in fwupd
+    TUD_BOS_DS20_DESCRIPTOR(DS_20_DESC_LEN, 0x42)
+};
+
+const uint8_t *tud_descriptor_bos_cb(void) {
+    return desc_bos;
+}
+
+bool tud_vendor_control_xfer_cb(uint8_t rhport, uint8_t stage, tusb_control_request_t const * request) {
+    // nothing to with DATA & ACK stage
+    if (stage != CONTROL_STAGE_SETUP) return true;
+
+    if (request->bRequest == 0x42 && request->wIndex == 7) {
+        // Get DS-20 descriptor
+        return tud_control_xfer(rhport, request, (void*)(uintptr_t) desc_ds20, sizeof(desc_ds20));
+    }
+
+    // stall unknown request
+    return false;
+}
+
+//------------- DS-20 (fwupd) -------------//
 
 const uint8_t *tud_descriptor_device_cb(void) {
     return (const uint8_t *)&usbd_desc_device;

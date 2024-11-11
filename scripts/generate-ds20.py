@@ -11,6 +11,7 @@ import sys
 import argparse
 import configparser
 import base64
+import pathlib
 from typing import List
 
 
@@ -23,6 +24,7 @@ if __name__ == "__main__":
         help="Buffer size in bytes",
     )
     parser.add_argument("-i", "--instance-id", type=str, help="Device instance ID")
+    parser.add_argument("--output", type=pathlib.Path, help="Output file to generate")
     parser.add_argument("filename", action="store", type=str, help="Quirk filename")
 
     args = parser.parse_args()
@@ -66,6 +68,10 @@ if __name__ == "__main__":
         buf = buf.ljust(args.bufsz, b"\0")
 
     # success
-    print("DS20 descriptor control transfer data:")
-    print(", ".join([f"0x{val:02x}" for val in list(buf)]))
-    print(base64.b64encode(buf).decode())
+    if args.output:
+        args.output.parent.mkdir(parents=True, exist_ok=True)
+        args.output.write_text(", ".join([f"0x{val:02x}" for val in list(buf)]))
+    else:
+        print("DS20 descriptor control transfer data:")
+        print(", ".join([f"0x{val:02x}" for val in list(buf)]))
+        print(base64.b64encode(buf).decode())

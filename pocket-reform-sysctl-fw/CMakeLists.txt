@@ -20,10 +20,12 @@ add_executable(sysctl
 	src/reset_interface.c
 	src/reform_stdio_usb.c
 	src/usb_descriptors.c
+	"${CMAKE_CURRENT_BINARY_DIR}/inc-generated/ds20-descriptor.h"
 )
 
 target_include_directories(sysctl PRIVATE
 	inc
+	"${CMAKE_CURRENT_BINARY_DIR}/inc-generated"
 )
 
 target_link_libraries(sysctl 
@@ -92,4 +94,12 @@ add_custom_command(
 	POST_BUILD
     VERBATIM
     COMMAND "${CMAKE_CURRENT_LIST_DIR}/../scripts/firmware_packager.py" --bin "${CMAKE_CURRENT_BINARY_DIR}/sysctl.uf2" --out "${CMAKE_CURRENT_BINARY_DIR}/sysctl.cab" --firmware-id "${FWCAB_FIRMWARE_ID}" --firmware-name "${FWCAB_FIRMWARE_NAME}" --firmware-description "${FWCAB_FIRMWARE_DESCRIPTION}" --firmware-license "${FWCAB_FIRMWARE_LICENSE}" --device-guid "${FWCAB_DEVICE_GUID}" --device-integrity "${FWCAB_DEVICE_INTEGRITY}" --homepage "${FWCAB_HOMEPAGE}" --firmware-summary "${FWCAB_SUMMARY}" --category "${FWCAB_CATEGORY}" --version-format "${FWCAB_RELEASE_VERSION_FORMAT}" --release-version "${FWCAB_RELEASE_VERSION}" --release-description "${FWCAB_RELEASE_DESCRIPTION}" --release-source-url "${FWCAB_RELEASE_SOURCE_URL}" --developer-name "${FWCAB_DEVELOPER_NAME}" --update-protocol "${FWCAB_UPDATE_PROTOCOL}"
+)
+
+configure_file("ds20.quirk.tpl" "ds20.quirk" @ONLY)
+
+add_custom_command(
+	OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/inc-generated/ds20-descriptor.h"
+	COMMAND "${CMAKE_CURRENT_LIST_DIR}/../scripts/generate-ds20.py" --output "${CMAKE_CURRENT_BINARY_DIR}/inc-generated/ds20-descriptor.h" "${CMAKE_CURRENT_BINARY_DIR}/ds20.quirk"
+	DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/ds20.quirk"
 )

@@ -55,7 +55,7 @@ if (DEFINED ENV{MNTRE_FIRMWARE_VERSION} AND (NOT MNTRE_FIRMWARE_VERSION))
     set(FWCAB_DEVELOPER_NAME "MNT Research GmbH")
     set(FWCAB_RELEASE_SOURCE_URL "https://source.mnt.re/reform/pocket-reform/-/tags/${MNTRE_FIRMWARE_VERSION}")
     set(FWCAB_FIRMWARE_DESCRIPTION "<p>MNT Research Pocket Reform System Controller Firmware Update (Release Build)</p>")
-    set(FWCAB_RELEASE_DESCRIPTION "<p>Release Build</p>")
+    set(FWCAB_RELEASE_DESCRIPTION_FILE "${CMAKE_CURRENT_LIST_DIR}/description-release.html")
     message("Using MNTRE_FIRMWARE_VERSION from environment ('${MNTRE_FIRMWARE_VERSION}')")
 endif ()
 if (NOT MNTRE_FIRMWARE_VERSION)
@@ -69,7 +69,7 @@ if (NOT MNTRE_FIRMWARE_VERSION)
     endif()
     set(FWCAB_RELEASE_SOURCE_URL "https://source.mnt.re/reform/pocket-reform/branch/${MNTRE_FIRMWARE_BRANCH}")
     set(FWCAB_FIRMWARE_DESCRIPTION "<p>Development build for testing</p>")
-    set(FWCAB_RELEASE_DESCRIPTION "<p>Development build for testing</p>")
+    set(FWCAB_RELEASE_DESCRIPTION_FILE "${CMAKE_CURRENT_LIST_DIR}/description-debug.html")
     message("Using MNTRE_FIRMWARE_VERSION ${MNTRE_FIRMWARE_VERSION} for debug build")
     message("Using FWCAB_RELEASE_SOURCE_URL ${FWCAB_RELEASE_SOURCE_URL} for debug build")
 endif ()
@@ -93,7 +93,7 @@ add_custom_command(
 	TARGET sysctl
 	POST_BUILD
     VERBATIM
-    COMMAND "${CMAKE_CURRENT_LIST_DIR}/../scripts/firmware_packager.py" --bin "${CMAKE_CURRENT_BINARY_DIR}/sysctl.uf2" --out "${CMAKE_CURRENT_BINARY_DIR}/sysctl.cab" --firmware-id "${FWCAB_FIRMWARE_ID}" --firmware-name "${FWCAB_FIRMWARE_NAME}" --firmware-description "${FWCAB_FIRMWARE_DESCRIPTION}" --firmware-license "${FWCAB_FIRMWARE_LICENSE}" --device-guid "${FWCAB_DEVICE_GUID}" --device-integrity "${FWCAB_DEVICE_INTEGRITY}" --homepage "${FWCAB_HOMEPAGE}" --firmware-summary "${FWCAB_SUMMARY}" --category "${FWCAB_CATEGORY}" --version-format "${FWCAB_RELEASE_VERSION_FORMAT}" --release-version "${FWCAB_RELEASE_VERSION}" --release-description "${FWCAB_RELEASE_DESCRIPTION}" --release-source-url "${FWCAB_RELEASE_SOURCE_URL}" --developer-name "${FWCAB_DEVELOPER_NAME}" --update-protocol "${FWCAB_UPDATE_PROTOCOL}"
+    COMMAND "${CMAKE_CURRENT_LIST_DIR}/../scripts/firmware_packager.py" --bin "${CMAKE_CURRENT_BINARY_DIR}/sysctl.uf2" --out "${CMAKE_CURRENT_BINARY_DIR}/sysctl.cab" --firmware-id "${FWCAB_FIRMWARE_ID}" --firmware-name "${FWCAB_FIRMWARE_NAME}" --firmware-description "${FWCAB_FIRMWARE_DESCRIPTION}" --firmware-license "${FWCAB_FIRMWARE_LICENSE}" --device-guid "${FWCAB_DEVICE_GUID}" --device-integrity "${FWCAB_DEVICE_INTEGRITY}" --homepage "${FWCAB_HOMEPAGE}" --firmware-summary "${FWCAB_SUMMARY}" --category "${FWCAB_CATEGORY}" --version-format "${FWCAB_RELEASE_VERSION_FORMAT}" --release-version "${FWCAB_RELEASE_VERSION}" --release-description-file "${FWCAB_RELEASE_DESCRIPTION_FILE}" --release-source-url "${FWCAB_RELEASE_SOURCE_URL}" --developer-name "${FWCAB_DEVELOPER_NAME}" --update-protocol "${FWCAB_UPDATE_PROTOCOL}"
 )
 
 configure_file("ds20.quirk.tpl" "ds20.quirk" @ONLY)

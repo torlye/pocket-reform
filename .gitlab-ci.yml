@@ -26,7 +26,7 @@ build:
     - echo "Building sysctl firmware"
     - cd "$SOURCE_ROOT/pocket-reform-sysctl-fw"
     - mkdir -p build && cd build
-    - cmake .. && make -j $(nproc)
+    - MNTRE_FIRMWARE_VERSION="${VERSION}" cmake .. && make -j $(nproc)
     #
     - echo "Building keyboard firmware"
     - cd "$SOURCE_ROOT/pocket-reform-keyboard-fw/pocket-hid"

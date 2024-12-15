@@ -12,6 +12,7 @@ import os
 import shutil
 import tempfile
 import time
+from xml.sax.saxutils import escape as escxml
 
 
 @contextlib.contextmanager
@@ -60,6 +61,10 @@ firmware_metainfo_template = """<?xml version="1.0" encoding="UTF-8"?>
 
 def make_firmware_metainfo(firmware_info, dst):
     local_info = vars(firmware_info)
+    local_info = {
+        key: value if key == 'release_description' or value is None else escxml(value)
+        for key, value in local_info.items()
+    }
     firmware_metainfo = firmware_metainfo_template.format(
         **local_info, timestamp=int(time.time())
     )
@@ -166,7 +171,7 @@ if __name__ == "__main__":
         required=True,
     )
     parser.add_argument(
-        "--release-description", help="Description of the firmware release"
+        "--release-description", help="Description of the firmware release (HTML)"
     )
     parser.add_argument(
         "--bin",

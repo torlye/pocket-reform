@@ -6,7 +6,6 @@
 #include <ctype.h>
 #include "pico/stdlib.h"
 #include "pico/binary_info.h"
-#include "pico/sleep.h"
 #include "hardware/i2c.h"
 #include "hardware/spi.h"
 #include "hardware/irq.h"

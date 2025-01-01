@@ -110,7 +110,7 @@ int execute_menu_function(int keycode) {
     rp2040_reset();
   }
   else if (keycode == KEY_U) {
-    // reset the MCU
+    // reset the USB stack
     tud_disconnect();
     sleep_ms(10);
     tud_connect();

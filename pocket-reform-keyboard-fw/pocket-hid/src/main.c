@@ -460,8 +460,6 @@ int process_keyboard(uint8_t* resulting_scancodes) {
         } else if (keycode == KEY_COMPOSE) {
           hyper_key = 1;
           active_matrix = matrix_fn;
-        } else if (keycode == KEY_LEFTSHIFT) {
-          shift_key = 1;
         } else {
           if (active_menu_mode) {
             // not holding the same key?
@@ -479,6 +477,10 @@ int process_keyboard(uint8_t* resulting_scancodes) {
             }
           }
         }
+
+        if (keycode == KEY_LEFTSHIFT) {
+          shift_key = 1;
+        }
       } else {
         // key not pressed
         if (keycode == KEY_COMPOSE) {
@@ -487,7 +489,9 @@ int process_keyboard(uint8_t* resulting_scancodes) {
           hyper_enter_long_press_start_ms = 0;
         } else if (keycode == KEY_ENTER) {
           hyper_enter_long_press_start_ms = 0;
-        } else if (keycode == KEY_LEFTSHIFT) {
+        }
+
+        if (keycode == KEY_LEFTSHIFT) {
           shift_key = 0;
         }
       }

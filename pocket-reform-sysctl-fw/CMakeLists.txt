@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.13)
 
 include(lib/pico_sdk_import.cmake)
 include(lib/pico_extras_import.cmake)
+set(SHARED_FW_INC "${CMAKE_CURRENT_LIST_DIR}/../pocket-reform-shared-fw/inc")
+set(SHARED_FW_SRC "${CMAKE_CURRENT_LIST_DIR}/../pocket-reform-shared-fw/src")
 
 project(pocket_sysctl_fw)
 
@@ -17,15 +19,16 @@ add_executable(sysctl
 	src/spi_com.c
 	src/uart_com.c
 	src/pd_com.c
-	src/reset_interface.c
-	src/reform_stdio_usb.c
 	src/usb_descriptors.c
 	"${CMAKE_CURRENT_BINARY_DIR}/inc-generated/ds20-descriptor.h"
+	"${SHARED_FW_SRC}/reset_interface.c"
+	"${SHARED_FW_SRC}/reform_stdio_usb.c"
 )
 
 target_include_directories(sysctl PRIVATE
 	inc
 	"${CMAKE_CURRENT_BINARY_DIR}/inc-generated"
+	"${SHARED_FW_INC}"
 )
 
 target_link_libraries(sysctl 

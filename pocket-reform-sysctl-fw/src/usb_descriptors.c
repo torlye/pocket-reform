@@ -30,8 +30,8 @@
 
 #include "tusb.h"
 #include "reform_stdio_usb.h"
-#include "pico/usb_reset_interface.h"
 #include "pico/unique_id.h"
+#include "mntre_reset_priv.h"
 
 #define USB_VID_PIDCODES     0x1209
 #define USB_VID_RASPBERRYPI  0x2E8A
@@ -57,12 +57,7 @@
 #endif
 
 
-#define TUD_RPI_RESET_DESC_LEN  9
-#if !PICO_STDIO_USB_ENABLE_RESET_VIA_VENDOR_INTERFACE
-#define USBD_DESC_LEN (TUD_CONFIG_DESC_LEN + TUD_CDC_DESC_LEN)
-#else
-#define USBD_DESC_LEN (TUD_CONFIG_DESC_LEN + TUD_CDC_DESC_LEN + TUD_RPI_RESET_DESC_LEN)
-#endif
+#define USBD_DESC_LEN (TUD_CONFIG_DESC_LEN + TUD_CDC_DESC_LEN + MNTRE_RESET_TUD_DESC_LEN)
 #if !PICO_STDIO_USB_DEVICE_SELF_POWERED
 #define USBD_CONFIGURATION_DESCRIPTOR_ATTRIBUTE (0)
 #define USBD_MAX_POWER_MA (250)
@@ -71,13 +66,9 @@
 #define USBD_MAX_POWER_MA (1)
 #endif
 
-#define USBD_ITF_CDC       (0) // needs 2 interfaces
-#if !PICO_STDIO_USB_ENABLE_RESET_VIA_VENDOR_INTERFACE
-#define USBD_ITF_MAX       (2)
-#else
-#define USBD_ITF_RPI_RESET (2)
-#define USBD_ITF_MAX       (3)
-#endif
+#define USBD_ITF_CDC         (0) // needs 2 interfaces
+#define USBD_ITF_MNTRE_RESET (2)
+#define USBD_ITF_MAX         (3)
 
 #define USBD_CDC_EP_CMD (0x81)
 #define USBD_CDC_EP_OUT (0x02)
@@ -90,30 +81,26 @@
 #define USBD_STR_PRODUCT (0x02)
 #define USBD_STR_SERIAL (0x03)
 #define USBD_STR_CDC (0x04)
-#define USBD_STR_RPI_RESET (0x05)
+#define USBD_STR_MNTRE_RESET (0x05)
 
 // Note: descriptors returned from callbacks must exist long enough for transfer to complete
 
 static const tusb_desc_device_t usbd_desc_device = {
     .bLength = sizeof(tusb_desc_device_t),
     .bDescriptorType = TUSB_DESC_DEVICE,
-    .bcdUSB = 0x0200,
+    .bcdUSB = 0x0210,  // needed to export a BOS descriptor
     .bDeviceClass = TUSB_CLASS_MISC,
     .bDeviceSubClass = MISC_SUBCLASS_COMMON,
     .bDeviceProtocol = MISC_PROTOCOL_IAD,
     .bMaxPacketSize0 = CFG_TUD_ENDPOINT0_SIZE,
     .idVendor = USBD_VID,
     .idProduct = USBD_PID,
-    .bcdDevice = 0x0100,
+    .bcdDevice = 0x0001,
     .iManufacturer = USBD_STR_MANUF,
     .iProduct = USBD_STR_PRODUCT,
     .iSerialNumber = USBD_STR_SERIAL,
     .bNumConfigurations = 1,
 };
-
-#define TUD_RPI_RESET_DESCRIPTOR(_itfnum, _stridx) \
-  /* Interface */\
-  9, TUSB_DESC_INTERFACE, _itfnum, 0, 0, TUSB_CLASS_VENDOR_SPECIFIC, RESET_INTERFACE_SUBCLASS, RESET_INTERFACE_PROTOCOL, _stridx,
 
 static const uint8_t usbd_desc_cfg[USBD_DESC_LEN] = {
     TUD_CONFIG_DESCRIPTOR(1, USBD_ITF_MAX, USBD_STR_0, USBD_DESC_LEN,
@@ -122,9 +109,7 @@ static const uint8_t usbd_desc_cfg[USBD_DESC_LEN] = {
     TUD_CDC_DESCRIPTOR(USBD_ITF_CDC, USBD_STR_CDC, USBD_CDC_EP_CMD,
         USBD_CDC_CMD_MAX_SIZE, USBD_CDC_EP_OUT, USBD_CDC_EP_IN, USBD_CDC_IN_OUT_MAX_SIZE),
 
-#if PICO_STDIO_USB_ENABLE_RESET_VIA_VENDOR_INTERFACE
-    TUD_RPI_RESET_DESCRIPTOR(USBD_ITF_RPI_RESET, USBD_STR_RPI_RESET)
-#endif
+    MNTRE_RESET_TUD_DESCRIPTOR(USBD_ITF_MNTRE_RESET, USBD_STR_MNTRE_RESET)
 };
 
 static char usbd_serial_str[PICO_UNIQUE_BOARD_ID_SIZE_BYTES * 2 + 1];
@@ -134,10 +119,52 @@ static const char *const usbd_desc_str[] = {
     [USBD_STR_PRODUCT] = USBD_PRODUCT,
     [USBD_STR_SERIAL] = usbd_serial_str,
     [USBD_STR_CDC] = "Board CDC",
-#if PICO_STDIO_USB_ENABLE_RESET_VIA_VENDOR_INTERFACE
-    [USBD_STR_RPI_RESET] = "Reset",
-#endif
+    [USBD_STR_MNTRE_RESET] = MNTRE_RESET_INTERFACE_NAME_STR,
 };
+
+//------------- DS-20 (fwupd) -------------//
+static const uint8_t desc_ds20[] = {
+#include "ds20-descriptor.h"
+};
+
+#define TUD_BOS_DS_20_DESC_LEN   28
+
+#define DS_20_DESC_LEN  (sizeof(desc_ds20))
+#define BOS_TOTAL_LEN      (TUD_BOS_DESC_LEN + TUD_BOS_DS_20_DESC_LEN)
+
+#define TUD_BOS_DS20_UUID   \
+    0x63, 0xec, 0x0a, 0x01, 0x74, 0xf5, 0xcd, 0x52, \
+    0x9d, 0xda, 0x28, 0x52, 0x55, 0x0d, 0x94, 0xf0
+
+#define TUD_BOS_DS20_DESCRIPTOR(_desc_set_len, _vendor_code) \
+    TUD_BOS_PLATFORM_DESCRIPTOR(TUD_BOS_DS20_UUID, U32_TO_U8S_LE(0x0001090e), U16_TO_U8S_LE(_desc_set_len), _vendor_code, 0)
+
+uint8_t const desc_bos[] = {
+    // total length, number of device caps
+    TUD_BOS_DESCRIPTOR(BOS_TOTAL_LEN, 1),
+
+    // DS-20, as used in fwupd
+    TUD_BOS_DS20_DESCRIPTOR(DS_20_DESC_LEN, 0x42)
+};
+
+const uint8_t *tud_descriptor_bos_cb(void) {
+    return desc_bos;
+}
+
+bool tud_vendor_control_xfer_cb(uint8_t rhport, uint8_t stage, tusb_control_request_t const * request) {
+    // nothing to with DATA & ACK stage
+    if (stage != CONTROL_STAGE_SETUP) return true;
+
+    if (request->bRequest == 0x42 && request->wIndex == 7) {
+        // Get DS-20 descriptor
+        return tud_control_xfer(rhport, request, (void*)(uintptr_t) desc_ds20, sizeof(desc_ds20));
+    }
+
+    // stall unknown request
+    return false;
+}
+
+//------------- DS-20 (fwupd) -------------//
 
 const uint8_t *tud_descriptor_device_cb(void) {
     return (const uint8_t *)&usbd_desc_device;

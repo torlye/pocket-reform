@@ -2,7 +2,7 @@
 set -euxo pipefail
 
 # fill $@ array with options passed to apt
-set -- build-essential avr-libc gcc-avr gcc-arm-none-eabi libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib libusb-1.0-0-dev cmake python3
+set -- build-essential avr-libc gcc-avr gcc-arm-none-eabi libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib libusb-1.0-0-dev cmake python3 gcab
 
 if [ "${CI:-}" = "true" ]; then
     set -- "$@" git ca-certificates

@@ -63,22 +63,26 @@
 #define USBD_MAX_POWER_MA (1)
 #endif
 
-#define USBD_ITF_CDC         (0) // needs 2 interfaces
-#define USBD_ITF_MNTRE_RESET (2)
-#define USBD_ITF_MAX         (3)
-
 #define USBD_CDC_EP_CMD (0x81)
 #define USBD_CDC_EP_OUT (0x02)
 #define USBD_CDC_EP_IN (0x82)
 #define USBD_CDC_CMD_MAX_SIZE (8)
 #define USBD_CDC_IN_OUT_MAX_SIZE (64)
 
-#define USBD_STR_0 (0x00)
-#define USBD_STR_MANUF (0x01)
-#define USBD_STR_PRODUCT (0x02)
-#define USBD_STR_SERIAL (0x03)
-#define USBD_STR_CDC (0x04)
-#define USBD_STR_MNTRE_RESET (0x05)
+enum {
+    USBD_ITF_CDC = 0, // needs 2 interfaces
+    USBD_ITF_MNTRE_RESET = 2,
+    USBD_ITF_MAX,
+};
+
+enum {
+    USBD_STR_0 = 0,
+    USBD_STR_MANUFACTURER,
+    USBD_STR_PRODUCT,
+    USBD_STR_SERIAL,
+    USBD_STR_MNTRE_RESET,
+    USBD_STR_CDC,
+};
 
 // Note: descriptors returned from callbacks must exist long enough for transfer to complete
 
@@ -93,7 +97,7 @@ static const tusb_desc_device_t usbd_desc_device = {
     .idVendor = USBD_VID,
     .idProduct = USBD_PID,
     .bcdDevice = 0x0001,
-    .iManufacturer = USBD_STR_MANUF,
+    .iManufacturer = USBD_STR_MANUFACTURER,
     .iProduct = USBD_STR_PRODUCT,
     .iSerialNumber = USBD_STR_SERIAL,
     .bNumConfigurations = 1,
@@ -112,11 +116,11 @@ static const uint8_t usbd_desc_cfg[USBD_DESC_LEN] = {
 static char usbd_serial_str[PICO_UNIQUE_BOARD_ID_SIZE_BYTES * 2 + 1];
 
 static const char *const usbd_desc_str[] = {
-    [USBD_STR_MANUF] = USBD_MANUFACTURER,
+    [USBD_STR_MANUFACTURER] = USBD_MANUFACTURER,
     [USBD_STR_PRODUCT] = USBD_PRODUCT,
     [USBD_STR_SERIAL] = usbd_serial_str,
-    [USBD_STR_CDC] = "Board CDC",
     [USBD_STR_MNTRE_RESET] = MNTRE_RESET_INTERFACE_NAME_STR,
+    [USBD_STR_CDC] = "Board CDC",
 };
 
 //------------- DS-20 (fwupd) -------------//

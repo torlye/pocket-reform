@@ -31,4 +31,4 @@ build:
     - echo "Building keyboard firmware"
     - cd "$SOURCE_ROOT/pocket-reform-keyboard-fw/pocket-hid"
     - mkdir -p build && cd build
-    - cmake -DFAMILY=rp2040 .. && make -j $(nproc)
+    - MNTRE_FIRMWARE_VERSION="${VERSION}" cmake -DFAMILY=rp2040 .. && make -j $(nproc)

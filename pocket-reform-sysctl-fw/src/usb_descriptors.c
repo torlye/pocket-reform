@@ -29,22 +29,19 @@
  */
 
 #include "tusb.h"
+#include "mntre_usbids.h"
+#include "usb_bos.h"
 #include "reform_stdio_usb.h"
 #include "pico/unique_id.h"
 #include "mntre_reset_priv.h"
 
-#define USB_VID_PIDCODES     0x1209
-#define USB_VID_RASPBERRYPI  0x2E8A
-#define USB_PID_MNT_POCKET_REFORM_SYSCTL_10   0x6D07
-#define USB_PID_RASPBERRYPI_PICO_SDK_CDC      0x000A
-
-#define USBD_MANUFACTURER "MNT"
+#define USBD_MANUFACTURER USB_STR_MANUFACTURER_MNT
 
 #if 1
 
 #define USBD_VID USB_VID_PIDCODES
 #define USBD_PID USB_PID_MNT_POCKET_REFORM_SYSCTL_10
-#define USBD_PRODUCT "Pocket Reform System Controller 1.0"
+#define USBD_PRODUCT USB_STR_PRODUCT_MNT_POCKET_REFORM_SYSCTL_10
 
 #else
 
@@ -66,29 +63,33 @@
 #define USBD_MAX_POWER_MA (1)
 #endif
 
-#define USBD_ITF_CDC         (0) // needs 2 interfaces
-#define USBD_ITF_MNTRE_RESET (2)
-#define USBD_ITF_MAX         (3)
-
 #define USBD_CDC_EP_CMD (0x81)
 #define USBD_CDC_EP_OUT (0x02)
 #define USBD_CDC_EP_IN (0x82)
 #define USBD_CDC_CMD_MAX_SIZE (8)
 #define USBD_CDC_IN_OUT_MAX_SIZE (64)
 
-#define USBD_STR_0 (0x00)
-#define USBD_STR_MANUF (0x01)
-#define USBD_STR_PRODUCT (0x02)
-#define USBD_STR_SERIAL (0x03)
-#define USBD_STR_CDC (0x04)
-#define USBD_STR_MNTRE_RESET (0x05)
+enum {
+    USBD_ITF_CDC = 0, // needs 2 interfaces
+    USBD_ITF_MNTRE_RESET = 2,
+    USBD_ITF_MAX,
+};
+
+enum {
+    USBD_STR_0 = 0,
+    USBD_STR_MANUFACTURER,
+    USBD_STR_PRODUCT,
+    USBD_STR_SERIAL,
+    USBD_STR_MNTRE_RESET,
+    USBD_STR_CDC,
+};
 
 // Note: descriptors returned from callbacks must exist long enough for transfer to complete
 
 static const tusb_desc_device_t usbd_desc_device = {
     .bLength = sizeof(tusb_desc_device_t),
     .bDescriptorType = TUSB_DESC_DEVICE,
-    .bcdUSB = 0x0210,  // needed to export a BOS descriptor
+    .bcdUSB = BCD_USB_MIN_FOR_BOS,
     .bDeviceClass = TUSB_CLASS_MISC,
     .bDeviceSubClass = MISC_SUBCLASS_COMMON,
     .bDeviceProtocol = MISC_PROTOCOL_IAD,
@@ -96,7 +97,7 @@ static const tusb_desc_device_t usbd_desc_device = {
     .idVendor = USBD_VID,
     .idProduct = USBD_PID,
     .bcdDevice = 0x0001,
-    .iManufacturer = USBD_STR_MANUF,
+    .iManufacturer = USBD_STR_MANUFACTURER,
     .iProduct = USBD_STR_PRODUCT,
     .iSerialNumber = USBD_STR_SERIAL,
     .bNumConfigurations = 1,
@@ -115,11 +116,11 @@ static const uint8_t usbd_desc_cfg[USBD_DESC_LEN] = {
 static char usbd_serial_str[PICO_UNIQUE_BOARD_ID_SIZE_BYTES * 2 + 1];
 
 static const char *const usbd_desc_str[] = {
-    [USBD_STR_MANUF] = USBD_MANUFACTURER,
+    [USBD_STR_MANUFACTURER] = USBD_MANUFACTURER,
     [USBD_STR_PRODUCT] = USBD_PRODUCT,
     [USBD_STR_SERIAL] = usbd_serial_str,
-    [USBD_STR_CDC] = "Board CDC",
     [USBD_STR_MNTRE_RESET] = MNTRE_RESET_INTERFACE_NAME_STR,
+    [USBD_STR_CDC] = "Board CDC",
 };
 
 //------------- DS-20 (fwupd) -------------//
@@ -127,24 +128,16 @@ static const uint8_t desc_ds20[] = {
 #include "ds20-descriptor.h"
 };
 
-#define TUD_BOS_DS_20_DESC_LEN   28
-
-#define DS_20_DESC_LEN  (sizeof(desc_ds20))
-#define BOS_TOTAL_LEN      (TUD_BOS_DESC_LEN + TUD_BOS_DS_20_DESC_LEN)
-
-#define TUD_BOS_DS20_UUID   \
-    0x63, 0xec, 0x0a, 0x01, 0x74, 0xf5, 0xcd, 0x52, \
-    0x9d, 0xda, 0x28, 0x52, 0x55, 0x0d, 0x94, 0xf0
-
-#define TUD_BOS_DS20_DESCRIPTOR(_desc_set_len, _vendor_code) \
-    TUD_BOS_PLATFORM_DESCRIPTOR(TUD_BOS_DS20_UUID, U32_TO_U8S_LE(0x0001090e), U16_TO_U8S_LE(_desc_set_len), _vendor_code, 0)
+#define DS_20_DESC_LEN           (sizeof(desc_ds20))
+#define BOS_TOTAL_LEN            (TUD_BOS_DESC_LEN + TUD_BOS_DS_20_DESC_LEN)
+#define DS_20_VENDOR_CODE        0x42
 
 uint8_t const desc_bos[] = {
     // total length, number of device caps
     TUD_BOS_DESCRIPTOR(BOS_TOTAL_LEN, 1),
 
     // DS-20, as used in fwupd
-    TUD_BOS_DS20_DESCRIPTOR(DS_20_DESC_LEN, 0x42)
+    TUD_BOS_DS20_DESCRIPTOR(DS_20_DESC_LEN, DS_20_VENDOR_CODE)
 };
 
 const uint8_t *tud_descriptor_bos_cb(void) {

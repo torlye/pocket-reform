@@ -94,6 +94,7 @@
 #define CFG_TUD_CDC               0
 #define CFG_TUD_MSC               0
 #define CFG_TUD_MIDI              0
+// We use a vendor specific interface but with our own driver
 #define CFG_TUD_VENDOR            0
 
 // HID buffer size Should be sufficient to hold ID (if any) + Data

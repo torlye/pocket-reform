@@ -4,13 +4,15 @@ include(lib/pico_sdk_import.cmake)
 include(lib/pico_extras_import.cmake)
 set(SHARED_FW_INC "${CMAKE_CURRENT_LIST_DIR}/../pocket-reform-shared-fw/inc")
 set(SHARED_FW_SRC "${CMAKE_CURRENT_LIST_DIR}/../pocket-reform-shared-fw/src")
+set(SCRIPTS "${CMAKE_CURRENT_LIST_DIR}/../scripts")
 
-project(pocket_sysctl_fw)
+set(PROJECT sysctl)
+project(${PROJECT})
 
 # initialize the Raspberry Pi Pico SDK
 pico_sdk_init()
 
-add_executable(sysctl
+add_executable(${PROJECT}
 	src/sysctl.c
 	src/max17320.c
 	src/mp2650.c
@@ -25,18 +27,18 @@ add_executable(sysctl
 	"${SHARED_FW_SRC}/reform_stdio_usb.c"
 )
 
-target_include_directories(sysctl PRIVATE
+target_include_directories(${PROJECT} PRIVATE
 	inc
 	"${CMAKE_CURRENT_BINARY_DIR}/inc-generated"
 	"${SHARED_FW_INC}"
 )
 
-target_link_libraries(sysctl 
-	pico_stdlib 
-	hardware_i2c 
-	hardware_spi 
-	hardware_rtc 
-	hardware_sleep 
+target_link_libraries(${PROJECT}
+	pico_stdlib
+	hardware_i2c
+	hardware_spi
+	hardware_rtc
+	hardware_sleep
 	hardware_pwm
 	pico_stdio
 	pico_time
@@ -44,12 +46,12 @@ target_link_libraries(sysctl
 	tinyusb_device
 )
 
-pico_enable_stdio_uart(sysctl 0)
-pico_add_extra_outputs(sysctl)
+pico_enable_stdio_uart(${PROJECT} 0)
+pico_add_extra_outputs(${PROJECT})
 
-target_compile_definitions(sysctl PUBLIC PICO_RP2040_USB_DEVICE_ENUMERATION_FIX=1)
-target_compile_options(sysctl PRIVATE -Wall -Wextra -Werror)
-target_compile_definitions(sysctl PUBLIC
+target_compile_definitions(${PROJECT} PUBLIC PICO_RP2040_USB_DEVICE_ENUMERATION_FIX=1)
+target_compile_options(${PROJECT} PRIVATE -Wall -Wextra -Werror)
+target_compile_definitions(${PROJECT} PUBLIC
 	PICO_XOSC_STARTUP_DELAY_MULTIPLIER=64
 )
 
@@ -77,9 +79,9 @@ if (NOT MNTRE_FIRMWARE_VERSION)
     message("Using FWCAB_RELEASE_SOURCE_URL ${FWCAB_RELEASE_SOURCE_URL} for debug build")
 endif ()
 
-target_compile_definitions(sysctl PRIVATE -DMNTRE_FIRMWARE_VERSION=${MNTRE_FIRMWARE_VERSION})
+target_compile_definitions(${PROJECT} PRIVATE -DMNTRE_FIRMWARE_VERSION=${MNTRE_FIRMWARE_VERSION})
 
-pico_set_program_version(sysctl ${MNTRE_FIRMWARE_VERSION})
+pico_set_program_version(${PROJECT} ${MNTRE_FIRMWARE_VERSION})
 set(FWCAB_RELEASE_VERSION ${MNTRE_FIRMWARE_VERSION})
 set(FWCAB_FIRMWARE_ID "com.mntre.pocket_reform.sysctl10.firmware")
 set(FWCAB_FIRMWARE_NAME "Pocket Reform System Controller 1.0 Firmware")
@@ -93,16 +95,16 @@ set(FWCAB_UPDATE_PROTOCOL "com.microsoft.uf2")
 set(FWCAB_HOMEPAGE "https://mntre.com")
 
 add_custom_command(
-	TARGET sysctl
+	TARGET ${PROJECT}
 	POST_BUILD
     VERBATIM
-    COMMAND "${CMAKE_CURRENT_LIST_DIR}/../scripts/firmware_packager.py" --bin "${CMAKE_CURRENT_BINARY_DIR}/sysctl.uf2" --out "${CMAKE_CURRENT_BINARY_DIR}/sysctl.cab" --firmware-id "${FWCAB_FIRMWARE_ID}" --firmware-name "${FWCAB_FIRMWARE_NAME}" --firmware-description "${FWCAB_FIRMWARE_DESCRIPTION}" --firmware-license "${FWCAB_FIRMWARE_LICENSE}" --device-guid "${FWCAB_DEVICE_GUID}" --device-integrity "${FWCAB_DEVICE_INTEGRITY}" --homepage "${FWCAB_HOMEPAGE}" --firmware-summary "${FWCAB_SUMMARY}" --category "${FWCAB_CATEGORY}" --version-format "${FWCAB_RELEASE_VERSION_FORMAT}" --release-version "${FWCAB_RELEASE_VERSION}" --release-description-file "${FWCAB_RELEASE_DESCRIPTION_FILE}" --release-source-url "${FWCAB_RELEASE_SOURCE_URL}" --developer-name "${FWCAB_DEVELOPER_NAME}" --update-protocol "${FWCAB_UPDATE_PROTOCOL}"
+    COMMAND "${SCRIPTS}/firmware_packager.py" --bin "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT}.uf2" --out "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT}.cab" --firmware-id "${FWCAB_FIRMWARE_ID}" --firmware-name "${FWCAB_FIRMWARE_NAME}" --firmware-description "${FWCAB_FIRMWARE_DESCRIPTION}" --firmware-license "${FWCAB_FIRMWARE_LICENSE}" --device-guid "${FWCAB_DEVICE_GUID}" --device-integrity "${FWCAB_DEVICE_INTEGRITY}" --homepage "${FWCAB_HOMEPAGE}" --firmware-summary "${FWCAB_SUMMARY}" --category "${FWCAB_CATEGORY}" --version-format "${FWCAB_RELEASE_VERSION_FORMAT}" --release-version "${FWCAB_RELEASE_VERSION}" --release-description-file "${FWCAB_RELEASE_DESCRIPTION_FILE}" --release-source-url "${FWCAB_RELEASE_SOURCE_URL}" --developer-name "${FWCAB_DEVELOPER_NAME}" --update-protocol "${FWCAB_UPDATE_PROTOCOL}"
 )
 
 configure_file("ds20.quirk.tpl" "ds20.quirk" @ONLY)
 
 add_custom_command(
 	OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/inc-generated/ds20-descriptor.h"
-	COMMAND "${CMAKE_CURRENT_LIST_DIR}/../scripts/generate-ds20.py" --output "${CMAKE_CURRENT_BINARY_DIR}/inc-generated/ds20-descriptor.h" "${CMAKE_CURRENT_BINARY_DIR}/ds20.quirk"
+	COMMAND "${SCRIPTS}/generate-ds20.py" --output "${CMAKE_CURRENT_BINARY_DIR}/inc-generated/ds20-descriptor.h" "${CMAKE_CURRENT_BINARY_DIR}/ds20.quirk"
 	DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/ds20.quirk"
 )

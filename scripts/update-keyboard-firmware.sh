@@ -13,13 +13,23 @@ fi
 
 set -e
 
-# make sure we have picotool
-apt install -y picotool
-
 # identify keyboard on usb bus
 COUNT=$(lsusb | grep $USBDEV | wc -l)
 if [[ $COUNT != 1 ]];
-then echo "MNT Pocket Reform Input not found or more than one found, exiting."
+then 
+	echo ""
+	echo "MNT Pocket Reform Input in RP2 Boot mode not found or more than one found, exiting."
+	echo ""
+	echo "To update the keyboard/trackball firmware, do this:"
+	echo ""
+	echo "- Make sure you have picotool installed (sudo apt install picotool)."
+	echo "- Connect an external keyboard so you can still type when the keyboard is in firmware update mode."
+	echo "- On the Pocket Reform's internal keyboard, press Hyper+Enter to open the OLED menu and then the X key to enter flashing mode."
+	echo "- Run this script again:"
+	echo ""
+	echo "    cd scripts"
+	echo "    sudo ./update-keyboard-firmware.sh"
+	echo ""
 	exit 1
 fi
 

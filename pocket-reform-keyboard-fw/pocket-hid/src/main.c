@@ -20,6 +20,7 @@
 #include "hardware/i2c.h"
 #include "hardware/irq.h"
 #include "hardware/pio.h"
+#include "hardware/watchdog.h"
 
 #include "usb_descriptors.h"
 #include "oled.h"
@@ -192,8 +193,19 @@ int main(void)
   led_set_brightness(0x0);
 
   gfx_init(false);
-  //anim_hello();
+  
+  // watchdog crash recovery
+  if (watchdog_caused_reboot()) {
+    led_set(0x00ff00);
+    gfx_clear();
+    gfx_on();
+    gfx_poke_str(0, 0, "Recovered from");
+    gfx_poke_str(0, 1, "crash.");
+    gfx_flush();
+  }
+  watchdog_enable(100, 1);
 
+  // UART IRQ
   irq_set_exclusive_handler(UART_IRQ, remote_on_uart_rx);
   irq_set_enabled(UART_IRQ, true);
   // bool rx_has_data, bool tx_needs_data
@@ -206,6 +218,7 @@ int main(void)
   unsigned int cycles = 0;
   while (1) {
     sleep_ms(5);
+    watchdog_update();
 
     // we can't do this in parallel
     // with OLED updating because they're

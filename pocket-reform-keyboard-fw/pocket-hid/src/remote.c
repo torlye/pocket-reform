@@ -55,14 +55,15 @@ int remote_get_power_state() {
 }
 
 void remote_on_uart_rx() {
-  while (uart_is_readable(UART_ID)) {
+  int read_count = 0;
+  while (uart_is_readable(UART_ID) && read_count < RESPONSE_MAX) {
     char c = uart_getc(UART_ID);
     if (uart_rx_i < RESPONSE_MAX-1) {
       response[uart_rx_i++] = c;
-      response[uart_rx_i] = 0;
     } else {
       uart_rx_i = 0;
     }
+    response[uart_rx_i] = 0;
 
     uint8_t poke_chr = c;
 
@@ -87,6 +88,7 @@ void remote_on_uart_rx() {
     } else {
       uart_response_complete = 1;
     }
+    read_count++;
   }
 }
 
@@ -212,6 +214,10 @@ int remote_get_voltages(int quiet) {
 }
 
 int remote_turn_on_som() {
+  // there might be some noise / leftovers
+  // in sysctl's uart since turning off,
+  // so send the command twice
+  remote_try_command("1p\r", 0);
   remote_try_command("1p\r", 0);
   soc_power_on = 1;
   return 1;

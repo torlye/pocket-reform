@@ -93,7 +93,7 @@ void exit_menu_mode(void);
 #define STOP_BITS 1
 #define PARITY    UART_PARITY_NONE
 
-// can be used as a global clock, incrementing around every ~10ms
+// can be used as a global clock, incrementing around every ~5ms
 int hid_task_counter = 0;
 int trackball_motion = 0;
 int request_enter_menu_mode = 0;
@@ -196,20 +196,22 @@ int main(void)
   
   // watchdog crash recovery
   if (watchdog_caused_reboot()) {
-    led_set(0x00ff00);
     gfx_clear();
     gfx_on();
-    gfx_poke_str(0, 0, "Recovered from");
-    gfx_poke_str(0, 1, "crash.");
+    gfx_poke_str(1, 1, "Reset by watchdog.");
     gfx_flush();
   }
-  watchdog_enable(100, 1);
+  // reset if main loop is stuck for 1000ms
+  watchdog_enable(1000, 1);
 
   // UART IRQ
   irq_set_exclusive_handler(UART_IRQ, remote_on_uart_rx);
-  irq_set_enabled(UART_IRQ, true);
+  uart_set_hw_flow(UART_ID, false, false);
   // bool rx_has_data, bool tx_needs_data
   uart_set_irq_enables(UART_ID, true, false);
+  uart_set_format(UART_ID, 8, 1, UART_PARITY_NONE);
+  uart_set_fifo_enabled(UART_ID, true);
+  irq_set_enabled(UART_IRQ, true);
 
   // call USB task every 5ms
   struct repeating_timer timer;
@@ -689,7 +691,6 @@ void led_bitmap(uint8_t row, const uint8_t* row_rgb) {
     }
   }
 }
-
 
 // Every 5ms, we will sent 1 report for each HID profile (keyboard, mouse etc ..)
 // tud_hid_report_complete_cb() is used to send the next report after previous one is complete

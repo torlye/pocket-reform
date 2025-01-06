@@ -13,7 +13,7 @@
 
 pd_state_s pd_state = {0};
 battery_info_s battery_info = {0};
-int disp_bl_percent = 50;
+int disp_bl_percent = 100;
 
 // The Pico boot rom uses watchdog scratch registers 0, 1, 4, 5, 6, and 7.
 // That leaves 2 and 3 for our "system is on" magic.
@@ -90,13 +90,17 @@ int32_t pwm_set_freq_duty(uint32_t slice_num, uint32_t chan, uint32_t freq, int 
 // that will ship in late 2024 (TOP070F01A)
 void set_display_backlight(int percent)
 {
-#ifdef PREF_DISPLAY_V2
   // DISP_EN = 7 = PWM3 B
   printf("# set_display_backlight: %d", percent);
   pwm_set_freq_duty(pwm_gpio_to_slice_num(PIN_DISP_EN), pwm_gpio_to_channel(PIN_DISP_EN), 100000, percent);
-#else
-  (void)percent; // supress unused message
-#endif
+
+  // caveat: latch needs to be always-on
+  // for brightnesses other than full brightness to work
+  gpio_put(PIN_PWREN_LATCH, 1);
+  sleep_ms(5);
+  if (percent == 0 || percent == 100) {
+    gpio_put(PIN_PWREN_LATCH, 0);
+  }
 }
 
 void charger_configure()
@@ -365,24 +369,15 @@ void turn_som_power_on()
   gpio_put(PIN_MODEM_POWER, 1); // active high
   gpio_put(PIN_PHONE_DPR, 1);   // active high
 
-#ifdef PREF_DISPLAY_V2
-  set_display_backlight(50);
-#else
-  gpio_put(PIN_DISP_EN, 1);
-#endif
-
   sleep_ms(10);
   gpio_put(PIN_DISP_RESET, 1);
 
   // Modem
   gpio_put(PIN_MODEM_RESET, 1); // active low
 
-#ifdef PREF_DISPLAY_V2
-  // FIXME: can't stop the latch when using non-100% brightness
-#else
   // Power latch end
   gpio_put(PIN_PWREN_LATCH, 0);
-#endif
+  set_display_backlight(100);
 
   battery_info.som_is_powered = true;
 
@@ -405,12 +400,6 @@ void turn_som_power_off()
   printf("# [action] turn_som_power_off\n");
   gpio_put(PIN_DISP_RESET, 0);
 
-#ifdef PREF_DISPLAY_V2
-  set_display_backlight(0);
-#else
-  gpio_put(PIN_DISP_EN, 0);
-#endif
-
   // Modem
   gpio_put(PIN_FLIGHTMODE, 0);  // active low
   gpio_put(PIN_MODEM_RESET, 0); // active low
@@ -426,6 +415,7 @@ void turn_som_power_off()
 
   // Power latch end
   gpio_put(PIN_PWREN_LATCH, 0);
+  set_display_backlight(0);
 
   // Disable charger discharge current recording while powered off
   mps_write_byte(0x0b, 0);
@@ -500,11 +490,9 @@ void setup()
   gpio_set_dir(PIN_DISP_RESET, GPIO_OUT);
   gpio_put(PIN_DISP_RESET, 0);
 
-#ifdef PREF_DISPLAY_V2
+  // For brightness control of display v2
+  // Needs to be at 100% for display v1
   gpio_set_function(PIN_DISP_EN, GPIO_FUNC_PWM);
-#else
-  gpio_put(PIN_DISP_EN, 0);
-#endif
 
   // Modem control pins
   gpio_init(PIN_FLIGHTMODE);
@@ -634,9 +622,10 @@ void loop()
   // to flash the keyboard
   if (factory_turn_on_once &&
       pd_state.state == PD_STATE_CHARGER_POWERED &&
-      battery_info->input_volts > 6)
+      battery_info.input_volts > 6)
   {
     turn_som_power_on();
+    factory_turn_on_once = 0;
   }
 #endif
 

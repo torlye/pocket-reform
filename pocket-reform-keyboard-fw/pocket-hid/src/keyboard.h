@@ -7,8 +7,6 @@
 #ifndef _KEYBOARD_H_
 #define _KEYBOARD_H_
 
-#define PREF_HID_FW_REV "PREFHID20240416"
-
 void reset_keyboard_state(void);
 
 void led_set(uint32_t rgb);

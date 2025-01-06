@@ -127,10 +127,12 @@ int remote_try_command(const char* cmd, int print_response) {
 }
 
 int remote_get_status(void) {
-  gfx_clear();
+  char tmp[20];
+  snprintf(tmp, sizeof(tmp)-1, "PREF1HID%d", MNTRE_FIRMWARE_VERSION);
 
+  gfx_clear();
   gfx_poke_cstr(0, 2, "MNT Pocket Reform HID");
-  gfx_poke_cstr(0, 3, PREF_HID_FW_REV);
+  gfx_poke_cstr(0, 3, tmp);
   gfx_on();
   gfx_flush();
 
@@ -191,22 +193,22 @@ int remote_get_voltages(int quiet) {
   gfx_clear();
   char str[32];
 
-  sprintf(str,"[] %.1f           %s",voltages[0],bat_gauge);
+  snprintf(str,31, "[] %.1f           %s",voltages[0],bat_gauge);
   insert_bat_icon(str,0,voltages[0]);
   gfx_poke_str(0,0,str);
 
-  sprintf(str,"[] %.1f            %s",voltages[1],power_str);
+  snprintf(str,31,"[] %.1f            %s",voltages[1],power_str);
   insert_bat_icon(str,0,voltages[1]);
   gfx_poke_str(0,1,str);
 
   if (bat_amps>=0) {
-    sprintf(str,"               %2.3fA",bat_amps);
+    snprintf(str,31,"               %2.3fA",bat_amps);
   } else {
-    sprintf(str,"               %2.2fA",bat_amps);
+    snprintf(str,31,"               %2.2fA",bat_amps);
   }
   gfx_poke_str(0,2,str);
 
-  sprintf(str,"               %2.2fV",bat_volts);
+  snprintf(str,31,"               %2.2fV",bat_volts);
   gfx_poke_str(0,3,str);
   gfx_flush();
 

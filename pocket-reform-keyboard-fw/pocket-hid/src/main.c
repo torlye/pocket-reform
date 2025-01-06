@@ -880,7 +880,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
 
       // uncomment for debugging
       /*char repinfo[64];
-      sprintf(repinfo, "cm: %c%c%c%c 4: %d sz: %d", cmd[0],cmd[1],cmd[2],cmd[3], cmd[4], bufsize);
+      snprintf(repinfo, sizeof(repinfo)-1, "cm: %c%c%c%c 4: %d sz: %d", cmd[0],cmd[1],cmd[2],cmd[3], cmd[4], bufsize);
       gfx_poke_str(0, 0, repinfo);
       gfx_flush();*/
 

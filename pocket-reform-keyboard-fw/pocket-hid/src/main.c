@@ -20,6 +20,7 @@
 #include "hardware/i2c.h"
 #include "hardware/irq.h"
 #include "hardware/pio.h"
+#include "hardware/watchdog.h"
 
 #include "usb_descriptors.h"
 #include "oled.h"
@@ -80,8 +81,11 @@ int led_brightness = 0;
 int led_saturation = 255;
 int led_hue = 127;
 
-void hid_task(void);
+bool hid_task(struct repeating_timer *t);
 int process_keyboard(uint8_t* resulting_scancodes);
+int poll_trackball(void);
+void enter_menu_mode(void);
+void exit_menu_mode(void);
 
 #define UART_ID uart1
 #define BAUD_RATE 115200
@@ -89,8 +93,18 @@ int process_keyboard(uint8_t* resulting_scancodes);
 #define STOP_BITS 1
 #define PARITY    UART_PARITY_NONE
 
-// can be used as a global clock, incrementing around every ~10ms
-static int hid_task_counter = 0;
+// can be used as a global clock, incrementing around every ~5ms
+int hid_task_counter = 0;
+int trackball_motion = 0;
+int request_enter_menu_mode = 0;
+int request_exit_menu_mode = 0;
+int request_menu_function = 0;
+int active_menu_mode = 0;
+bool hyper_key = 0; // holding HYPER?
+bool shift_key = 0; // holding SHIFT?
+uint8_t last_menu_key = 0;
+int8_t tb_nx = 0;
+int8_t tb_ny = 0;
 
 static inline uint32_t board_millis(void) {
   return to_ms_since_boot(get_absolute_time());
@@ -157,7 +171,7 @@ int main(void)
   gpio_set_dir(PIN_ROW6, false);
   gpio_pull_down(PIN_ROW6);
 
-  i2c_init(i2c0, 100 * 1000);
+  i2c_init(i2c0, 400 * 1000);
   gpio_set_function(PIN_SDA, GPIO_FUNC_I2C);
   gpio_set_function(PIN_SCL, GPIO_FUNC_I2C);
 
@@ -179,17 +193,90 @@ int main(void)
   led_set_brightness(0x0);
 
   gfx_init(false);
-  //anim_hello();
+  
+  // watchdog crash recovery
+  if (watchdog_caused_reboot()) {
+    gfx_clear();
+    gfx_on();
+    gfx_poke_str(1, 1, "Reset by watchdog.");
+    gfx_flush();
+  }
+  // reset if main loop is stuck for 1000ms
+  watchdog_enable(1000, 1);
 
+  // UART IRQ
   irq_set_exclusive_handler(UART_IRQ, remote_on_uart_rx);
-  irq_set_enabled(UART_IRQ, true);
+  uart_set_hw_flow(UART_ID, false, false);
   // bool rx_has_data, bool tx_needs_data
   uart_set_irq_enables(UART_ID, true, false);
+  uart_set_format(UART_ID, 8, 1, UART_PARITY_NONE);
+  uart_set_fifo_enabled(UART_ID, true);
+  irq_set_enabled(UART_IRQ, true);
 
+  // call USB task every 5ms
+  struct repeating_timer timer;
+  add_repeating_timer_ms(-5, hid_task, NULL, &timer);
+
+  unsigned int cycles = 0;
   while (1) {
-    pressed_keys = process_keyboard(pressed_scancodes);
-    tud_task(); // tinyusb device task
-    hid_task();
+    sleep_ms(5);
+    watchdog_update();
+
+    // we can't do this in parallel
+    // with OLED updating because they're
+    // both on the same I2C port
+    trackball_motion = poll_trackball();
+
+    // service menu requests
+    if (request_enter_menu_mode) {
+      enter_menu_mode();
+      request_enter_menu_mode = 0;
+    }
+    if (request_exit_menu_mode) {
+      exit_menu_mode();
+      request_exit_menu_mode = 0;
+    }
+    if (request_menu_function) {
+      int stay_menu = execute_menu_function(request_menu_function);
+      request_menu_function = 0;
+      // exit menu mode
+      if (!stay_menu) {
+        exit_menu_mode();
+      }
+    }
+
+    // notifications / page refreshing
+    cycles++;
+    if (cycles%1000 == 0) {
+      // quietly get voltages to update power state
+      //remote_get_voltages(1);
+    }
+    if (cycles%50 == 0) {
+      refresh_menu_page();
+
+      // if device is off and user is pressing random keys,
+      // show a hint for turning on the device
+      if (!remote_get_power_state()) {
+        if (pressed_keys>0 && !active_menu_mode && !hyper_key && !last_menu_key) {
+          execute_menu_function(KEY_H);
+        }
+      }
+    }
+
+    // backlight hue/value wheel
+    if (trackball_motion && hyper_key) {
+      if (tb_ny) {
+        // shift held? saturation
+        if (shift_key) {
+          led_mod_saturation(tb_ny);
+        } else {
+          led_mod_brightness(tb_ny);
+        }
+      }
+      if (tb_nx) {
+        led_mod_hue(tb_nx);
+      }
+    }
   }
 
   return 0;
@@ -269,13 +356,9 @@ bool tud_hid_trackball_report(uint8_t report_id,
 uint8_t matrix_debounce[KBD_COLS*KBD_ROWS];
 uint8_t matrix_state[KBD_COLS*KBD_ROWS];
 
-int active_menu_mode = 0;
-uint8_t last_menu_key = 0;
 uint32_t hyper_enter_long_press_start_ms = 0;
 
 uint8_t* active_matrix = matrix;
-bool media_toggle = 0;
-bool hyper_key = 0; // Am I holding HYPER?
 
 // enter the menu
 void enter_menu_mode(void) {
@@ -342,8 +425,8 @@ int process_keyboard(uint8_t* resulting_scancodes) {
       uint8_t keycode;
       int loc = y*KBD_COLS+x;
       keycode = active_matrix[loc];
-      uint8_t  pressed = 0;
-      uint8_t  debounced_pressed = 0;
+      uint8_t pressed = 0;
+      uint8_t debounced_pressed = 0;
 
       switch (y) {
       case 0:  pressed = gpio_get(PIN_ROW1); break;
@@ -372,7 +455,7 @@ int process_keyboard(uint8_t* resulting_scancodes) {
         if (keycode == KEY_ENTER && hyper_key) {
           if (!last_menu_key) {
             if (!active_menu_mode) {
-              enter_menu_mode();
+              request_enter_menu_mode = 1;
             }
             uint32_t now_ms = board_millis();
             if (!now_ms) now_ms++;
@@ -383,8 +466,8 @@ int process_keyboard(uint8_t* resulting_scancodes) {
             }
             if (now_ms - hyper_enter_long_press_start_ms > 1000) {
               // turn on computer after 2 seconds of holding hyper + enter
-              execute_menu_function(KEY_1);
-              exit_menu_mode();
+              request_menu_function = KEY_1;
+              request_exit_menu_mode = 1;
               last_menu_key = KEY_1;
               hyper_enter_long_press_start_ms = 0;
             }
@@ -397,21 +480,9 @@ int process_keyboard(uint8_t* resulting_scancodes) {
             // not holding the same key?
             if (last_menu_key != keycode) {
               // hyper/menu functions
-              int stay_menu = execute_menu_function(keycode);
+              request_menu_function = keycode;
               // don't repeat action while key is held down
               last_menu_key = keycode;
-
-              // exit menu mode
-              if (!stay_menu) {
-                exit_menu_mode();
-              }
-
-              // after wake-up from sleep mode, skip further keymap processing
-              if (stay_menu == 2) {
-                reset_keyboard_state();
-                enter_menu_mode();
-                return 0;
-              }
             }
           } else if (!last_menu_key) {
             // not menu mode, regular key: report keypress via USB
@@ -421,6 +492,10 @@ int process_keyboard(uint8_t* resulting_scancodes) {
             }
           }
         }
+
+        if (keycode == KEY_LEFTSHIFT) {
+          shift_key = 1;
+        }
       } else {
         // key not pressed
         if (keycode == KEY_COMPOSE) {
@@ -429,6 +504,10 @@ int process_keyboard(uint8_t* resulting_scancodes) {
           hyper_enter_long_press_start_ms = 0;
         } else if (keycode == KEY_ENTER) {
           hyper_enter_long_press_start_ms = 0;
+        }
+
+        if (keycode == KEY_LEFTSHIFT) {
+          shift_key = 0;
         }
       }
     }
@@ -458,24 +537,11 @@ int process_keyboard(uint8_t* resulting_scancodes) {
     idle_counter = 0;
   }
 
-  // if device is off and user is pressing random keys,
-  // show a hint for turning on the device
-  if (!remote_get_power_state()) {
-    if (total_pressed>0 && !active_menu_mode && !hyper_key && !last_menu_key) {
-      execute_menu_function(KEY_H);
-    }
-  }
-
   return used_key_codes;
 }
 
-
-int prev_buttons = 0;
 int scroll_toggle = 0;
-int prev_num_keys = 0;
 
-int8_t tb_nx = 0;
-int8_t tb_ny = 0;
 int tb_btn_left = 0;
 int tb_btn_right = 0;
 int tb_btn_scroll = 0;
@@ -487,7 +553,7 @@ int tb_btn_scroll_idx = KBD_COLS*5+7;
 int tb_btn_middle_idx = KBD_COLS*5+3;
 
 // returns motion yes/no
-static int poll_trackball()
+int poll_trackball()
 {
   tb_btn_left = matrix_state[tb_btn_left_idx]>0;
   tb_btn_middle = matrix_state[tb_btn_middle_idx]>0;
@@ -508,22 +574,6 @@ static int poll_trackball()
 
     tb_nx = (int8_t)buf[0];
     tb_ny = (int8_t)buf[1];
-
-    // backlight hue/value wheel
-    if (matrix_state[KBD_COLS*4+0]) {
-      if (tb_ny) {
-        // shift held? saturation
-        if (matrix_state[KBD_COLS*3+0]) {
-          led_mod_saturation(tb_ny);
-        } else {
-          led_mod_brightness(tb_ny);
-        }
-      }
-      if (tb_nx) {
-        led_mod_hue(tb_nx);
-      }
-    }
-
     return 1;
   }
   return 0;
@@ -531,23 +581,22 @@ static int poll_trackball()
 
 static void send_hid_report(uint8_t report_id)
 {
-  // skip if hid is not ready yet
-  if (!tud_hid_ready()) return;
+  if (!tud_hid_ready()) {
+    return;
+  }
 
   switch (report_id) {
     case REPORT_ID_KEYBOARD:
     {
       tud_hid_keyboard_report(REPORT_ID_KEYBOARD, 0, pressed_scancodes);
-      prev_num_keys = pressed_keys;
     }
     break;
 
     case REPORT_ID_MOUSE:
     {
       int buttons = tb_btn_left | (tb_btn_right<<1) | (tb_btn_middle<<2);
-      int motion = poll_trackball();
 
-      if (motion) {
+      if (trackball_motion) {
         // no button, right + down, no scroll pan
         if (tb_btn_scroll || scroll_toggle) {
           tud_hid_mouse_report(REPORT_ID_MOUSE, (uint8_t)buttons, 0, 0, 2*tb_ny, -2*tb_nx);
@@ -568,8 +617,6 @@ static void send_hid_report(uint8_t report_id)
           }
         }
       }
-
-      prev_buttons = buttons;
     }
     break;
 
@@ -645,48 +692,18 @@ void led_bitmap(uint8_t row, const uint8_t* row_rgb) {
   }
 }
 
-
-// Every 10ms, we will sent 1 report for each HID profile (keyboard, mouse etc ..)
+// Every 5ms, we will sent 1 report for each HID profile (keyboard, mouse etc ..)
 // tud_hid_report_complete_cb() is used to send the next report after previous one is complete
-void hid_task(void)
+bool hid_task(__unused struct repeating_timer *t)
 {
-  // Poll every 10ms
-  const uint32_t interval_ms = 10;
-  static uint32_t start_ms = 0;
+  tud_task();
+  pressed_keys = process_keyboard(pressed_scancodes);
 
-  if (board_millis() - start_ms < interval_ms) {
-    // not enough time passed
-    return;
-  }
-  start_ms += interval_ms;
-
-  // Remote wakeup
-  if (tud_suspended() && pressed_keys > 0)
-  {
-    // Wake up host if we are in suspend mode
-    // and REMOTE_WAKEUP feature is enabled by host
-    tud_remote_wakeup();
-  } else {
-    // Send the 1st of report chain, the rest will be sent by tud_hid_report_complete_cb()
-    send_hid_report(REPORT_ID_KEYBOARD);
-  }
-
+  send_hid_report(REPORT_ID_KEYBOARD);
   hid_task_counter++;
-  if (hid_task_counter%1000 == 0) {
-    // quietly get voltages to update power state
-    remote_get_voltages(1);
-  }
-  if (hid_task_counter%100 == 0) {
-    refresh_menu_page();
 
-    // power state debugging
-    /*if (remote_get_power_state()) {
-      gfx_poke_cstr(0,0,"[pwr on]");
-    } else {
-      gfx_poke_cstr(0,0,"[pwr off]");
-    }
-    gfx_flush();*/
-  }
+  // timer should continue calling us
+  return true;
 }
 
 typedef struct RgbColor

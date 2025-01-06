@@ -21,7 +21,7 @@ int8_t logo_timeout_ticks = 0;
 #ifdef KBD_MODE_STANDALONE
 // TODO
 #else
-#define MENU_NUM_ITEMS 7
+#define MENU_NUM_ITEMS 8
 const MenuItem menu_items[] = {
   { "Exit Menu         ESC", KEY_ESC },
   { "Power On            1", KEY_1 },
@@ -30,6 +30,7 @@ const MenuItem menu_items[] = {
   { "Wake              SPC", KEY_SPACE },
   { "System Status       s", KEY_S },
   { "Reset Keyboard      r", KEY_R },
+  { "Reset USB           u", KEY_U },
 };
 #endif
 
@@ -107,6 +108,12 @@ int execute_menu_function(int keycode) {
   else if (keycode == KEY_R) {
     // reset the MCU
     rp2040_reset();
+  }
+  else if (keycode == KEY_U) {
+    // reset the USB stack
+    tud_disconnect();
+    sleep_ms(10);
+    tud_connect();
   }
   else if (keycode == KEY_T) {
     render_tina();

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sudo picotool load build/pocket-hid.uf2 --bus 1 -f
+sudo picotool load build/pocket-hid.uf2
 sleep 1
-sudo picotool reboot --bus 1 -f
+sudo picotool reboot
 

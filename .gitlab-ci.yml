@@ -6,6 +6,7 @@ build:
       - pocket-reform-sysctl-fw/build/sysctl.uf2
       - pocket-reform-sysctl-fw/build/sysctl.cab
       - scripts/update-sysctl-firmware.sh
+      - scripts/update-keyboard-firmware.sh
       - pocket-reform-keyboard-fw/pocket-hid/build/pocket-hid.uf2
   script:
     - ./install-fw-dependencies.sh

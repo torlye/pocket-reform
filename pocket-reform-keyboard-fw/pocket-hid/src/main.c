@@ -35,7 +35,7 @@
 #define KBD_COLS 12
 #define KBD_ROWS 6
 #define KBD_MATRIX_SZ KBD_COLS * KBD_ROWS + 4
-#define TRACKBALL_ACCEL_POWER 1.5
+#define TRACKBALL_FACTOR 2
 
 #include "matrix.h"
 
@@ -221,13 +221,15 @@ int main(void)
 
   unsigned int cycles = 0;
   while (1) {
-    sleep_ms(5);
+    // the sleep time directly influences
+    // trackball tracking speed
+    sleep_ms(10);
     watchdog_update();
 
     // we can't do this in parallel
     // with OLED updating because they're
     // both on the same I2C port
-    trackball_motion |= poll_trackball();
+    trackball_motion = poll_trackball();
 
     // service menu requests
     if (request_enter_menu_mode) {
@@ -576,10 +578,7 @@ int poll_trackball()
 
     tb_nx = (double)((int8_t)buf[0]);
     tb_ny = (double)((int8_t)buf[1]);
-    double sgn_nx = (tb_nx < 0 ? -1 : 1);
-    double sgn_ny = (tb_ny < 0 ? -1 : 1);
-    tb_nx = pow(fabs(tb_nx), TRACKBALL_ACCEL_POWER) * sgn_nx;
-    tb_ny = pow(fabs(tb_ny), TRACKBALL_ACCEL_POWER) * sgn_ny;
+
     return 1;
   }
   return 0;
@@ -605,11 +604,10 @@ static void send_hid_report(uint8_t report_id)
       if (trackball_motion) {
         // no button, right + down, no scroll pan
         if (tb_btn_scroll || scroll_toggle) {
-          tud_hid_mouse_report(REPORT_ID_MOUSE, (uint8_t)buttons, 0, 0, 2*tb_ny, -2*tb_nx);
+          tud_hid_mouse_report(REPORT_ID_MOUSE, (uint8_t)buttons, 0, 0, TRACKBALL_FACTOR*tb_ny, -TRACKBALL_FACTOR*tb_nx);
         } else {
-          tud_hid_mouse_report(REPORT_ID_MOUSE, (uint8_t)buttons, -2*tb_nx, -2*tb_ny, 0, 0);
+          tud_hid_mouse_report(REPORT_ID_MOUSE, (uint8_t)buttons, -TRACKBALL_FACTOR*tb_nx, -TRACKBALL_FACTOR*tb_ny, 0, 0);
         }
-        trackball_motion = 0;
       } else {
         if (tb_btn_middle && tb_btn_scroll) {
           // enter sticky scroll mode

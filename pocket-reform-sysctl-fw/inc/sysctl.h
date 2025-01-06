@@ -22,8 +22,6 @@
 
 #define FW_STRING1 "PREF1SYS"
 #define FW_STRING2 "R1"
-#define FW_STRING3 "20240830"
-#define FW_REV FW_STRING1 FW_STRING2 FW_STRING3
 
 #define PIN_SDA 0
 #define PIN_SCL 1

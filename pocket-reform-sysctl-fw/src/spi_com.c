@@ -134,7 +134,9 @@ void handle_spi_commands(battery_info_s *battery_info)
         }
         else
         {
-            memcpy(spi_buf, FW_STRING3, 8);
+            char tmp[10];
+            snprintf((char*)tmp, 9, "%08d", MNTRE_FIRMWARE_VERSION);
+            memcpy(spi_buf, tmp, 8);
         }
     }
     // execute status query command

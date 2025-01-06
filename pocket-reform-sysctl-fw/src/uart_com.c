@@ -1,7 +1,7 @@
 #include "uart_com.h"
 
 void handle_uart_commands(battery_info_s* battery_info)
-{   
+{
   while (uart_is_readable(UART_ID))
   {
     handle_commands(uart_getc(UART_ID), battery_info);
@@ -15,11 +15,11 @@ void handle_commands(char chr, battery_info_s* battery_info)
 {
     static uart_state_s uart_state = {0};
 
-    char uart_buffer[255] = {0};
+    char uart_buffer[UART_BUFSZ+1] = {0};
 
     if (uart_state.echo)
     {
-        sprintf(uart_buffer, "%c", chr);
+        snprintf(uart_buffer, UART_BUFSZ, "%c", chr);
         uart_puts(UART_ID, uart_buffer);
     }
 
@@ -29,7 +29,7 @@ void handle_commands(char chr, battery_info_s* battery_info)
     // 5   syntax error (unexpected character)
     // 6   command letter entered
 
-    if (/*cmd_state >= ST_EXPECT_DIGIT_0 &&*/ uart_state.cmd_state <= ST_EXPECT_DIGIT_3)
+    if (uart_state.cmd_state <= ST_EXPECT_DIGIT_3)
     {
         // read number or command
         if (chr >= '0' && chr <= '9')
@@ -50,7 +50,7 @@ void handle_commands(char chr, battery_info_s* battery_info)
         }
         else if (chr == '\r')
         {
-            sprintf(uart_buffer, "error:syntax\r\n");
+            snprintf(uart_buffer, UART_BUFSZ, "error:syntax\r\n");
             uart_puts(UART_ID, uart_buffer);
             uart_state.cmd_state = ST_EXPECT_DIGIT_0;
             uart_state.cmd_number = 0;
@@ -80,7 +80,7 @@ void handle_commands(char chr, battery_info_s* battery_info)
         if (chr == '\r')
         {
             printf("# [keyboard] [ERROR] syntax error\n");
-            sprintf(uart_buffer, "error:syntax\r\n");
+            snprintf(uart_buffer, UART_BUFSZ, "error:syntax\r\n");
             uart_puts(UART_ID, uart_buffer);
             uart_state.cmd_state = ST_EXPECT_DIGIT_0;
             uart_state.cmd_number = 0;
@@ -98,7 +98,7 @@ void handle_commands(char chr, battery_info_s* battery_info)
             if (uart_state.echo)
             {
                 // FIXME
-                sprintf(uart_buffer, "\n");
+                snprintf(uart_buffer, UART_BUFSZ, "\n");
                 uart_puts(UART_ID, uart_buffer);
             }
 
@@ -109,19 +109,19 @@ void handle_commands(char chr, battery_info_s* battery_info)
                 if (uart_state.cmd_number == 0)
                 {
                     turn_som_power_off();
-                    sprintf(uart_buffer, "system: off\r\n");
+                    snprintf(uart_buffer, UART_BUFSZ, "system: off\r\n");
                     uart_puts(UART_ID, uart_buffer);
                 }
                 else if (uart_state.cmd_number == 2)
                 {
                     // reset_som();
-                    sprintf(uart_buffer, "system: reset\r\n");
+                    snprintf(uart_buffer, UART_BUFSZ, "system: reset\r\n");
                     uart_puts(UART_ID, uart_buffer);
                 }
                 else
                 {
                     turn_som_power_on();
-                    sprintf(uart_buffer, "system: on\r\n");
+                    snprintf(uart_buffer, UART_BUFSZ, "system: on\r\n");
                     uart_puts(UART_ID, uart_buffer);
                 }
             }
@@ -129,27 +129,26 @@ void handle_commands(char chr, battery_info_s* battery_info)
             {
                 // TODO
                 // get system current (mA)
-                sprintf(uart_buffer, "%d\r\n", 0);
+                snprintf(uart_buffer, UART_BUFSZ, "%d\r\n", 0);
                 uart_puts(UART_ID, uart_buffer);
             }
             else if (uart_state.remote_cmd == 'v')
             {
                 // TODO
                 // get cell voltage
-                sprintf(uart_buffer, "%d\r\n", 0);
+                snprintf(uart_buffer, UART_BUFSZ, "%d\r\n", 0);
                 uart_puts(UART_ID, uart_buffer);
             }
             else if (uart_state.remote_cmd == 'V')
             {
                 // TODO
                 // get system voltage
-                sprintf(uart_buffer, "%d\r\n", 0);
+                snprintf(uart_buffer, UART_BUFSZ, "%d\r\n", 0);
                 uart_puts(UART_ID, uart_buffer);
             }
             else if (uart_state.remote_cmd == 's')
             {
-                // TODO
-                sprintf(uart_buffer, FW_REV "normal,%d,%d,%d\r\n", 0, 0, 0);
+                snprintf(uart_buffer, UART_BUFSZ, "MNT Pocket Reform   " FW_STRING1 FW_STRING2 "%08d\r\n", MNTRE_FIRMWARE_VERSION);
                 uart_puts(UART_ID, uart_buffer);
             }
             else if (uart_state.remote_cmd == 'u')
@@ -161,7 +160,7 @@ void handle_commands(char chr, battery_info_s* battery_info)
             {
                 // wake SoC
                 som_wake();
-                sprintf(uart_buffer, "system: wake\r\n");
+                snprintf(uart_buffer, UART_BUFSZ, "system: wake\r\n");
                 uart_puts(UART_ID, uart_buffer);
             }
             else if (uart_state.remote_cmd == 'c')
@@ -175,7 +174,7 @@ void handle_commands(char chr, battery_info_s* battery_info)
                     mA_sign = '-';
                 }
                 int mV = (int)(battery_info->battery_volts * 1000.0);
-                sprintf(uart_buffer, "%02d %02d %02d %02d %02d %02d %02d %02d mA%c%04dmV%05d %3d%% P%d\r\n",
+                snprintf(uart_buffer, UART_BUFSZ, "%02d %02d %02d %02d %02d %02d %02d %02d mA%c%04dmV%05d %3d%% P%d\r\n",
                         (int)(battery_info->cell1_volts / 100),
                         (int)(battery_info->cell2_volts / 100),
                         (int)(0),
@@ -196,14 +195,14 @@ void handle_commands(char chr, battery_info_s* battery_info)
             {
                 // TODO
                 // get charger system cycles in current state
-                sprintf(uart_buffer, "%d\r\n", 0);
+                snprintf(uart_buffer, UART_BUFSZ, "%d\r\n", 0);
                 uart_puts(UART_ID, uart_buffer);
             }
             else if (uart_state.remote_cmd == 'C')
             {
                 // TODO
                 // get battery capacity (mAh)
-                sprintf(uart_buffer, "%d/%d/%d\r\n", 0, 0, 0);
+                snprintf(uart_buffer, UART_BUFSZ, "%d/%d/%d\r\n", 0, 0, 0);
                 uart_puts(UART_ID, uart_buffer);
             }
             else if (uart_state.remote_cmd == 'e')
@@ -213,7 +212,7 @@ void handle_commands(char chr, battery_info_s* battery_info)
             }
             else
             {
-                sprintf(uart_buffer, "error:command\r\n");
+                snprintf(uart_buffer, UART_BUFSZ, "error:command\r\n");
                 uart_puts(UART_ID, uart_buffer);
             }
 
@@ -226,4 +225,3 @@ void handle_commands(char chr, battery_info_s* battery_info)
         }
     }
 }
-

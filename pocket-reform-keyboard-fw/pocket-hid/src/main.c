@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 
 #include "tusb.h"
 
@@ -34,6 +35,7 @@
 #define KBD_COLS 12
 #define KBD_ROWS 6
 #define KBD_MATRIX_SZ KBD_COLS * KBD_ROWS + 4
+#define TRACKBALL_ACCEL_POWER 1.5
 
 #include "matrix.h"
 
@@ -103,8 +105,8 @@ int active_menu_mode = 0;
 bool hyper_key = 0; // holding HYPER?
 bool shift_key = 0; // holding SHIFT?
 uint8_t last_menu_key = 0;
-int8_t tb_nx = 0;
-int8_t tb_ny = 0;
+double tb_nx = 0;
+double tb_ny = 0;
 
 static inline uint32_t board_millis(void) {
   return to_ms_since_boot(get_absolute_time());
@@ -193,7 +195,7 @@ int main(void)
   led_set_brightness(0x0);
 
   gfx_init(false);
-  
+
   // watchdog crash recovery
   if (watchdog_caused_reboot()) {
     gfx_clear();
@@ -225,7 +227,7 @@ int main(void)
     // we can't do this in parallel
     // with OLED updating because they're
     // both on the same I2C port
-    trackball_motion = poll_trackball();
+    trackball_motion |= poll_trackball();
 
     // service menu requests
     if (request_enter_menu_mode) {
@@ -572,8 +574,12 @@ int poll_trackball()
     i2c_write_blocking_until(i2c0, ADDR_SENSOR, buf, 1, true, make_timeout_time_ms(2));
     i2c_read_blocking_until(i2c0, ADDR_SENSOR, buf, 2, false, make_timeout_time_ms(2));
 
-    tb_nx = (int8_t)buf[0];
-    tb_ny = (int8_t)buf[1];
+    tb_nx = (double)((int8_t)buf[0]);
+    tb_ny = (double)((int8_t)buf[1]);
+    double sgn_nx = (tb_nx < 0 ? -1 : 1);
+    double sgn_ny = (tb_ny < 0 ? -1 : 1);
+    tb_nx = pow(fabs(tb_nx), TRACKBALL_ACCEL_POWER) * sgn_nx;
+    tb_ny = pow(fabs(tb_ny), TRACKBALL_ACCEL_POWER) * sgn_ny;
     return 1;
   }
   return 0;
@@ -603,6 +609,7 @@ static void send_hid_report(uint8_t report_id)
         } else {
           tud_hid_mouse_report(REPORT_ID_MOUSE, (uint8_t)buttons, -2*tb_nx, -2*tb_ny, 0, 0);
         }
+        trackball_motion = 0;
       } else {
         if (tb_btn_middle && tb_btn_scroll) {
           // enter sticky scroll mode

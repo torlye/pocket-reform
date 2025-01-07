@@ -117,7 +117,7 @@ void charger_init()
   mps_read_buf(MPS_REGSTART_STATUS, sizeof(mps_reg_status.all_regs), mps_reg_status.all_regs);
 
   // set input current limit to 2000mA
-  mps_reg_limits.input_i_limit = 1<<5 | 1<<3;
+  mps_reg_limits.input_i_limit1 = 1<<5 | 1<<3;
   // // set input voltage limit to 6V (above 5V USB voltage)
   // mps_write_byte(0x01, (1<<6));
   // set charge current limit to 2000mA (1600+400)
@@ -383,7 +383,7 @@ void charger_dump(battery_info_s *battery_info)
     printf("adc_discharge_c = %d\n", adc_discharge_c);
     printf("adc_ntc_v = %f\n", adc_ntc_v);
 
-    printf("input_c_limit = 0x%x ", mps_reg_limits.input_i_limit);
+    printf("input_i_limit1 = 0x%x ", mps_reg_limits.input_i_limit1);
     printf("input_v_limit = 0x%x\n", mps_reg_limits.input_v_limit);
 
     printf("charge_c = 0x%x ", mps_reg_limits.charge_current);

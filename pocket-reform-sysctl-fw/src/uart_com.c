@@ -35,6 +35,10 @@ void handle_commands(char chr, battery_info_s* battery_info)
         // read number or command
         if (chr >= '0' && chr <= '9')
         {
+            if (uart_state.cmd_number == CMD_NUMBER_INVALID)
+            {
+                uart_state.cmd_number = 0;
+            }
             uart_state.cmd_number *= 10;
             uart_state.cmd_number += (chr - '0');
             uart_state.cmd_state++;
@@ -54,7 +58,7 @@ void handle_commands(char chr, battery_info_s* battery_info)
             snprintf(uart_buffer, UART_BUFSZ, "error:syntax\r\n");
             uart_puts(UART_ID, uart_buffer);
             uart_state.cmd_state = ST_EXPECT_DIGIT_0;
-            uart_state.cmd_number = 0;
+            uart_state.cmd_number = CMD_NUMBER_INVALID;
         }
         else
         {
@@ -84,7 +88,7 @@ void handle_commands(char chr, battery_info_s* battery_info)
             snprintf(uart_buffer, UART_BUFSZ, "error:syntax\r\n");
             uart_puts(UART_ID, uart_buffer);
             uart_state.cmd_state = ST_EXPECT_DIGIT_0;
-            uart_state.cmd_number = 0;
+            uart_state.cmd_number = CMD_NUMBER_INVALID;
         }
     }
     else if (uart_state.cmd_state == ST_EXPECT_RETURN)
@@ -119,7 +123,7 @@ void handle_commands(char chr, battery_info_s* battery_info)
                     snprintf(uart_buffer, UART_BUFSZ, "system: reset\r\n");
                     uart_puts(UART_ID, uart_buffer);
                 }
-                else
+                else if (uart_state.cmd_number == 1)
                 {
                     turn_som_power_on();
                     snprintf(uart_buffer, UART_BUFSZ, "system: on\r\n");
@@ -211,7 +215,7 @@ void handle_commands(char chr, battery_info_s* battery_info)
             else if (uart_state.remote_cmd == 'e')
             {
                 // toggle serial echo
-                uart_state.echo = uart_state.cmd_number ? 1 : 0;
+                uart_state.echo = uart_state.cmd_number == 1 ? 1 : 0;
             }
             else
             {
@@ -220,7 +224,7 @@ void handle_commands(char chr, battery_info_s* battery_info)
             }
 
             uart_state.cmd_state = ST_EXPECT_DIGIT_0;
-            uart_state.cmd_number = 0;
+            uart_state.cmd_number = CMD_NUMBER_INVALID;
         }
         else
         {

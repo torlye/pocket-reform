@@ -5,6 +5,7 @@
 #include "sysctl.h"
 
 #define UART_BUFSZ 255
+#define CMD_NUMBER_INVALID 0xffff
 
 void handle_uart_commands(battery_info_s* battery_info);
 void handle_commands(char chr, battery_info_s* battery_info);

@@ -34,9 +34,9 @@
 
 typedef union mps_reg_limits_t {
   struct {
-    uint8_t input_i_limit;
-    uint8_t input_v_limit;
-    uint8_t charge_current;
+    uint8_t input_i_limit1;  // REG00H
+    uint8_t input_v_limit;  // REG01H
+    uint8_t charge_current;  // REG02H
 
     union {
       uint8_t reg_byte;

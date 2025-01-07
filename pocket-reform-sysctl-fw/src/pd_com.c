@@ -369,15 +369,15 @@ bool pd_tick(battery_info_s* battery_info) {
             tx.hdr &= ~PD_HDR_MESSAGEID;
             tx.hdr |= (tx_id_count % 8) << PD_HDR_MESSAGEID_SHIFT;
 
-            // FIXME: 1500mA is an assumption. should probably read the charger config
+            // FIXME: We currently statically set the charger to 2000mA.
             // FIXME: what about headroom for passing power to other USB devices?
-            int current = 150; // value is in 10mA units
+            int current = 200; // value is in 10mA units
 
             tx.obj[0] = PD_RDO_FV_MAX_CURRENT_SET(current)
               | PD_RDO_FV_CURRENT_SET(current)
               | PD_RDO_USB_COMMS
               | PD_RDO_NO_USB_SUSPEND
-              | PD_RDO_OBJPOS_SET(power_objects); // FIXME
+              | PD_RDO_OBJPOS_SET(power_objects);
 
             fusb_send_message(&tx);
 

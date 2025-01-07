@@ -149,7 +149,9 @@ void handle_commands(char chr, battery_info_s* battery_info)
             }
             else if (uart_state.remote_cmd == 's')
             {
-                snprintf(uart_buffer, UART_BUFSZ, "MNT Pocket Reform   " FW_STRING1 FW_STRING2 "%08d\r\n", MNTRE_FIRMWARE_VERSION);
+                char tmp[9];
+                strlcpy(tmp, MNTRE_FIRMWARE_VERSION, sizeof(tmp));
+                snprintf(uart_buffer, UART_BUFSZ, "MNT Pocket Reform   " FW_STRING1 FW_STRING2 "%s\r\n", MNTRE_FIRMWARE_VERSION);
                 uart_puts(UART_ID, uart_buffer);
             }
             else if (uart_state.remote_cmd == 'u')

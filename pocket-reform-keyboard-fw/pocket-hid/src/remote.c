@@ -128,7 +128,9 @@ int remote_try_command(const char* cmd, int print_response) {
 
 int remote_get_status(void) {
   char tmp[20];
-  snprintf(tmp, sizeof(tmp)-1, "PREF1HID%d", MNTRE_FIRMWARE_VERSION);
+  // cannot fit more into the buffer
+  static_assert(sizeof(MNTRE_FIRMWARE_VERSION) < 11);
+  snprintf(tmp, sizeof(tmp)-1, "PREF1HID%s", MNTRE_FIRMWARE_VERSION);
 
   gfx_clear();
   gfx_poke_cstr(0, 2, "MNT Pocket Reform HID");

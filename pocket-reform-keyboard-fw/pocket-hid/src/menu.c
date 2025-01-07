@@ -12,6 +12,7 @@
 #include "pico/stdlib.h"
 #include "pico/bootrom.h"
 #include "hardware/watchdog.h"
+#include "tusb.h"
 
 int current_menu_y = 0;
 int current_scroll_y = 0;

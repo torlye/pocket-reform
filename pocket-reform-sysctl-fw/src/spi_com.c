@@ -134,9 +134,10 @@ void handle_spi_commands(battery_info_s *battery_info)
         }
         else
         {
-            char tmp[10];
-            snprintf((char*)tmp, 9, "%08d", MNTRE_FIRMWARE_VERSION);
-            memcpy(spi_buf, tmp, 8);
+            // if spi_buf size changes, check that both sides can deal with the longer string
+            static_assert(sizeof(spi_buf) == 8);
+            memset(spi_buf, 0, sizeof(spi_buf));
+            strlcpy((char*)spi_buf, MNTRE_FIRMWARE_VERSION, sizeof(spi_buf));
         }
     }
     // execute status query command

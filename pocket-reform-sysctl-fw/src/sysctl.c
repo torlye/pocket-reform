@@ -90,7 +90,7 @@ int32_t pwm_set_freq_duty(uint32_t slice_num, uint32_t chan, uint32_t freq, int 
 void set_display_backlight(int percent)
 {
   // DISP_EN = 7 = PWM3 B
-  printf("# set_display_backlight: %d", percent);
+  printf("# set_display_backlight: %d\n", percent);
   pwm_set_freq_duty(pwm_gpio_to_slice_num(PIN_DISP_EN), pwm_gpio_to_channel(PIN_DISP_EN), 100000, percent);
 
   // caveat: latch needs to be always-on

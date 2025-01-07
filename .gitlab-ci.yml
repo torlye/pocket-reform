@@ -8,6 +8,7 @@ build:
       - scripts/update-sysctl-firmware.sh
       - scripts/update-keyboard-firmware.sh
       - pocket-reform-keyboard-fw/pocket-hid/build/pocket-hid.uf2
+      - pocket-reform-keyboard-fw/pocket-hid/build/pocket-hid.cab
   script:
     - ./install-fw-dependencies.sh
     - export SOURCE_ROOT="$PWD"

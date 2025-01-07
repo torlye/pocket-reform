@@ -81,30 +81,35 @@ void fusb_send_message(const union pd_msg *msg)
   fusb_write_buf(FUSB_FIFOS, 4, eop_seq);
 }
 
-uint8_t fusb_read_message(union pd_msg *msg)
+bool fusb_read_message(union pd_msg *msg)
 {
   uint8_t garbage[4];
-  uint8_t numobj;
 
   /* If this isn't an SOP message, return error.
    * Because of our configuration, we should be able to assume this means the
    * buffer is empty, and not try to read past a non-SOP message. */
+  // TODO: [zeha] check if the above comment is really true
   uint8_t rxb = fusb_read_byte(FUSB_FIFOS);
-  if (rxb!=0) printf("# [fusb] rx = 0x%02x\n", rxb);
-  if ((rxb & FUSB_FIFO_RX_TOKEN_BITS)
-      != FUSB_FIFO_RX_SOP) {
-    return 1;
+  if (rxb == 0) {
+    return false;
   }
+  if ((rxb & FUSB_FIFO_RX_TOKEN_BITS) != FUSB_FIFO_RX_SOP) {
+    printf("# [fusb] rxb = 0x%02x - skipping\n", rxb);
+    return false;
+  }
+
   /* Read the message header into msg */
   fusb_read_buf(FUSB_FIFOS, 2, msg->bytes);
   /* Get the number of data objects */
-  numobj = PD_NUMOBJ_GET(msg);
+  uint8_t numobj = PD_NUMOBJ_GET(msg);
   /* If there is at least one data object, read the data objects */
+  printf("# [fusb] rxb 0x%02x msgtype 0x%02x msgid %d role %s numobj %d size %d\n",
+          rxb, PD_MSGTYPE_GET(msg), PD_MESSAGEID_GET(msg), PD_POWERROLE_STR(msg), numobj, numobj * 4);
   if (numobj > 0) {
     fusb_read_buf(FUSB_FIFOS, numobj * 4, msg->bytes + 2);
   }
   /* Throw the CRC32 in the garbage, since the PHY already checked it. */
   fusb_read_buf(FUSB_FIFOS, 4, garbage);
 
-  return 0;
+  return true;
 }

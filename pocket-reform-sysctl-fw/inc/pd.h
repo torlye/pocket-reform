@@ -101,8 +101,10 @@
 #define PD_SPECREV_3_0 (0x2 << PD_HDR_SPECREV_SHIFT)
 
 /* Port power roles */
-#define PD_POWERROLE_SINK (0x0 << PD_HDR_POWERROLE_SHIFT)
-#define PD_POWERROLE_SOURCE (0x1 << PD_HDR_POWERROLE_SHIFT)
+#define PD_POWERROLE_SINK (0x0)
+#define PD_POWERROLE_SOURCE (0x1)
+#define PD_POWERROLE_GET(msg) (((msg)->hdr & PD_HDR_POWERROLE) >> PD_HDR_POWERROLE_SHIFT)
+#define PD_POWERROLE_STR(msg) (PD_POWERROLE_GET(msg) ? "SRC" : "SNK")
 
 /* Message ID */
 #define PD_MESSAGEID_GET(msg) (((msg)->hdr & PD_HDR_MESSAGEID) >> PD_HDR_MESSAGEID_SHIFT)

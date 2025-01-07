@@ -19,6 +19,7 @@
 #define PDB_FUSB302B_H
 
 #include <stdint.h>
+#include <stdbool.h>
 
 #include "pdb_msg.h"
 
@@ -47,7 +48,11 @@
 #define FUSB_SWITCHES1_POWERROLE (1 << 7)
 #define FUSB_SWITCHES1_SPECREV_SHIFT 5
 #define FUSB_SWITCHES1_SPECREV (0x3 << FUSB_SWITCHES1_SPECREV_SHIFT)
+#define FUSB_SWITCHES1_SPECREV_REV1_0 (0)
+#define FUSB_SWITCHES1_SPECREV_REV2_0 (0x1 << FUSB_SWITCHES1_SPECREV_SHIFT)
 #define FUSB_SWITCHES1_DATAROLE (1 << 4)
+#define FUSB_SWITCHES1_DATAROLE_SRC_DFP (1 << 4)
+#define FUSB_SWITCHES1_DATAROLE_SNK_UFP (0 << 4)
 #define FUSB_SWITCHES1_AUTO_CRC (1 << 2)
 #define FUSB_SWITCHES1_TXCC2 (1 << 1)
 #define FUSB_SWITCHES1_TXCC1 1
@@ -265,6 +270,6 @@ void fusb_read_buf(uint8_t addr, uint8_t size, uint8_t *buf);
 void fusb_write_byte(uint8_t addr, uint8_t byte);
 void fusb_write_buf(uint8_t addr, uint8_t size, const uint8_t *buf);
 void fusb_send_message(const union pd_msg *msg);
-uint8_t fusb_read_message(union pd_msg *msg);
+bool fusb_read_message(union pd_msg *msg);
 
 #endif /* PDB_FUSB302B_H */

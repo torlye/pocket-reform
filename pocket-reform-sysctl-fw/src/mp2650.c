@@ -1,4 +1,11 @@
+#include "hardware/i2c.h"
+#include "sysctl.h"
 #include "mp2650.h"
+
+mps_reg_config_t mps_reg_config;
+mps_reg_limits_t mps_reg_limits;
+mps_reg_status_t mps_reg_status;
+mps_reg_adc_t mps_reg_adc;
 
 uint8_t mps_read_byte(uint8_t addr)
 {
@@ -23,40 +30,36 @@ float mps_word_to_ntc(uint16_t w)
   return result;
 }
 
-float mps_word_to_3200(uint16_t w)
+uint16_t mps_word_to_12800(uint16_t w)
 {
-  float result = (w>>10)*100
-    + ((w&(1<<9))>>9)*50
-    + ((w&(1<<8))>>8)*25
-    + ((w&(1<<7))>>7)*12.5
-    + ((w&(1<<6))>>6)*6.25;
+  return (w>>6) * 25;
+}
+
+uint16_t mps_word_to_3200(uint16_t w)
+{
+  uint16_t result = (w>>8) * 25;
+  if (w & 0x80) {
+    result += 12;  // should be 12.5.
+  }
+  if (w & 0x40) {
+    result += 6;  // should be 6.25.
+  }
   return result;
 }
 
-float mps_word_to_6400(uint16_t w)
+uint16_t mps_word_to_6400(uint16_t w)
 {
-  float result = (w>>9)*100
-    + ((w&(1<<8))>>8)*50
-    + ((w&(1<<7))>>7)*25
-    + ((w&(1<<6))>>6)*12.5;
+  uint16_t result = (w>>7) * 25;
+  if (w & 0x40) {
+    result += 12;  // should be 12.5.
+  }
   return result;
 }
 
-float mps_word_to_12800(uint16_t w)
+// range: 127.875 to 0.125
+float mps_word_to_watt(uint16_t w)
 {
-  float result = (w>>8)*100
-    + ((w&(1<<7))>>7)*50
-    + ((w&(1<<6))>>6)*25;
-  return result;
-}
-
-float mps_word_to_w(uint16_t w)
-{
-  float result = (w>>9)
-    + ((w&(1<<8))>>8)*0.5
-    + ((w&(1<<7))>>7)*0.25
-    + ((w&(1<<6))>>6)*0.125;
-  return result;
+  return (float)(w >> 6) / (float)8;
 }
 
 float mps_word_to_temp(uint16_t w)

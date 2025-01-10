@@ -5,7 +5,7 @@ FWPATH=../pocket-reform-keyboard-fw/pocket-hid/build/pocket-hid.uf2
 USBDEV=2e8a:0003
 
 # make sure the file is there
-strings $FWPATH | grep PREFHID > /dev/null
+strings $FWPATH | grep PREF1HID > /dev/null
 if [[ $? != 0 ]]; then 
 	echo "Firmware file $FWPATH is invalid, exiting."
 	exit 1

@@ -90,9 +90,6 @@ int32_t pwm_set_freq_duty(uint32_t slice_num, uint32_t chan, uint32_t freq, int 
 void set_display_backlight(int percent)
 {
   // DISP_EN = 7 = PWM3 B
-  // 80% is a limit of the hardware (above, the backlight can flicker)
-  if (percent > 80) percent = 80;
-  if (percent < 0) percent = 0;
   printf("# set_display_backlight: %d\n", percent);
   pwm_set_freq_duty(pwm_gpio_to_slice_num(PIN_DISP_EN), pwm_gpio_to_channel(PIN_DISP_EN), 100000, percent);
 

@@ -192,10 +192,11 @@ void handle_spi_commands(battery_info_s *battery_info)
     {
         // only for display v2
         int brightness = spi_arg1;
+        // 80% is a limit of the hardware (above, the backlight can flicker)
         if (brightness < 0)
             brightness = 0;
-        if (brightness > 100)
-            brightness = 100;
+        if (brightness > 80)
+            brightness = 80;
         set_display_backlight(brightness);
     }
 

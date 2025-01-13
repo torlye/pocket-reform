@@ -15,3 +15,6 @@
 
 // delays in ms before rebooting via regular flash boot, default=100, group=pico_stdio_usb
 #define RESET_INTERFACE_RESET_TO_FLASH_DELAY_MS 100
+
+// Will be called just before resetting. Each firmware implementation must define it.
+void mntre_reset_callback(void);

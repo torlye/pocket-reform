@@ -49,11 +49,13 @@ static bool resetd_control_xfer_cb(__unused uint8_t rhport, uint8_t stage, tusb_
     }
 
     if (request->bRequest == MNTRE_RESET_REQUEST_BOOTSEL) {
+        mntre_reset_callback();
         reset_usb_boot(0, 0);
         // does not return, otherwise we'd return true
     }
 
     if (request->bRequest == MNTRE_RESET_REQUEST_RESET) {
+        mntre_reset_callback();
         watchdog_reboot(0, 0, RESET_INTERFACE_RESET_TO_FLASH_DELAY_MS);
         return true;
     }

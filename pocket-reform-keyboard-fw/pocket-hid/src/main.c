@@ -966,3 +966,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
         reset_usb_boot(gpio_mask, 0);
     }
 }*/
+
+void mntre_reset_callback(void) {
+    // nothing to do
+}

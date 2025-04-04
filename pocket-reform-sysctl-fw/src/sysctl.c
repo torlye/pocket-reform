@@ -637,10 +637,6 @@ void usb_host_5v_disable() {
 #endif
 }
 
-#ifdef FACTORY_MODE
-int factory_turn_on_once = 1;
-#endif
-
 void loop()
 {
   bool can_sleep = true;
@@ -660,18 +656,6 @@ void loop()
     can_sleep = false;
   }
   charger_tick();
-
-#ifdef FACTORY_MODE
-  // in factory mode, turn on power immediately after pd charger is found
-  // to flash the keyboard
-  if (factory_turn_on_once &&
-      pd_state.state == PD_STATE_CHARGER_POWERED &&
-      battery_info.input_volts > 6)
-  {
-    turn_som_power_on();
-    factory_turn_on_once = 0;
-  }
-#endif
 
   // query gauge and charger, update battery status
   battery_info.ticks++;

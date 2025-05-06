@@ -112,27 +112,20 @@ void charger_init()
   mps_reg_config.config0.reg_rst = 1;
   mps_write_byte(MPS_REG_CONFIG0, mps_reg_config.config0.reg_byte);
 
+  // turn off charging until PD allows it
+  mps_reg_config.config0.chg_en = 0;
+  mps_reg_config.config0.susp_en = 0;
+  mps_reg_config.config0.ntc_gcomp_sel = 0;  // disable OTG pin
+  mps_write_byte(MPS_REG_CONFIG0, mps_reg_config.config0.reg_byte);
+
   mps_read_buf(MPS_REGSTART_CONFIG, sizeof(mps_reg_config.all_regs), mps_reg_config.all_regs);
   mps_read_buf(MPS_REGSTART_LIMITS, sizeof(mps_reg_limits.all_regs), mps_reg_limits.all_regs);
   mps_read_buf(MPS_REGSTART_STATUS, sizeof(mps_reg_status.all_regs), mps_reg_status.all_regs);
 
-  // set input current limit to 2000mA
-  mps_reg_limits.input_i_limit1 = 1<<5 | 1<<3;
-  // // set input voltage limit to 6V (above 5V USB voltage)
-  // mps_write_byte(0x01, (1<<6));
-  // set charge current limit to 2000mA (1600+400)
+  // 2A max charge current, assumes 4000mAh cells.
+  // will be written into register by charger_disable_charge.
   mps_reg_limits.charge_current = 1<<5 | 1<<3;
-
-  mps_write_buf(MPS_REGSTART_LIMITS, sizeof(mps_reg_limits.all_regs), mps_reg_limits.all_regs);
-  mps_read_buf(MPS_REGSTART_LIMITS, sizeof(mps_reg_limits.all_regs), mps_reg_limits.all_regs);
-
-  mps_reg_config.config0.chg_en = 0;
-  mps_reg_config.config0.susp_en = 0;
-
-  mps_reg_config.config0.ntc_gcomp_sel = 0;  // disable OTG pin
-  mps_write_byte(MPS_REG_CONFIG0, mps_reg_config.config0.reg_byte);
-
-  mps_write_byte(0x0F, 0x18);  // input limit 2 = 2.4A
+  charger_disable_charge();
 
   charger_tick();
 }
@@ -150,11 +143,36 @@ void charger_tick() {
   }
 }
 
-void charger_enable_charge() {
-  gpio_put(PIN_LED_R, 1);
+// current in 10mA units
+void charger_enable_charge(int current) {
+  int current_reg_value = current / 5;
+  printf("# [charger] setting limit %d \n", current_reg_value);
+
+  mps_reg_limits.input_i_limit1 = current_reg_value;
+  mps_write_buf(MPS_REGSTART_LIMITS, sizeof(mps_reg_limits.all_regs), mps_reg_limits.all_regs);
+  mps_read_buf(MPS_REGSTART_LIMITS, sizeof(mps_reg_limits.all_regs), mps_reg_limits.all_regs);
+  mps_write_byte(0x0F, current_reg_value);
+
   mps_reg_config.config0.chg_en = 1;
   mps_reg_config.config0.susp_en = 0;
   mps_write_byte(MPS_REG_CONFIG0, mps_reg_config.config0.reg_byte);
+
+  gpio_put(PIN_LED_R, 1);
+}
+
+void charger_disable_charge() {
+  mps_reg_config.config0.chg_en = 0;
+  mps_reg_config.config0.susp_en = 0;
+  mps_write_byte(MPS_REG_CONFIG0, mps_reg_config.config0.reg_byte);
+
+  // set all current limits to 500mA (should always be safe)
+  int current_limit = 1<<3 | 1<<1;
+  mps_reg_limits.input_i_limit1 = current_limit;
+  mps_write_buf(MPS_REGSTART_LIMITS, sizeof(mps_reg_limits.all_regs), mps_reg_limits.all_regs);
+  mps_read_buf(MPS_REGSTART_LIMITS, sizeof(mps_reg_limits.all_regs), mps_reg_limits.all_regs);
+  mps_write_byte(0x0F, current_limit); // Input Limit 2
+
+  gpio_put(PIN_LED_R, 0);
 }
 
 void gauge_tick(battery_info_s *battery_info)

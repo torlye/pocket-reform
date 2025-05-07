@@ -142,6 +142,10 @@ void charger_init()
   mps_reg_config.config0.ntc_gcomp_sel = 0;  // disable OTG pin
   mps_write_byte(MPS_REG_CONFIG0, mps_reg_config.config0.reg_byte);
 
+  // 160sec watchdog
+  mps_reg_config.config1.wtd = 3;
+  mps_write_byte(MPS_REG_CONFIG1, mps_reg_config.config1.reg_byte);
+
   mps_read_buf(MPS_REGSTART_LIMITS, sizeof(mps_reg_limits.all_regs), mps_reg_limits.all_regs);
   mps_read_buf(MPS_REGSTART_STATUS, sizeof(mps_reg_status.all_regs), mps_reg_status.all_regs);
 
@@ -172,6 +176,11 @@ void charger_tick() {
   if (old_config3 != mps_reg_config.config3.reg_byte) {
     mps_write_byte(MPS_REG_CONFIG3, mps_reg_config.config3.reg_byte);
   }
+
+  // TODO: do this only every X seconds, maybe up to 100?
+  // clear watchdog
+  mps_reg_config.config0.wtd_rst = 1;
+  mps_write_byte(MPS_REG_CONFIG0, mps_reg_config.config0.reg_byte);
 }
 
 // current in 10mA units

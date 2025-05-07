@@ -112,7 +112,7 @@ typedef union mps_reg_config_t {
         uint8_t tmr2x_en:1;
         uint8_t chg_tmr:2;
         uint8_t en_tmr:1;
-        uint8_t wdt:2;
+        uint8_t wtd:2;
         uint8_t en_term:1;
         uint8_t :1;  // reserved
       };

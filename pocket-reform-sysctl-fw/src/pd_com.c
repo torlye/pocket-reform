@@ -88,6 +88,8 @@ union pd_msg tx;
 int tx_id_count = 0;
 union pd_msg rx_msg;
 unsigned int ccpin = 0;
+// in 10mA units
+int requested_current = 0;
 
 int factory_turn_on_once = 1;
 
@@ -107,7 +109,7 @@ inline void pd_set_fusb_switches1() {
 bool pd_tick(battery_info_s* battery_info) {
   if (pd_state == PD_STATE_SETUP) {
     // setup/timeout state
-    gpio_put(PIN_LED_R, 0);
+    charger_disable_charge();
     request_sent = 0;
 
     printf("# [pd] PD_STATE_SETUP\n");
@@ -343,15 +345,19 @@ bool pd_tick(battery_info_s* battery_info) {
           } else {
             int max_voltage = 0;
             int power_objects = 0;
+            int pdo_current = 0;
             for (int i=0; i<numobj; i++) {
               uint32_t pdo = rx_msg.obj[i];
 
               if ((pdo & PD_PDO_TYPE) == PD_PDO_TYPE_FIXED) {
                 print_src_fixed_pdo(i + 1, pdo);
                 int voltage = PD_PDV_V(PD_PDO_SRC_FIXED_VOLTAGE_GET(pdo));
-                if (voltage > max_voltage && voltage <= 20) {
+                // PD reports power in 10mA steps
+                int current = PD_PDO_SRC_FIXED_CURRENT_GET(pdo);
+                if (voltage > max_voltage && voltage <= 20 && current >= 10) {
                   power_objects = i+1;
                   max_voltage = voltage;
+                  pdo_current = current;
                 }
               } else {
                 printf("# [pd] PD_STATE_ATTACHED_SNK not a fixed PDO: 0x%08lx\n", pdo);
@@ -363,18 +369,20 @@ bool pd_tick(battery_info_s* battery_info) {
               // TODO: can probably remove this
             }
 
-            printf("# [pd] requesting PO %d, %d V\n", power_objects, max_voltage);
+            // FIXME: what about headroom for passing power to other USB devices?
+            requested_current = pdo_current;
+            if (requested_current > 300) {
+              requested_current = 300;
+            }
+
+            printf("# [pd] requesting PO %d, %d V at %d mA\n", power_objects, max_voltage, requested_current * 10);
             tx.hdr = PD_MSGTYPE_REQUEST | PD_NUMOBJ(1) | pd_datarole | (pd_powerrole << PD_HDR_POWERROLE_SHIFT) | PD_SPECREV_2_0;
 
             tx.hdr &= ~PD_HDR_MESSAGEID;
             tx.hdr |= (tx_id_count % 8) << PD_HDR_MESSAGEID_SHIFT;
 
-            // FIXME: We currently statically set the charger to 2000mA.
-            // FIXME: what about headroom for passing power to other USB devices?
-            int current = 200; // value is in 10mA units
-
-            tx.obj[0] = PD_RDO_FV_MAX_CURRENT_SET(current)
-              | PD_RDO_FV_CURRENT_SET(current)
+            tx.obj[0] = PD_RDO_FV_MAX_CURRENT_SET(requested_current)
+              | PD_RDO_FV_CURRENT_SET(requested_current)
               | PD_RDO_USB_COMMS
               | PD_RDO_NO_USB_SUSPEND
               | PD_RDO_OBJPOS_SET(power_objects);
@@ -391,7 +399,7 @@ bool pd_tick(battery_info_s* battery_info) {
           // power supply is ready
           printf("# [pd] power supply ready.\n");
 
-          charger_enable_charge();
+          charger_enable_charge(requested_current);
 
           t = 0;
         } else if (msgrole == PD_POWERROLE_SOURCE && msgtype == PD_MSGTYPE_DR_SWAP) {

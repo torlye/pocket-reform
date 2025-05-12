@@ -464,6 +464,7 @@ void turn_som_power_off()
 
 void som_wake()
 {
+  // TODO: toggle gpio 19!
   uart_puts(uart0, "wake\r\n");
 }
 

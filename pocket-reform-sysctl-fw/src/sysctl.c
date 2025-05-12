@@ -91,6 +91,7 @@ void set_display_backlight(int percent)
 {
   // DISP_EN = 7 = PWM3 B
   printf("# set_display_backlight: %d\n", percent);
+  gpio_set_function(PIN_DISP_EN, GPIO_FUNC_PWM);
   pwm_set_freq_duty(pwm_gpio_to_slice_num(PIN_DISP_EN), pwm_gpio_to_channel(PIN_DISP_EN), 100000, percent);
 
   // caveat: latch needs to be always-on
@@ -411,53 +412,57 @@ void charger_dump(battery_info_s *battery_info)
 
 void turn_som_power_on()
 {
+  printf("# [action] turn_som_power_on\n");
   init_spi_client();
 
-  // Power latch enable
-  gpio_put(PIN_PWREN_LATCH, 1);
-
   gpio_put(PIN_LED_B, 1);
+  gpio_put(PIN_PWREN_LATCH, 0);
 
   set_boot_magic();
 
-  printf("# [action] turn_som_power_on\n");
   gpio_put(PIN_1V1_ENABLE, 1);
-  sleep_ms(10);
   gpio_put(PIN_3V3_ENABLE, 1);
-  sleep_ms(10);
   gpio_put(PIN_5V_ENABLE, 1);
 
   // Modem
   gpio_put(PIN_FLIGHTMODE, 1);  // active low
-  gpio_put(PIN_MODEM_RESET, 0); // active low (?)
+  gpio_put(PIN_MODEM_RESET, 1); // active low
   gpio_put(PIN_MODEM_POWER, 1); // active high
   gpio_put(PIN_PHONE_DPR, 1);   // active high
 
-  sleep_ms(10);
+  // Display reset (deassert)
+  gpio_set_function(PIN_DISP_EN, GPIO_FUNC_SIO);
   gpio_put(PIN_DISP_RESET, 1);
+  gpio_put(PIN_DISP_EN, 1);
 
-  // Modem
-  gpio_put(PIN_MODEM_RESET, 1); // active low
-
-  // Power latch end
+  // Latch power enables
+  gpio_put(PIN_PWREN_LATCH, 1);
+  if (!battery_info.som_is_powered) {
+    // reset display + modem (active low)
+    // unless this is a warm reboot of sysctl
+    gpio_put(PIN_DISP_RESET, 0);
+    gpio_put(PIN_MODEM_RESET, 0);
+    sleep_ms(20);
+    gpio_put(PIN_DISP_RESET, 1);
+    gpio_put(PIN_MODEM_RESET, 1);
+  }
   gpio_put(PIN_PWREN_LATCH, 0);
-  set_display_backlight(100);
 
   battery_info.som_is_powered = true;
 }
 
 void turn_som_power_off()
 {
+  printf("# [action] turn_som_power_off\n");
   init_spi_client();
-
-  // Power latch enable
-  gpio_put(PIN_PWREN_LATCH, 1);
 
   gpio_put(PIN_LED_B, 0);
 
   clear_boot_magic();
 
-  printf("# [action] turn_som_power_off\n");
+  // Display
+  gpio_set_function(PIN_DISP_EN, GPIO_FUNC_SIO);
+  gpio_put(PIN_DISP_EN, 0);
   gpio_put(PIN_DISP_RESET, 0);
 
   // Modem
@@ -468,12 +473,11 @@ void turn_som_power_off()
 
   // Power rails
   gpio_put(PIN_5V_ENABLE, 0);
-  sleep_ms(10);
   gpio_put(PIN_3V3_ENABLE, 0);
-  sleep_ms(10);
   gpio_put(PIN_1V1_ENABLE, 0);
 
-  // Power latch end
+  // Latch power enables
+  gpio_put(PIN_PWREN_LATCH, 1);
   gpio_put(PIN_PWREN_LATCH, 0);
   set_display_backlight(0);
 
@@ -548,9 +552,10 @@ void setup()
   gpio_set_dir(PIN_DISP_RESET, GPIO_OUT);
   gpio_put(PIN_DISP_RESET, 0);
 
-  // For brightness control of display v2
+  // For brightness control of display v2,
+  // this pin is switched to PWM mode later
   // Needs to be at 100% for display v1
-  gpio_set_function(PIN_DISP_EN, GPIO_FUNC_PWM);
+  gpio_set_function(PIN_DISP_EN, GPIO_FUNC_SIO);
 
   // Modem control pins
   gpio_init(PIN_FLIGHTMODE);
@@ -586,13 +591,15 @@ void setup()
   // pins.
   if (syscon_warm_boot())
   {
-    printf("# [reset] watchdog scratch had valid on magic, not latching power.\n");
+    // on by default after reboot
+    printf("# [reset] watchdog scratch had valid on magic, restoring power.\n");
     battery_info.som_is_powered = true;
+    turn_som_power_on();
   }
   else
   {
-    gpio_put(PIN_PWREN_LATCH, 1);
-    gpio_put(PIN_PWREN_LATCH, 0);
+    // off by default
+    turn_som_power_off();
   }
 
   gauge_init();
@@ -609,7 +616,11 @@ void handle_usb_commands()
     printf("# [acm_command] '%c'\n", usb_c);
     if (usb_c == '1')
     {
-      turn_som_power_on();
+      if (battery_info.som_is_powered) {
+        turn_som_power_on(true);
+      } else {
+        turn_som_power_on(false);
+      }
     }
     else if (usb_c == '0')
     {

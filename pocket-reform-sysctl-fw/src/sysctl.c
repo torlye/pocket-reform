@@ -687,14 +687,18 @@ void loop()
   }
   charger_tick();
 
-  // query gauge and charger, update battery status
   battery_info.ticks++;
-  if (battery_info.ticks > 5000)
+
+  // every 100ms: query gauge and charger, update battery status
+  if (battery_info.ticks % 1000 == 0)
   {
-    battery_info.ticks = 0;
     gauge_tick(&battery_info);
     charger_dump(&battery_info);
+  }
 
+  // every 1000ms: report to serial
+  if (battery_info.ticks % 10000 == 0)
+  {
     // TODO: print adc_charge_c adc_discharge_c
     printf("# %s %s %s chg=%1x mps_flt=%02x input=%dmV@%dmA charge=%dmA discharge=%dmA p=%0.2fW ttempty=%umin\n",
             battery_info.som_is_powered ? "ON" : "OFF",
@@ -729,7 +733,7 @@ int main()
 {
   setup();
 
-  sleep_ms(1000);
+  sleep_ms(100);
   printf("# [pocket_sysctl] entering main loop\n");
 
   while (true)

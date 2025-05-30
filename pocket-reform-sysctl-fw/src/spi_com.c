@@ -13,7 +13,8 @@ void init_spi_client()
     gpio_set_function(PIN_SOM_SS0, GPIO_FUNC_SPI);
     gpio_set_function(PIN_SOM_SCK, GPIO_FUNC_SPI);
 
-    spi_init(spi1, 400 * 1000);
+    // 4 MHz
+    spi_init(spi1, 4000 * 1000);
     // we don't appreciate the wording, but it's the API we are given
     spi_set_slave(spi1, true);
     spi_set_format(spi1, 8, SPI_CPOL_0, SPI_CPHA_1, SPI_MSB_FIRST);
@@ -21,197 +22,182 @@ void init_spi_client()
     printf("# [spi] init_spi_client done\n");
 }
 
+static int spi_debug_enabled = 0;
+static int spi_rxlen = 0;
+
 void handle_spi_commands(battery_info_s *battery_info)
 {
-    int command_len = 0;
-    bool all_zeroes = true;
-    uint8_t spi_buf[SPI_BUF_LEN];
-    unsigned char spi_cmd_state = ST_EXPECT_MAGIC;
-    unsigned char spi_command = '\0';
-    uint8_t spi_arg1 = 0;
+  uint8_t spi_command = 0;
+  uint8_t spi_arg1 = 0;
+  uint8_t spi_buf[SPI_BUF_LEN]; // normally 8 bytes
 
-    while (spi_is_readable(spi1) && command_len < SPI_BUF_LEN)
-    {
-        // 0x00 is "repeated tx data"
-        spi_read_blocking(spi1, 0x00, &spi_buf[command_len], 1);
-        if (spi_buf[command_len] != 0)
-        {
-            all_zeroes = false;
-        }
-        command_len++;
+  if (!battery_info->som_is_powered) return;
+
+  // non blocking read
+  for (uint8_t i = 0; i < 4; i++) {
+    // no more data in receive buffer? then break
+    if (!spi_is_readable(spi1)) {
+      break;
     }
 
-    if (command_len == 0)
-    {
-        return;
+    uint8_t rx = 0xff;
+    spi_read_blocking(spi1, 0xff, &rx, 1);
+
+    if (rx == 0xff) {
+      // leftovers from unsynced host read
+      spi_rxlen = 0;
+    } else {
+      // resync to the beginning
+      if (rx == 0xb5) {
+        spi_rxlen = 0;
+      }
+
+      spi_buf[spi_rxlen] = rx;
+      spi_rxlen++;
+      if (spi_rxlen >= 4) {
+        break;
+      }
     }
+  }
 
-    // states:
-    // 0   arg1 byte expected
-    // 4   command byte expected
-    // 6   execute command
-    // 7   magic byte expected
-    for (uint8_t s = 0; s < command_len; s++)
-    {
-        if (spi_cmd_state == ST_EXPECT_MAGIC)
-        {
-            // magic byte found, prevents garbage data
-            // in the bus from triggering a command
-            if (spi_buf[s] == 0xb5)
-            {
-                spi_cmd_state = ST_EXPECT_CMD;
-            }
-        }
-        else if (spi_cmd_state == ST_EXPECT_CMD)
-        {
-            // read command
-            spi_command = spi_buf[s];
-            spi_cmd_state = ST_EXPECT_DIGIT_0;
-        }
-        else if (spi_cmd_state == ST_EXPECT_DIGIT_0)
-        {
-            // read arg1 byte
-            spi_arg1 = spi_buf[s];
-            spi_cmd_state = ST_EXPECT_RETURN;
-        }
+  if (spi_rxlen < 4) return;
+
+  // dump the buffer to serial
+  if (spi_debug_enabled || spi_buf[0] != 0xb5) {
+    printf("# [spi rx %d] ", spi_rxlen);
+    for (int i = 0; i < spi_rxlen; i++) {
+      printf("%2x ", spi_buf[i]);
     }
-
-    if (spi_cmd_state == ST_EXPECT_MAGIC && !all_zeroes)
-    {
-        // reset SPI0 block
-        // this is a workaround for confusion with
-        // software spi from BPI-CM4 where we get
-        // bit-shifted bytes
-
-        init_spi_client();
-        spi_cmd_state = ST_EXPECT_MAGIC;
-        spi_command = 0;
-        spi_arg1 = 0;
-        return;
+    printf("\t");
+    for (int i = 0; i < spi_rxlen; i++) {
+      if (spi_buf[i] >= 32) {
+        printf("%c", spi_buf[i]);
+      } else {
+        printf(".");
+      }
     }
+    printf("\n");
+  }
 
-    if (spi_cmd_state != ST_EXPECT_RETURN)
-    {
-        // waiting for more data
-        return;
-    }
+  // reset
+  spi_rxlen = 0;
 
-    printf("# [spi] exec: '%c' 0x%02x\n", spi_command, spi_arg1);
-
-    // clear receive buffer, reuse as send buffer
-    memset(spi_buf, 0, SPI_BUF_LEN);
-
-    // execute power state command
-    if (spi_command == 'p')
-    {
-        // toggle system power and/or reset imx
-        if (spi_arg1 == 1)
-        {
-            turn_som_power_off();
-        }
-        if (spi_arg1 == 2)
-        {
-            turn_som_power_on();
-        }
-        if (spi_arg1 == 3)
-        {
-            // TODO
-            // reset_som();
-        }
-
-        spi_buf[0] = battery_info->som_is_powered;
-    }
-    // return firmware version and api info
-    else if (spi_command == 'f')
-    {
-        if (spi_arg1 == 0)
-        {
-            memcpy(spi_buf, FW_STRING1, 8);
-        }
-        else if (spi_arg1 == 1)
-        {
-            memcpy(spi_buf, FW_STRING2, 2);
-        }
-        else
-        {
-            // if spi_buf size changes, check that both sides can deal with the longer string
-            static_assert(sizeof(spi_buf) == 8);
-            memset(spi_buf, 0, sizeof(spi_buf));
-            strlcpy((char*)spi_buf, MNTRE_FIRMWARE_VERSION, sizeof(spi_buf));
-        }
-    }
-    // execute status query command
-    else if (spi_command == 'q')
-    {
-        uint8_t percentage = (uint8_t)battery_info->charge_percentage;
-        int16_t voltsInt = (int16_t)(battery_info->battery_volts * 1000.0);
-        int16_t currentInt = (int16_t)(battery_info->battery_amps * 1000.0);
-
-        spi_buf[0] = (uint8_t)voltsInt;
-        spi_buf[1] = (uint8_t)(voltsInt >> 8);
-        spi_buf[2] = (uint8_t)currentInt;
-        spi_buf[3] = (uint8_t)(currentInt >> 8);
-        spi_buf[4] = (uint8_t)percentage;
-        spi_buf[5] = (uint8_t)0; // TODO "state" not implemented
-        spi_buf[6] = (uint8_t)0;
-    }
-    // get cell voltage
-    else if (spi_command == 'v')
-    {
-        uint16_t volts = 0;
-        if (spi_arg1 == 0)
-        {
-            volts = battery_info->cell1_volts;
-            spi_buf[0] = (uint8_t)volts;
-            spi_buf[1] = (uint8_t)(volts >> 8);
-
-            volts = battery_info->cell2_volts;
-            spi_buf[2] = (uint8_t)volts;
-            spi_buf[3] = (uint8_t)(volts >> 8);
-        }
-    }
-    // get calculated capacity
-    else if (spi_command == 'c')
-    {
-        uint16_t cap_accu = (uint16_t) BATTERY_CAPACITY_MILLIAMP_HOURS * (((float)battery_info->charge_percentage) / 100.0);
-        uint16_t cap_min = (uint16_t)0;
-        uint16_t cap_max = (uint16_t) BATTERY_CAPACITY_MILLIAMP_HOURS;
-
-        spi_buf[0] = (uint8_t)cap_accu;
-        spi_buf[1] = (uint8_t)(cap_accu >> 8);
-        spi_buf[2] = (uint8_t)cap_min;
-        spi_buf[3] = (uint8_t)(cap_min >> 8);
-        spi_buf[4] = (uint8_t)cap_max;
-        spi_buf[5] = (uint8_t)(cap_max >> 8);
-    }
-    else if (spi_command == 'u')
-    {
-        // not implemented
-    }
-    else if (spi_command == 'b')
-    {
-        // only for display v2
-        int brightness = spi_arg1;
-        // 80% is a limit of the hardware (above, the backlight can flicker)
-        if (brightness < 0)
-            brightness = 0;
-        if (brightness > 80)
-            brightness = 80;
-        set_display_backlight(brightness);
-    }
-
-    // FIXME: if we don't reset, SPI wants to transact the amount of bytes
-    // that we read above for unknown reasons
+  // commands are always 4 bytes, starting with 0xb5
+  if (spi_buf[0] != 0xb5) {
+    // reset SPI0 block
+    // this is a workaround for confusion with
+    // software spi from BPI-CM4 where we get
+    // bit-shifted bytes
+    printf("# [spi resync]\n");
     init_spi_client();
-
-    if (battery_info->som_is_powered)
-    {
-        spi_write_blocking(spi1, spi_buf, SPI_BUF_LEN);
-    }
-
-    spi_cmd_state = ST_EXPECT_MAGIC;
-    spi_command = 0;
-    spi_arg1 = 0;
-
     return;
+  }
+
+  spi_command = spi_buf[1];
+  spi_arg1 = spi_buf[2];
+
+  // clear receive buffer, reuse as send buffer
+  memset(spi_buf, 0, SPI_BUF_LEN);
+
+  /* deliver the responses first, then execute
+     any blocking work later */
+
+  if (spi_command == 'p') {
+    spi_buf[0] = spi_arg1;
+  }
+  else if (spi_command == 'f') {
+    // return firmware version and api info
+    if (spi_arg1 == 0) memcpy(spi_buf, FW_STRING1, MIN(SPI_BUF_LEN, sizeof(FW_STRING1)));
+    else if (spi_arg1 == 1) memcpy(spi_buf, FW_STRING2, MIN(SPI_BUF_LEN, sizeof(FW_STRING2)));
+    else memcpy(spi_buf, MNTRE_FIRMWARE_VERSION, MIN(SPI_BUF_LEN, sizeof(MNTRE_FIRMWARE_VERSION)));
+  }
+  else if (spi_command == 'q') {
+    // execute status query command
+    uint8_t percentage = (uint8_t)battery_info->charge_percentage;
+    int16_t voltsInt = (int16_t)(battery_info->battery_volts * 1000.0);
+    int16_t currentInt = (int16_t)(battery_info->battery_amps * 1000.0);
+
+    spi_buf[0] = (uint8_t)voltsInt;
+    spi_buf[1] = (uint8_t)(voltsInt >> 8);
+    spi_buf[2] = (uint8_t)currentInt;
+    spi_buf[3] = (uint8_t)(currentInt >> 8);
+    spi_buf[4] = (uint8_t)percentage;
+    // TODO "state" not implemented
+    spi_buf[5] = (uint8_t)0;
+  }
+  else if (spi_command == 'v') {
+    // get cell voltage
+    int volts = 0;
+    if (spi_arg1 == 0) {
+      // pack 0
+      volts = battery_info->cell1_volts;
+      spi_buf[0] = (uint8_t)volts;
+      spi_buf[1] = (uint8_t)(volts >> 8);
+
+      volts = battery_info->cell2_volts;
+      spi_buf[2] = (uint8_t)volts;
+      spi_buf[3] = (uint8_t)(volts >> 8);
+    }
+  }
+  else if (spi_command == 'c') {
+    // get calculated capacity (emulated)
+    uint16_t cap_accu = (uint16_t)BATTERY_CAPACITY_MILLIAMP_HOURS * (((float)battery_info->charge_percentage) / 100.0);
+    uint16_t cap_min = (uint16_t)0;
+    uint16_t cap_max = (uint16_t)BATTERY_CAPACITY_MILLIAMP_HOURS;
+
+    spi_buf[0] = (uint8_t)cap_accu;
+    spi_buf[1] = (uint8_t)(cap_accu >> 8);
+    spi_buf[2] = (uint8_t)cap_min;
+    spi_buf[3] = (uint8_t)(cap_min >> 8);
+    spi_buf[4] = (uint8_t)cap_max;
+    spi_buf[5] = (uint8_t)(cap_max >> 8);
+  }
+  else if (spi_command == 'b') {
+    // only for display v2
+    int brightness = spi_arg1;
+    // 80% is a limit of the hardware (above, the backlight can flicker)
+    if (brightness < 0)
+      brightness = 0;
+    if (brightness > 80)
+      brightness = 80;
+    set_display_backlight(brightness);
+  }
+
+  /* send response to host (8 bytes) and discard response */
+  if (battery_info->som_is_powered) {
+    uint8_t discard[8];
+    spi_write_read_blocking(spi1, (const uint8_t*)spi_buf, discard, 8);
+  }
+
+  /* empty the receive fifo */
+  /*for (uint8_t i = 0; i < 8; i++) {
+    int timeout = 20; // up to 160 ms timeout total
+    while (!spi_is_readable(spi1)) {
+      delay(1);
+      timeout--;
+      if (timeout <= 0) {
+        printf("# [rx drain timeout @%d]\n", i);
+        break;
+      }
+    }
+    uint8_t discard;
+    spi_read_blocking(spi1, 0xff, &discard, 1);
+  }*/
+
+  /* execute commands that may block for a while */
+  if (spi_command == 'p') {
+    // toggle system power and/or reset imx
+    if (spi_arg1 == 1) {
+      turn_som_power_off();
+    } else if (spi_arg1 == 2) {
+      turn_som_power_on();
+    } else if (spi_arg1 == 3) {
+      /* TODO: not yet implemented */
+      /* reset_som(); */
+    }
+  }
+  else if (spi_command == 'z') {
+    // pass message byte (spi_arg1) directly to uart (implemented for Desktop Reform control panel)
+    /* TODO: not yet implemented */
+  }
 }

@@ -23,46 +23,36 @@ void init_spi_client()
 }
 
 static int spi_debug_enabled = 0;
-static int spi_rxlen = 0;
 
 void handle_spi_commands(battery_info_s *battery_info)
 {
   uint8_t spi_command = 0;
   uint8_t spi_arg1 = 0;
   uint8_t spi_buf[SPI_BUF_LEN]; // normally 8 bytes
+  int spi_rxlen = 0;
 
   if (!battery_info->som_is_powered) return;
+  if (!spi_is_readable(spi1)) return;
 
   // non blocking read
   for (uint8_t i = 0; i < 4; i++) {
-    // no more data in receive buffer? then break and
-    // continue next time
-    if (!spi_is_readable(spi1)) {
-      break;
-    }
-
     // read a byte (but don't write a byte)
-    uint8_t rx = (uint8_t)spi_get_hw(spi1)->dr;
-
-    if (rx == 0xff) {
-      // leftovers from unsynced host read
-      spi_rxlen = 0;
-    } else {
-      // resync to the beginning
-      if (rx == 0xb5) spi_rxlen = 0;
-
-      spi_buf[spi_rxlen] = rx;
-      spi_rxlen++;
-      if (spi_rxlen >= 4) {
+    int timeout = 1000000;
+    while (!spi_is_readable(spi1)) {
+      timeout--;
+      if (timeout<=0) {
+        printf("# [spi rx timeout @%d]\n", i);
         break;
       }
     }
+    uint8_t rx = (uint8_t)spi_get_hw(spi1)->dr;
+    spi_buf[i] = rx;
+    spi_rxlen++;
   }
 
-  if (spi_rxlen < 4) return;
-
+  // commands are always 4 bytes, starting with 0xb5
   // dump the buffer to serial
-  if (spi_debug_enabled || spi_buf[0] != 0xb5) {
+  if (spi_debug_enabled || spi_buf[0] != 0xb5 || spi_rxlen != 4) {
     printf("# [spi rx %d] ", spi_rxlen);
     for (int i = 0; i < spi_rxlen; i++) {
       printf("%2x ", spi_buf[i]);
@@ -76,13 +66,6 @@ void handle_spi_commands(battery_info_s *battery_info)
       }
     }
     printf("\n");
-  }
-
-  // reset
-  spi_rxlen = 0;
-
-  // commands are always 4 bytes, starting with 0xb5
-  if (spi_buf[0] != 0xb5) {
     // reset SPI0 block
     // this is a workaround for confusion with
     // software spi from BPI-CM4 where we get

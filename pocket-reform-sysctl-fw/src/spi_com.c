@@ -35,22 +35,21 @@ void handle_spi_commands(battery_info_s *battery_info)
 
   // non blocking read
   for (uint8_t i = 0; i < 4; i++) {
-    // no more data in receive buffer? then break
+    // no more data in receive buffer? then break and
+    // continue next time
     if (!spi_is_readable(spi1)) {
       break;
     }
 
-    uint8_t rx = 0xff;
-    spi_read_blocking(spi1, 0xff, &rx, 1);
+    // read a byte (but don't write a byte)
+    uint8_t rx = (uint8_t)spi_get_hw(spi1)->dr;
 
     if (rx == 0xff) {
       // leftovers from unsynced host read
       spi_rxlen = 0;
     } else {
       // resync to the beginning
-      if (rx == 0xb5) {
-        spi_rxlen = 0;
-      }
+      if (rx == 0xb5) spi_rxlen = 0;
 
       spi_buf[spi_rxlen] = rx;
       spi_rxlen++;
@@ -152,37 +151,11 @@ void handle_spi_commands(battery_info_s *battery_info)
     spi_buf[4] = (uint8_t)cap_max;
     spi_buf[5] = (uint8_t)(cap_max >> 8);
   }
-  else if (spi_command == 'b') {
-    // only for display v2
-    int brightness = spi_arg1;
-    // 80% is a limit of the hardware (above, the backlight can flicker)
-    if (brightness < 0)
-      brightness = 0;
-    if (brightness > 80)
-      brightness = 80;
-    set_display_backlight(brightness);
-  }
 
   /* send response to host (8 bytes) and discard response */
   if (battery_info->som_is_powered) {
-    uint8_t discard[8];
-    spi_write_read_blocking(spi1, (const uint8_t*)spi_buf, discard, 8);
+    spi_write_blocking(spi1, (const uint8_t*)spi_buf, 8);
   }
-
-  /* empty the receive fifo */
-  /*for (uint8_t i = 0; i < 8; i++) {
-    int timeout = 20; // up to 160 ms timeout total
-    while (!spi_is_readable(spi1)) {
-      delay(1);
-      timeout--;
-      if (timeout <= 0) {
-        printf("# [rx drain timeout @%d]\n", i);
-        break;
-      }
-    }
-    uint8_t discard;
-    spi_read_blocking(spi1, 0xff, &discard, 1);
-  }*/
 
   /* execute commands that may block for a while */
   if (spi_command == 'p') {
@@ -199,5 +172,15 @@ void handle_spi_commands(battery_info_s *battery_info)
   else if (spi_command == 'z') {
     // pass message byte (spi_arg1) directly to uart (implemented for Desktop Reform control panel)
     /* TODO: not yet implemented */
+  }
+  else if (spi_command == 'b') {
+    // only for display v2
+    int brightness = spi_arg1;
+    // 80% is a limit of the hardware (above, the backlight can flicker)
+    if (brightness < 0)
+      brightness = 0;
+    if (brightness > 80)
+      brightness = 80;
+    set_display_backlight(brightness);
   }
 }

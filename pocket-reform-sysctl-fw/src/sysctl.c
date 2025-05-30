@@ -674,9 +674,6 @@ void loop()
   // handle commands from keyboard
   handle_uart_commands(&battery_info);
 
-  // handle commands from SoM
-  handle_spi_commands(&battery_info);
-
 #ifdef ACM_ENABLED
   // handle commands over usb serial
   handle_usb_commands();
@@ -729,11 +726,21 @@ void mntre_reset_callback(void) {
     gpio_put(PIN_PWREN_LATCH, 0);
 }
 
+bool spi_commands_task(__unused struct repeating_timer *t) {
+  // handle commands from SoM
+  handle_spi_commands(&battery_info);
+  // timer should continue calling us
+  return true;
+}
+
 int main()
 {
   setup();
 
-  sleep_ms(100);
+  // call SPI task every 5ms to ensure response time
+  struct repeating_timer spi_timer;
+  add_repeating_timer_ms(-5, spi_commands_task, NULL, &spi_timer);
+
   printf("# [pocket_sysctl] entering main loop\n");
 
   while (true)

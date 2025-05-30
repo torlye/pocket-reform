@@ -37,14 +37,6 @@ void handle_spi_commands(battery_info_s *battery_info)
   // non blocking read
   for (uint8_t i = 0; i < 4; i++) {
     // read a byte (but don't write a byte)
-    int timeout = 1000000;
-    while (!spi_is_readable(spi1)) {
-      timeout--;
-      if (timeout<=0) {
-        printf("# [spi rx timeout @%d]\n", i);
-        break;
-      }
-    }
     uint8_t rx = (uint8_t)spi_get_hw(spi1)->dr;
     spi_buf[i] = rx;
     spi_rxlen++;

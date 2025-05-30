@@ -718,12 +718,12 @@ void loop()
 }
 
 void mntre_reset_callback(void) {
-    // avoid leaving display brightness PWM at a bad duty cycle.
-    gpio_set_function(PIN_DISP_EN, GPIO_FUNC_SIO);
-    gpio_put(PIN_DISP_EN, 1);
+  // avoid leaving display brightness PWM at a bad duty cycle.
+  gpio_set_function(PIN_DISP_EN, GPIO_FUNC_SIO);
+  gpio_put(PIN_DISP_EN, 1);
 
-    // clear latch, so resetting _us_ does not reset the SOC.
-    gpio_put(PIN_PWREN_LATCH, 0);
+  // clear latch, so resetting _us_ does not reset the SOC.
+  gpio_put(PIN_PWREN_LATCH, 0);
 }
 
 bool spi_commands_task(__unused struct repeating_timer *t) {

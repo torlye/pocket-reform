@@ -8,18 +8,18 @@
 
 void init_spi_client()
 {
-    gpio_set_function(PIN_SOM_MOSI, GPIO_FUNC_SPI);
-    gpio_set_function(PIN_SOM_MISO, GPIO_FUNC_SPI);
-    gpio_set_function(PIN_SOM_SS0, GPIO_FUNC_SPI);
-    gpio_set_function(PIN_SOM_SCK, GPIO_FUNC_SPI);
+  gpio_set_function(PIN_SOM_MOSI, GPIO_FUNC_SPI);
+  gpio_set_function(PIN_SOM_MISO, GPIO_FUNC_SPI);
+  gpio_set_function(PIN_SOM_SS0, GPIO_FUNC_SPI);
+  gpio_set_function(PIN_SOM_SCK, GPIO_FUNC_SPI);
 
-    // 4 MHz
-    spi_init(spi1, 4000 * 1000);
-    // we don't appreciate the wording, but it's the API we are given
-    spi_set_slave(spi1, true);
-    spi_set_format(spi1, 8, SPI_CPOL_0, SPI_CPHA_1, SPI_MSB_FIRST);
+  // 4 MHz
+  spi_init(spi1, 4000 * 1000);
+  // we don't appreciate the wording, but it's the API we are given
+  spi_set_slave(spi1, true);
+  spi_set_format(spi1, 8, SPI_CPOL_0, SPI_CPHA_1, SPI_MSB_FIRST);
 
-    printf("# [spi] init_spi_client done\n");
+  printf("# [spi] init_spi_client done\n");
 }
 
 static int spi_debug_enabled = 0;

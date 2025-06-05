@@ -1,0 +1,210 @@
+(footprint "Mounting_Sinhoo_SMTSO20"
+	(version 20241229)
+	(generator "pcbnew")
+	(generator_version "9.0")
+	(layer "F.Cu")
+	(descr "Mounting Hardware, inside through hole M2, height 1.5, Wuerth electronics 9774015243 (https://katalog.we-online.de/em/datasheet/9774015243.pdf), generated with kicad-footprint-generator")
+	(tags "Mounting M2 9774015243")
+	(property "Reference" "H1"
+		(at 0 -3.6 0)
+		(unlocked yes)
+		(layer "F.SilkS")
+		(hide yes)
+		(uuid "1d6f67e7-d810-4cb2-86fc-c84e990cfcc0")
+		(effects
+			(font
+				(size 0.5 0.5)
+				(thickness 0.125)
+			)
+		)
+	)
+	(property "Value" "MountingHole_Pad"
+		(at 0 3.6 0)
+		(layer "F.Fab")
+		(uuid "0fe7350d-e7f2-40fb-8288-53d773e94845")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "8c8f65a8-cb71-4813-8c52-4e484d343f04")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" "Mounting Hole with connection"
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "62bd2caf-398d-4d37-8935-b997c557ccbb")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Manufacturer" "Wuerth"
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "3ee03abb-5669-41f8-8595-949ebac0d216")
+		(effects
+			(font
+				(size 0.5 0.5)
+				(thickness 0.1)
+			)
+		)
+	)
+	(property "Manufacturer_No" "9774015243"
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "e662301b-fa29-4a3a-9983-302512f078ba")
+		(effects
+			(font
+				(size 0.5 0.5)
+				(thickness 0.1)
+			)
+		)
+	)
+	(property "Notes" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "1ac50302-4a1a-4d28-8d43-5981d5094a40")
+		(effects
+			(font
+				(size 0.5 0.5)
+				(thickness 0.1)
+			)
+		)
+	)
+	(property "Alt_Manufacturer" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "9f4549ff-706f-4171-a7f1-3e6be9d098ff")
+		(effects
+			(font
+				(size 0.5 0.5)
+				(thickness 0.1)
+			)
+		)
+	)
+	(property "Alt_Part_No" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "3a993736-784e-4df8-aabb-576419fd165b")
+		(effects
+			(font
+				(size 0.5 0.5)
+				(thickness 0.1)
+			)
+		)
+	)
+	(property "LCSC" "global sourcing"
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "76206eea-d3d5-4110-9b9f-bbc4ee78cbf7")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr smd allow_soldermask_bridges)
+	(fp_arc
+		(start -2.4 -0.7)
+		(mid -1.767767 -1.767767)
+		(end -0.7 -2.4)
+		(stroke
+			(width 1)
+			(type solid)
+		)
+		(layer "F.Paste")
+		(uuid "1505f0ca-f40a-4028-aeff-5a9aa4ca75b9")
+	)
+	(fp_arc
+		(start -0.7 2.4)
+		(mid -1.767767 1.767767)
+		(end -2.4 0.7)
+		(stroke
+			(width 1)
+			(type solid)
+		)
+		(layer "F.Paste")
+		(uuid "a9269827-bf1c-415a-9d6d-38fad0e42e25")
+	)
+	(fp_arc
+		(start 0.699999 -2.4)
+		(mid 1.767766 -1.767767)
+		(end 2.399999 -0.7)
+		(stroke
+			(width 1)
+			(type solid)
+		)
+		(layer "F.Paste")
+		(uuid "5221b222-2131-4a3f-86ad-4e6df0fbd673")
+	)
+	(fp_arc
+		(start 2.399999 0.7)
+		(mid 1.767766 1.767767)
+		(end 0.699999 2.4)
+		(stroke
+			(width 1)
+			(type solid)
+		)
+		(layer "F.Paste")
+		(uuid "6828408b-5e9c-46be-b4bb-4158922a185a")
+	)
+	(fp_text user "${REFERENCE}"
+		(at 0 -4.6 0)
+		(layer "F.Fab")
+		(uuid "3f0ad4ba-fd0c-42a2-a1a4-cca25fa64c59")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(pad "1" thru_hole circle
+		(at 0 0)
+		(size 6.2 6.2)
+		(drill 3.75)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "909fda42-cffc-4f02-afa9-b210f2b4dfbb")
+	)
+	(embedded_fonts no)
+	(model "${KICAD9_3DMODEL_DIR}/Mounting_Wuerth.3dshapes/Mounting_Wuerth_WA-SMSI-M2_H1.5mm_9774015243.wrl"
+		(offset
+			(xyz 0 0 0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 0)
+		)
+	)
+)

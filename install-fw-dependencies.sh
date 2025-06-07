@@ -18,7 +18,7 @@ set -- apt-get --no-install-recommends -y install "$@"
 if [ "$UID" != 0 ]; then
     set -- sudo "$@"
 fi
-echo "Running $@"
+echo "Running $*"
 "$@"
 # clear $@
 set --

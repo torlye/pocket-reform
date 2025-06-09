@@ -364,10 +364,10 @@ bool pd_tick(battery_info_s* battery_info) {
               }
             }
 
-            printf("# [pd] discarding further messages\n");
+            /*printf("# [pd] discarding further messages\n");
             while (fusb_read_message(&rx_msg)) {
               // TODO: can probably remove this
-            }
+            }*/
 
             // FIXME: what about headroom for passing power to other USB devices?
             requested_current = pdo_current;

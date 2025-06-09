@@ -73,13 +73,7 @@ void handle_spi_commands(battery_info_s *battery_info)
   // clear receive buffer, reuse as send buffer
   memset(spi_buf, 0, SPI_BUF_LEN);
 
-  /* deliver the responses first, then execute
-     any blocking work later */
-
-  if (spi_command == 'p') {
-    spi_buf[0] = spi_arg1;
-  }
-  else if (spi_command == 'f') {
+  if (spi_command == 'f') {
     // return firmware version and api info
     if (spi_arg1 == 0) memcpy(spi_buf, FW_STRING1, MIN(SPI_BUF_LEN, sizeof(FW_STRING1)));
     else if (spi_arg1 == 1) memcpy(spi_buf, FW_STRING2, MIN(SPI_BUF_LEN, sizeof(FW_STRING2)));
@@ -126,22 +120,13 @@ void handle_spi_commands(battery_info_s *battery_info)
     spi_buf[4] = (uint8_t)cap_max;
     spi_buf[5] = (uint8_t)(cap_max >> 8);
   }
-
-  /* send response to host (8 bytes) and discard response */
-  if (battery_info->som_is_powered) {
-    spi_write_blocking(spi1, (const uint8_t*)spi_buf, 8);
-  }
-
-  /* execute commands that may block for a while */
-  if (spi_command == 'p') {
-    // toggle system power and/or reset imx
+  else if (spi_command == 'p') {
+    // toggle system power off
     if (spi_arg1 == 1) {
       turn_som_power_off();
-    } else if (spi_arg1 == 2) {
-      turn_som_power_on();
-    } else if (spi_arg1 == 3) {
-      /* TODO: not yet implemented */
-      /* reset_som(); */
+      // don't try to send a response to turned-off SOM,
+      // because SPI will hang otherwise
+      return;
     }
   }
   else if (spi_command == 'z') {
@@ -157,5 +142,10 @@ void handle_spi_commands(battery_info_s *battery_info)
     if (brightness > 80)
       brightness = 80;
     set_display_backlight(brightness);
+  }
+
+  /* send response to host (8 bytes) and discard response */
+  if (battery_info->som_is_powered) {
+    spi_write_blocking(spi1, (const uint8_t*)spi_buf, 8);
   }
 }

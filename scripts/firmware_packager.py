@@ -67,7 +67,7 @@ def make_firmware_metainfo(firmware_info, dst):
     del local_info["release_description_file"]
 
     local_info = {
-        key: value if key == 'release_description' or value is None else escxml(value)
+        key: value if key in ['release_description', 'firmware_description'] or value is None else escxml(value)
         for key, value in local_info.items()
     }
     firmware_metainfo = firmware_metainfo_template.format(

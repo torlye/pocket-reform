@@ -3,9 +3,12 @@
 
 void handle_uart_commands(battery_info_s* battery_info)
 {
-  while (uart_is_readable(UART_ID))
+  // prevent endless loop
+  int uart_max = 8;
+  while (uart_is_readable(UART_ID) && uart_max > 0)
   {
     handle_commands(uart_getc(UART_ID), battery_info);
+    uart_max--;
   }
 }
 

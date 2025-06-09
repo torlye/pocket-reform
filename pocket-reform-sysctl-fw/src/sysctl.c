@@ -90,16 +90,15 @@ int32_t pwm_set_freq_duty(uint32_t slice_num, uint32_t chan, uint32_t freq, int 
 void set_display_backlight(int percent)
 {
   // DISP_EN = 7 = PWM3 B
-  printf("# set_display_backlight: %d\n", percent);
   gpio_set_function(PIN_DISP_EN, GPIO_FUNC_PWM);
   pwm_set_freq_duty(pwm_gpio_to_slice_num(PIN_DISP_EN), pwm_gpio_to_channel(PIN_DISP_EN), 100000, percent);
 
   // caveat: latch needs to be always-on
   // for brightnesses other than full brightness to work
-  gpio_put(PIN_PWREN_LATCH, 1);
-  sleep_ms(5);
   if (percent == 0 || percent == 100) {
     gpio_put(PIN_PWREN_LATCH, 0);
+  } else {
+    gpio_put(PIN_PWREN_LATCH, 1);
   }
 }
 
@@ -413,7 +412,6 @@ void charger_dump(battery_info_s *battery_info)
 void turn_som_power_on()
 {
   printf("# [action] turn_som_power_on\n");
-  init_spi_client();
 
   gpio_put(PIN_LED_B, 1);
   gpio_put(PIN_PWREN_LATCH, 0);
@@ -449,14 +447,13 @@ void turn_som_power_on()
   gpio_put(PIN_PWREN_LATCH, 0);
 
   battery_info.som_is_powered = true;
+  init_spi_client();
 }
 
 void turn_som_power_off()
 {
   printf("# [action] turn_som_power_off\n");
-  init_spi_client();
-
-  gpio_put(PIN_LED_B, 0);
+  battery_info.som_is_powered = false;
 
   clear_boot_magic();
 
@@ -478,10 +475,11 @@ void turn_som_power_off()
 
   // Latch power enables
   gpio_put(PIN_PWREN_LATCH, 1);
+  sleep_ms(1);
   gpio_put(PIN_PWREN_LATCH, 0);
   set_display_backlight(0);
 
-  battery_info.som_is_powered = false;
+  gpio_put(PIN_LED_B, 0);
 }
 
 void som_wake()
@@ -494,6 +492,10 @@ void setup()
 {
   tusb_init();
   reform_stdio_usb_init();
+
+  // reset if main loop is stuck for 1000ms
+  watchdog_enable(1000, 1);
+
   init_spi_client();
 
   printf("# [reset] cause: %#.8x\n", (uint16_t)vreg_and_chip_reset_hw->chip_reset);
@@ -670,6 +672,8 @@ void usb_host_5v_disable() {
 void loop()
 {
   bool can_sleep = true;
+
+  watchdog_update();
 
   // handle commands from keyboard
   handle_uart_commands(&battery_info);

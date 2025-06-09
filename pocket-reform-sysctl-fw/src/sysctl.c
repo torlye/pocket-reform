@@ -90,16 +90,15 @@ int32_t pwm_set_freq_duty(uint32_t slice_num, uint32_t chan, uint32_t freq, int 
 void set_display_backlight(int percent)
 {
   // DISP_EN = 7 = PWM3 B
-  printf("# set_display_backlight: %d\n", percent);
   gpio_set_function(PIN_DISP_EN, GPIO_FUNC_PWM);
   pwm_set_freq_duty(pwm_gpio_to_slice_num(PIN_DISP_EN), pwm_gpio_to_channel(PIN_DISP_EN), 100000, percent);
 
   // caveat: latch needs to be always-on
   // for brightnesses other than full brightness to work
-  gpio_put(PIN_PWREN_LATCH, 1);
-  sleep_ms(5);
   if (percent == 0 || percent == 100) {
     gpio_put(PIN_PWREN_LATCH, 0);
+  } else {
+    gpio_put(PIN_PWREN_LATCH, 1);
   }
 }
 
@@ -413,7 +412,6 @@ void charger_dump(battery_info_s *battery_info)
 void turn_som_power_on()
 {
   printf("# [action] turn_som_power_on\n");
-  init_spi_client();
 
   gpio_put(PIN_LED_B, 1);
   gpio_put(PIN_PWREN_LATCH, 0);
@@ -449,14 +447,13 @@ void turn_som_power_on()
   gpio_put(PIN_PWREN_LATCH, 0);
 
   battery_info.som_is_powered = true;
+  init_spi_client();
 }
 
 void turn_som_power_off()
 {
   printf("# [action] turn_som_power_off\n");
-  init_spi_client();
-
-  gpio_put(PIN_LED_B, 0);
+  battery_info.som_is_powered = false;
 
   clear_boot_magic();
 
@@ -478,10 +475,11 @@ void turn_som_power_off()
 
   // Latch power enables
   gpio_put(PIN_PWREN_LATCH, 1);
+  sleep_ms(1);
   gpio_put(PIN_PWREN_LATCH, 0);
   set_display_backlight(0);
 
-  battery_info.som_is_powered = false;
+  gpio_put(PIN_LED_B, 0);
 }
 
 void som_wake()
@@ -494,6 +492,10 @@ void setup()
 {
   tusb_init();
   reform_stdio_usb_init();
+
+  // reset if main loop is stuck for 1000ms
+  watchdog_enable(1000, 1);
+
   init_spi_client();
 
   printf("# [reset] cause: %#.8x\n", (uint16_t)vreg_and_chip_reset_hw->chip_reset);
@@ -671,11 +673,10 @@ void loop()
 {
   bool can_sleep = true;
 
+  watchdog_update();
+
   // handle commands from keyboard
   handle_uart_commands(&battery_info);
-
-  // handle commands from SoM
-  handle_spi_commands(&battery_info);
 
 #ifdef ACM_ENABLED
   // handle commands over usb serial
@@ -687,14 +688,18 @@ void loop()
   }
   charger_tick();
 
-  // query gauge and charger, update battery status
   battery_info.ticks++;
-  if (battery_info.ticks > 5000)
+
+  // every 100ms: query gauge and charger, update battery status
+  if (battery_info.ticks % 1000 == 0)
   {
-    battery_info.ticks = 0;
     gauge_tick(&battery_info);
     charger_dump(&battery_info);
+  }
 
+  // every 1000ms: report to serial
+  if (battery_info.ticks % 10000 == 0)
+  {
     // TODO: print adc_charge_c adc_discharge_c
     printf("# %s %s %s chg=%1x mps_flt=%02x input=%dmV@%dmA charge=%dmA discharge=%dmA p=%0.2fW ttempty=%umin\n",
             battery_info.som_is_powered ? "ON" : "OFF",
@@ -717,19 +722,29 @@ void loop()
 }
 
 void mntre_reset_callback(void) {
-    // avoid leaving display brightness PWM at a bad duty cycle.
-    gpio_set_function(PIN_DISP_EN, GPIO_FUNC_SIO);
-    gpio_put(PIN_DISP_EN, 1);
+  // avoid leaving display brightness PWM at a bad duty cycle.
+  gpio_set_function(PIN_DISP_EN, GPIO_FUNC_SIO);
+  gpio_put(PIN_DISP_EN, 1);
 
-    // clear latch, so resetting _us_ does not reset the SOC.
-    gpio_put(PIN_PWREN_LATCH, 0);
+  // clear latch, so resetting _us_ does not reset the SOC.
+  gpio_put(PIN_PWREN_LATCH, 0);
+}
+
+bool spi_commands_task(__unused struct repeating_timer *t) {
+  // handle commands from SoM
+  handle_spi_commands(&battery_info);
+  // timer should continue calling us
+  return true;
 }
 
 int main()
 {
   setup();
 
-  sleep_ms(1000);
+  // call SPI task every 5ms to ensure response time
+  struct repeating_timer spi_timer;
+  add_repeating_timer_ms(-5, spi_commands_task, NULL, &spi_timer);
+
   printf("# [pocket_sysctl] entering main loop\n");
 
   while (true)

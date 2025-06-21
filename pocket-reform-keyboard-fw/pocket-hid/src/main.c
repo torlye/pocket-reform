@@ -31,7 +31,7 @@
 
 #include "ws2812.pio.h"
 
-#define KBD_VARIANT_QWERTY_US
+#define KBD_VARIANT_QWERTY_US_ANRI
 #define KBD_COLS 12
 #define KBD_ROWS 6
 #define KBD_MATRIX_SZ KBD_COLS * KBD_ROWS + 4

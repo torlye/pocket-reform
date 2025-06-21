@@ -37,7 +37,11 @@
 #define KBD_MATRIX_SZ KBD_COLS * KBD_ROWS + 4
 #define TRACKBALL_FACTOR 2
 
-#include "matrix.h"
+#ifdef KBD_VARIANT_QWERTY_US_ANRI
+  #include "matrix_anri.h"
+#else
+  #include "matrix.h"
+#endif
 
 #define PIN_SDA 0
 #define PIN_SCL 1

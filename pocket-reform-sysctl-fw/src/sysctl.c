@@ -493,8 +493,8 @@ void setup()
   tusb_init();
   reform_stdio_usb_init();
 
-  // reset if main loop is stuck for 1000ms
-  watchdog_enable(1000, 1);
+  // reset if main loop is stuck for 10000ms
+  watchdog_enable(10000, 1);
 
   init_spi_client();
 

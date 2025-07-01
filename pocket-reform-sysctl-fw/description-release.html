@@ -1,6 +1,4 @@
-<p>Release 20250609</p>
+<p>Release 20250623</p>
 <ul>
-  <li>Much faster and more robust SPI communication to avoid battery status/percentage mis-reporting (works in conjunction with reform2-lpc driver update)</li>
-  <li>Removed some potential endless loops</li>
-  <li>Watchdog resets System Controller if it should be stuck for more than 1 second (in the stuck state, keyboard OLED displays a "T" in the top left corner)</li>
+  <li>System Controller watchdog reset timeout increased to 10 seconds to avoid spurious resets of the device.</li>
 </ul>

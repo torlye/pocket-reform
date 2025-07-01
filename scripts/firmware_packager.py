@@ -41,7 +41,7 @@ firmware_metainfo_template = """<?xml version="1.0" encoding="UTF-8"?>
   <updatecontact>{contact_info}</updatecontact>
   <developer_name>{developer_name}</developer_name>
   <releases>
-    <release version="{release_version}" timestamp="{timestamp}">
+    <release version="{release_version}" timestamp="{timestamp}" urgency="high">
       <url type="source">{release_source_url}</url>
       <description>
         {release_description}

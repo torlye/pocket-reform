@@ -124,7 +124,21 @@ void charger_init()
   mps_read_buf(MPS_REGSTART_STATUS, sizeof(mps_reg_status.all_regs), mps_reg_status.all_regs);
 
   // 2A max charge current, assumes 4000mAh cells.
-  // will be written into register by charger_disable_charge.
+  // Will be written into register by charger_disable_charge.
+  // This sets REG02H (charge current setting) of the MP2650:
+  //
+  //  bit  value
+  // ----------------
+  //   7   reserved
+  //   6   3200 mA
+  //   5   1600 mA
+  //   4   800 mA
+  //   3   400 mA
+  //   2   200 mA
+  //   1   100 mA
+  //   0   50 mA
+  //
+  //  1<<5 | 1<<3 --> 00101000 --> 400+1600 --> 2 A
   mps_reg_limits.charge_current = 1<<5 | 1<<3;
   charger_disable_charge();
 
@@ -167,6 +181,7 @@ void charger_disable_charge() {
   mps_write_byte(MPS_REG_CONFIG0, mps_reg_config.config0.reg_byte);
 
   // set all current limits to 500mA (should always be safe)
+  // bit 1 (100 mA) + bit 3 (400 mA)
   int current_limit = 1<<3 | 1<<1;
   mps_reg_limits.input_i_limit1 = current_limit;
   mps_write_buf(MPS_REGSTART_LIMITS, sizeof(mps_reg_limits.all_regs), mps_reg_limits.all_regs);

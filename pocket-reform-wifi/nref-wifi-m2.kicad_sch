@@ -3858,6 +3858,17 @@
 		)
 		(uuid "4e9c2f63-820e-4a90-a989-98ec973de27b")
 	)
+	(text "alternative:\nSCTF SX2M32.768KM20F30TNN"
+		(exclude_from_sim no)
+		(at 118.11 170.18 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "5b0b2bee-a9c9-451a-8e20-81339a628c67")
+	)
 	(text "WiFi/BT/Internal Expansion\n(flipped! need same side contacts cable!)"
 		(exclude_from_sim no)
 		(at 26.416 28.956 0)

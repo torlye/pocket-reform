@@ -78,11 +78,6 @@ static uint8_t pressed_scancodes[MAX_SCANCODES] = {0,0,0,0,0,0};
 static int pressed_keys = 0;
 static volatile uint32_t led_value = 0;
 
-// used for keyboard dimming
-int idle_counter = 0;         // time since last keypress
-int dim_stage = 0;            // stage of fade-out effect
-uint32_t saved_rgb = 0;       // saved backlight rgbq
-
 int led_brightness = 0;
 int led_saturation = 255;
 int led_hue = 127;
@@ -522,27 +517,8 @@ int process_keyboard(uint8_t* resulting_scancodes) {
   }
 
   // if no more keys are held down, allow a new menu command
-  if (total_pressed<1) {
+  if (total_pressed < 1) {
     last_menu_key = 0;
-    // dim keyboard leds on inactivity
-    if (dim_stage < 8) {
-      idle_counter++;
-      int stage = (idle_counter - 500000)/1000;
-      if (stage > dim_stage) {
-	dim_stage++;
-	// compute fade-out rgb by decreasing each byte in the saved backlight rgb
-	uint32_t new_rgb;
-	for (int b = 0; b < 4; b++)
-	  ((uint8_t *)(&new_rgb))[b] = ((uint8_t *)(&saved_rgb))[b] >> (uint8_t)dim_stage;
-	led_task(new_rgb);
-      }
-    }
-  } else {
-    if (dim_stage > 0) {
-      led_task(saved_rgb);
-      dim_stage = 0;
-    }
-    idle_counter = 0;
   }
 
   return used_key_codes;
@@ -775,7 +751,6 @@ RgbColor HsvToRgb(HsvColor hsv)
 }
 
 void led_set(uint32_t rgb) {
-  saved_rgb = rgb;
   led_task(rgb);
 }
 

@@ -4,6 +4,7 @@ build:
   artifacts:
     paths:
       - pocket-reform-sysctl-fw/build/sysctl.uf2
+      - pocket-reform-sysctl-fw/build/sysctl-recovery-mode.uf2
       - pocket-reform-sysctl-fw/build/sysctl.cab
       - scripts/update-sysctl-firmware.sh
       - scripts/update-keyboard-firmware.sh
@@ -29,6 +30,12 @@ build:
     - cd "$SOURCE_ROOT/pocket-reform-sysctl-fw"
     - mkdir -p build && cd build
     - MNTRE_FIRMWARE_VERSION="${VERSION}" cmake .. && make -j $(nproc)
+    #
+    - echo "Building sysctl-recovery-mode firmware"
+    - cd "$SOURCE_ROOT/pocket-reform-sysctl-fw"
+    - mkdir -p build && cd build
+    - MNTRE_FIRMWARE_VERSION="${VERSION}" MNTRE_FACTORY_MODE=1 cmake .. && make -j $(nproc)
+    - cp sysctl.uf2 sysctl-recovery-mode.uf2
     #
     - echo "Building keyboard firmware"
     - cd "$SOURCE_ROOT/pocket-reform-keyboard-fw/pocket-hid"

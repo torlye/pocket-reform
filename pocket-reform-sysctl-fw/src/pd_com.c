@@ -457,6 +457,7 @@ bool pd_tick(battery_info_s* battery_info) {
     }
 
 #ifdef FACTORY_MODE
+    #pragma message "[mode] FACTORY MODE compiled in!"
     // in factory mode, turn on power immediately to be able to flash
     // the keyboard
     if (factory_turn_on_once) {

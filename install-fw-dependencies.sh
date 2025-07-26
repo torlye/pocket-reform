@@ -1,6 +1,8 @@
 #!/bin/bash
 set -euxo pipefail
 
+apt-get update
+
 # fill $@ array with options passed to apt
 set -- build-essential avr-libc gcc-avr gcc-arm-none-eabi libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib libusb-1.0-0-dev cmake python3 gcab
 
@@ -11,12 +13,12 @@ else
     set -- "$@" tio picotool
 fi
 
-set -- apt-get --update --no-install-recommends -y install "$@"
+set -- apt-get --no-install-recommends -y install "$@"
 
 if [ "$UID" != 0 ]; then
     set -- sudo "$@"
 fi
-echo "Running $@"
+echo "Running $*"
 "$@"
 # clear $@
 set --

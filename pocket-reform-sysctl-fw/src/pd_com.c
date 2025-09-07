@@ -109,6 +109,14 @@ inline void pd_set_fusb_switches1() {
 bool pd_tick(battery_info_s* battery_info) {
   if (pd_state == PD_STATE_SETUP) {
     // setup/timeout state
+    if (battery_info->emergency_charge_necessary) {
+      printf("# [pd] PD_STATE_SETUP - emergency_charge_necessary - not initializing PD\n");
+      if (mps_reg_config.config0.chg_en != 1) {
+        // 500mA, should be safe and get us to at least a minimal charge.
+        charger_enable_charge(50);
+      }
+      return true;
+    }
     charger_disable_charge();
     request_sent = 0;
 

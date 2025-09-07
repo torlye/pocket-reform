@@ -31,6 +31,11 @@
 #define MPS_REG_ADC_SYS_POWER 0x26
 #define MPS_REG_ADC_BAT_DISCHARGE_I 0x28
 
+/* 0=Not charging, 1=Trickle/Pre, 2=Fast charging, 3=Charging done */
+#define MPS_CHGSTAT_OFF 0
+#define MPS_CHGSTAT_TRICKLE 1
+#define MPS_CHGSTAT_FAST 2
+#define MPS_CHGSTAT_DONE 3
 
 typedef union mps_reg_limits_t {
   struct {

@@ -104,16 +104,34 @@ void set_display_backlight(int percent)
 
 void charger_tick();
 
+// Assumes mps_reg_status and battery_info->charge_percentage were recently updated.
+//
+static void derive_emergency_charge_necessary(void) {
+  if (mps_reg_status.status.chg_stat == MPS_CHGSTAT_TRICKLE && battery_info.charge_percentage == 0) {
+    battery_info.emergency_charge_necessary = true;
+  } else {
+    battery_info.emergency_charge_necessary = false;
+  }
+}
+
 void charger_init()
 {
   // TODO: check all MP2650 registers, esp. 4, 7, b
+
+  mps_read_buf(MPS_REGSTART_STATUS, sizeof(mps_reg_status.all_regs), mps_reg_status.all_regs);
+  derive_emergency_charge_necessary();
 
   // reset all registers
   mps_reg_config.config0.reg_rst = 1;
   mps_write_byte(MPS_REG_CONFIG0, mps_reg_config.config0.reg_byte);
 
-  // turn off charging until PD allows it
-  mps_reg_config.config0.chg_en = 0;
+  if (battery_info.emergency_charge_necessary) {
+    // continue emergency charging
+    mps_reg_config.config0.chg_en = 1;
+  } else {
+    // turn off charging until PD allows it
+    mps_reg_config.config0.chg_en = 0;
+  }
   mps_reg_config.config0.susp_en = 0;
   mps_reg_config.config0.ntc_gcomp_sel = 0;  // disable OTG pin
   mps_write_byte(MPS_REG_CONFIG0, mps_reg_config.config0.reg_byte);
@@ -123,14 +141,22 @@ void charger_init()
   mps_read_buf(MPS_REGSTART_STATUS, sizeof(mps_reg_status.all_regs), mps_reg_status.all_regs);
 
   // 2A max charge current, assumes 4000mAh cells.
-  // will be written into register by charger_disable_charge.
   mps_reg_limits.charge_current = 1<<5 | 1<<3;
-  charger_disable_charge();
+  // set all current limits to 500mA (should always be safe)
+  int current_limit = 1<<3 | 1<<1;
+  mps_reg_limits.input_i_limit1 = current_limit;
+  mps_write_buf(MPS_REGSTART_LIMITS, sizeof(mps_reg_limits.all_regs), mps_reg_limits.all_regs);
+  mps_read_buf(MPS_REGSTART_LIMITS, sizeof(mps_reg_limits.all_regs), mps_reg_limits.all_regs);
+  mps_write_byte(0x0F, current_limit); // Input Limit 2
+
+  gpio_put(PIN_LED_R, mps_reg_config.config0.chg_en);
 
   charger_tick();
 }
 
 void charger_tick() {
+  derive_emergency_charge_necessary();
+
   uint8_t old_config3 = mps_reg_config.config3.reg_byte;
   if (battery_info.som_is_powered) {
     mps_reg_config.config3.prochot_psys_cfg = 0b11;  // enable PSYS/ADC feature, even on battery

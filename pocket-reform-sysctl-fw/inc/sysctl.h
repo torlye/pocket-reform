@@ -95,6 +95,7 @@ typedef struct battery_info_s
     float time_to_empty;
 
     // metadata
+    bool emergency_charge_necessary;
     bool print_pack_info;
     uint16_t max17320_devname;
     uint16_t ticks;

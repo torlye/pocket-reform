@@ -13,6 +13,7 @@
 #include "pico/bootrom.h"
 #include "hardware/watchdog.h"
 #include "tusb.h"
+#include <malloc.h>
 
 int current_menu_y = 0;
 int current_scroll_y = 0;
@@ -34,6 +35,17 @@ const MenuItem menu_items[] = {
   { "Reset USB           u", KEY_U },
 };
 #endif
+
+// via https://forums.raspberrypi.com/viewtopic.php?p=2082565&sid=7f7f0999d6a9e8001755ca7793806fa8#p2082565
+uint32_t get_total_heap(void) {
+   extern char __StackLimit, __bss_end__;
+   return &__StackLimit  - &__bss_end__;
+}
+
+uint32_t get_free_heap(void) {
+   struct mallinfo m = mallinfo();
+   return get_total_heap() - m.uordblks;
+}
 
 void rp2040_reset() {
   watchdog_enable(1, 1);
@@ -142,6 +154,16 @@ int execute_menu_function(int keycode) {
   }
   else if (keycode == KEY_S) {
     remote_get_status();
+    return 0;
+  }
+  else if (keycode == KEY_M) {
+    // show free memory and soon, more stats
+    char tmp[32];
+    uint32_t free_heap = get_free_heap();
+    snprintf(tmp, 32, "free: %lu", free_heap);
+    gfx_clear();
+    gfx_poke_str(0,0,tmp);
+    gfx_flush();
     return 0;
   }
   else if (keycode == KEY_F1) {

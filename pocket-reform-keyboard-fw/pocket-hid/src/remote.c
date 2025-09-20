@@ -159,13 +159,11 @@ int remote_get_voltages(int quiet) {
   //                                       26     33    39   44
   //                                       |
   //                                       `- can be a minus
-  double sum_volts = 0;
 
   for (int i=0; i<8; i++) {
     voltages[i] = ((double)((response[i*3]-'0')*10 + (response[i*3+1]-'0')))/10.0;
     if (voltages[i]<0) voltages[i]=0;
     if (voltages[i]>=10) voltages[i]=9.9;
-    sum_volts += voltages[i];
   }
 
   int amps_offset = 3*8+2;

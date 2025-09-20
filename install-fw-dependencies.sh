@@ -23,9 +23,11 @@ set --
 
 echo "Fetching git dependencies"
 
-git clone --branch 1.5.1 --depth 1 https://github.com/raspberrypi/pico-sdk || true
-# Need submodules as otherwise USB will silently fail.
-(cd pico-sdk && git checkout 1.5.1 && git submodule update --init)
+SDK_VER=2.2.0
 
-git clone --branch sdk-1.5.1 --depth 1 https://github.com/raspberrypi/pico-extras || true
-(cd pico-extras && git checkout sdk-1.5.1)
+git clone --branch ${SDK_VER} --depth 1 https://github.com/raspberrypi/pico-sdk || true
+# Need submodules as otherwise USB will silently fail.
+(cd pico-sdk && git checkout ${SDK_VER} && git submodule update --init)
+
+git clone --branch sdk-${SDK_VER} --depth 1 https://github.com/raspberrypi/pico-extras || true
+(cd pico-extras && git checkout sdk-${SDK_VER})

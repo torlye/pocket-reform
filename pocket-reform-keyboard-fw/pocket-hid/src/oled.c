@@ -198,10 +198,6 @@ void gfx_poke_str(uint8_t x, uint8_t y, char* str) {
   }
 }
 
-void gfx_poke_cstr(uint8_t x, uint8_t y, const char* str) {
-  gfx_poke_str(x, y, strdup(str));
-}
-
 void gfx_write_char(uint8_t c) {
   matrix_write_char(&display, c);
 }

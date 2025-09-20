@@ -70,7 +70,6 @@ struct CharacterMatrix {
 
 void gfx_poke(uint8_t x, uint8_t y, uint8_t c);
 void gfx_poke_str(uint8_t x, uint8_t y, char* str);
-void gfx_poke_cstr(uint8_t x, uint8_t y, const char* str);
 void gfx_clear_invert(void);
 void gfx_invert_row(uint8_t y);
 bool gfx_init(bool rotate);

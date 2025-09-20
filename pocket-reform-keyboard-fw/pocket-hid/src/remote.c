@@ -133,8 +133,8 @@ int remote_get_status(void) {
   snprintf(tmp, sizeof(tmp)-1, "PREF1HID%s", MNTRE_FIRMWARE_VERSION);
 
   gfx_clear();
-  gfx_poke_cstr(0, 2, "MNT Pocket Reform HID");
-  gfx_poke_cstr(0, 3, tmp);
+  gfx_poke_str(0, 2, "MNT Pocket Reform HID");
+  gfx_poke_str(0, 3, tmp);
   gfx_on();
   gfx_flush();
 

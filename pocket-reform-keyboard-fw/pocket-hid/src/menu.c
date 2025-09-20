@@ -74,7 +74,7 @@ void render_menu(int y) {
   gfx_clear();
   gfx_invert_row((uint8_t)(current_menu_y-y));
   for (int i=0; i<MENU_NUM_ITEMS; i++) {
-    gfx_poke_cstr(0,(uint8_t)(i-y),menu_items[i].title);
+    gfx_poke_str(0,(uint8_t)(i-y),(char*)menu_items[i].title);
   }
   gfx_on();
   gfx_contrast(0xff);
@@ -140,8 +140,8 @@ int execute_menu_function(int keycode) {
   else if (keycode == KEY_H) {
     // turn-on hint page
     gfx_clear();
-    gfx_poke_cstr(0,1,"Press \x8a + \x8b for menu.");
-    gfx_poke_cstr(0,2,"Hold to power up.");
+    gfx_poke_str(0,1,"Press \x8a + \x8b for menu.");
+    gfx_poke_str(0,2,"Hold to power up.");
     gfx_flush();
     logo_timeout_ticks = 5;
     current_menu_page = MENU_PAGE_MNT_LOGO;
@@ -198,8 +198,8 @@ int execute_menu_function(int keycode) {
   }
   else if (keycode == KEY_X) {
     gfx_clear();
-    gfx_poke_cstr(1, 1, "Entered firmware");
-    gfx_poke_cstr(1, 2, "update mode.");
+    gfx_poke_str(1, 1, "Entered firmware");
+    gfx_poke_str(1, 2, "update mode.");
     gfx_on();
     gfx_flush();
     rp2040_reset_to_bootloader();

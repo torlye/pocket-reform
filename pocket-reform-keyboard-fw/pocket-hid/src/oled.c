@@ -64,9 +64,8 @@ done:
   return;
 }
 
-bool gfx_init(bool rotate) {
+bool gfx_init() {
   bool success = false;
-	rotate = false; // FIXME
 
   send_cmd1(DisplayOff);
   send_cmd2(SetDisplayClockDiv, 0x80);
@@ -74,17 +73,13 @@ bool gfx_init(bool rotate) {
 
   send_cmd2(SetDisplayOffset, 0);
 
-  send_cmd1(SetStartLine | 0x0);
+  send_cmd1(SetStartLine /* | 0x0 */);
   send_cmd2(SetChargePump, 0x14 /* Enable */);
   send_cmd2(SetMemoryMode, 0 /* horizontal addressing */);
 
-  if (rotate) {
-    send_cmd1(SegRemap);
-    send_cmd1(ComScanInc);
-  } else {
-    send_cmd1(SegRemap | 0x1);
-    send_cmd1(ComScanDec);
-  }
+  // no rotation
+  send_cmd1(SegRemap | 0x1);
+  send_cmd1(ComScanDec);
 
   send_cmd2(SetComPins, 0x2);
   send_cmd2(SetContrast, 0x8f);
@@ -192,9 +187,7 @@ void gfx_poke_str(uint8_t x, uint8_t y, char* str) {
   if (y>3) return;
 
   for (int xx=x; xx<x+len && xx<21; xx++) {
-    if (xx<21) {
-      display.display[y][xx] = (uint8_t)str[xx-x];
-    }
+    display.display[y][xx] = (uint8_t)str[xx-x];
   }
 }
 

@@ -189,7 +189,7 @@ int main(void)
 
   led_set_brightness(0x0);
 
-  gfx_init(false);
+  gfx_init();
 
   // watchdog crash recovery
   if (watchdog_caused_reboot()) {

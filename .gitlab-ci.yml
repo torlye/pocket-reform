@@ -26,6 +26,9 @@ build:
       fi
     - export PICO_SDK_PATH="$SOURCE_ROOT/pico-sdk"
     #
+    # find bugs like dynamic memory allocation in firmware
+    - scripts/cppcheck.sh
+    #
     - echo "Building sysctl-recovery-mode firmware"
     - cd "$SOURCE_ROOT/pocket-reform-sysctl-fw"
     - mkdir -p build && cd build

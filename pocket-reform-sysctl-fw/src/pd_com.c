@@ -20,49 +20,49 @@ void print_src_fixed_pdo(int number, uint32_t pdo)
     tmp = (pdo & PD_PDO_SRC_FIXED_DUAL_ROLE_PWR) >> PD_PDO_SRC_FIXED_DUAL_ROLE_PWR_SHIFT;
     if (tmp)
     {
-        printf("\tdual_role_pwr = %d\n", tmp);
+        printf("\tdual_role_pwr = %u\n", tmp);
     }
 
     /* USB Suspend Supported */
     tmp = (pdo & PD_PDO_SRC_FIXED_USB_SUSPEND) >> PD_PDO_SRC_FIXED_USB_SUSPEND_SHIFT;
     if (tmp)
     {
-        printf("\tusb_suspend = %d\n", tmp);
+        printf("\tusb_suspend = %u\n", tmp);
     }
 
     /* Unconstrained Power */
     tmp = (pdo & PD_PDO_SRC_FIXED_UNCONSTRAINED) >> PD_PDO_SRC_FIXED_UNCONSTRAINED_SHIFT;
     if (tmp)
     {
-        printf("\tunconstrained_pwr = %d\n", tmp);
+        printf("\tunconstrained_pwr = %u\n", tmp);
     }
 
     /* USB Communications Capable */
     tmp = (pdo & PD_PDO_SRC_FIXED_USB_COMMS) >> PD_PDO_SRC_FIXED_USB_COMMS_SHIFT;
     if (tmp)
     {
-        printf("\tusb_comms = %d\n", tmp);
+        printf("\tusb_comms = %u\n", tmp);
     }
 
     /* Dual-Role Data */
     tmp = (pdo & PD_PDO_SRC_FIXED_DUAL_ROLE_DATA) >> PD_PDO_SRC_FIXED_DUAL_ROLE_DATA_SHIFT;
     if (tmp)
     {
-        printf("\tdual_role_data = %d\n", tmp);
+        printf("\tdual_role_data = %u\n", tmp);
     }
 
     /* Unchunked Extended Messages Supported */
     tmp = (pdo & PD_PDO_SRC_FIXED_UNCHUNKED_EXT_MSG) >> PD_PDO_SRC_FIXED_UNCHUNKED_EXT_MSG_SHIFT;
     if (tmp)
     {
-        printf("\tunchunked_ext_msg = %d\n", tmp);
+        printf("\tunchunked_ext_msg = %u\n", tmp);
     }
 
     /* Peak Current */
     tmp = (pdo & PD_PDO_SRC_FIXED_PEAK_CURRENT) >> PD_PDO_SRC_FIXED_PEAK_CURRENT_SHIFT;
     if (tmp)
     {
-        printf("\tpeak_i = %d\n", tmp);
+        printf("\tpeak_i = %u\n", tmp);
     }
 
     /* Voltage */
@@ -103,7 +103,8 @@ unsigned int pd_get_state_for_debug() {
 }
 
 inline void pd_set_fusb_switches1() {
-  fusb_write_byte(FUSB_SWITCHES1, FUSB_SWITCHES1_SPECREV_REV2_0| (pd_datarole == PD_DATAROLE_DFP) ? FUSB_SWITCHES1_DATAROLE_SRC_DFP : FUSB_SWITCHES1_DATAROLE_SNK_UFP);
+  uint8_t fusb_datarole = (pd_datarole == PD_DATAROLE_DFP) ? FUSB_SWITCHES1_DATAROLE_SRC_DFP : FUSB_SWITCHES1_DATAROLE_SNK_UFP;
+  fusb_write_byte(FUSB_SWITCHES1, FUSB_SWITCHES1_SPECREV_REV2_0 | fusb_datarole);
 }
 
 bool pd_tick(battery_info_s* battery_info) {

@@ -133,8 +133,8 @@ int remote_get_status(void) {
   snprintf(tmp, sizeof(tmp)-1, "PREF1HID%s", MNTRE_FIRMWARE_VERSION);
 
   gfx_clear();
-  gfx_poke_cstr(0, 2, "MNT Pocket Reform HID");
-  gfx_poke_cstr(0, 3, tmp);
+  gfx_poke_str(0, 2, "MNT Pocket Reform HID");
+  gfx_poke_str(0, 3, tmp);
   gfx_on();
   gfx_flush();
 
@@ -159,13 +159,11 @@ int remote_get_voltages(int quiet) {
   //                                       26     33    39   44
   //                                       |
   //                                       `- can be a minus
-  double sum_volts = 0;
 
   for (int i=0; i<8; i++) {
     voltages[i] = ((double)((response[i*3]-'0')*10 + (response[i*3+1]-'0')))/10.0;
     if (voltages[i]<0) voltages[i]=0;
     if (voltages[i]>=10) voltages[i]=9.9;
-    sum_volts += voltages[i];
   }
 
   int amps_offset = 3*8+2;

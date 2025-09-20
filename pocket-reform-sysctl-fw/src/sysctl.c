@@ -52,7 +52,6 @@ int32_t pwm_set_freq_duty(uint32_t slice_num, uint32_t chan, uint32_t freq, int 
 {
   uint8_t clk_divider = 0;
   uint32_t wrap = 0;
-  uint32_t clock_div = 0;
   uint32_t clock = clock_get_hz(clk_sys);
 
   if (freq < 8 || freq > clock)
@@ -63,7 +62,7 @@ int32_t pwm_set_freq_duty(uint32_t slice_num, uint32_t chan, uint32_t freq, int 
   for (clk_divider = 1; clk_divider < UINT8_MAX; clk_divider++)
   {
     /* Find clock_division to fit current frequency */
-    clock_div = div_u32u32(clock, clk_divider);
+    uint32_t clock_div = div_u32u32(clock, clk_divider);
     wrap = div_u32u32(clock_div, freq);
     if (div_u32u32(clock_div, UINT16_MAX) <= freq && wrap <= UINT16_MAX)
     {

@@ -224,14 +224,8 @@ void render_tina(void) {
   for (int f=13; f>=0; f--) {
     for (uint8_t y=0; y<4; y++) {
       for (uint8_t x=0; x<6; x++) {
-        if (x==6) {
-          if (x+8+f<21) {
-            gfx_poke((uint8_t)(x+8+f),y,' ');
-          }
-        } else {
-          if (x+8+f<21) {
-            gfx_poke((uint8_t)(x+8+f),y,(uint8_t)((4+y)*32+x+12));
-          }
+        if (x+8+f<21) {
+          gfx_poke((uint8_t)(x+8+f),y,(uint8_t)((4+y)*32+x+12));
         }
       }
     }

@@ -39,7 +39,7 @@ const MenuItem menu_items[] = {
 // via https://forums.raspberrypi.com/viewtopic.php?p=2082565&sid=7f7f0999d6a9e8001755ca7793806fa8#p2082565
 uint32_t get_total_heap(void) {
    extern char __StackLimit, __bss_end__;
-   return &__StackLimit  - &__bss_end__;
+   return &__StackLimit - &__bss_end__;
 }
 
 uint32_t get_free_heap(void) {
@@ -160,7 +160,7 @@ int execute_menu_function(int keycode) {
     // show free memory and soon, more stats
     char tmp[32];
     uint32_t free_heap = get_free_heap();
-    snprintf(tmp, 32, "free: %lu", free_heap);
+    snprintf(tmp, 32, "free: %lu", (unsigned long)free_heap);
     gfx_clear();
     gfx_poke_str(0,0,tmp);
     gfx_flush();

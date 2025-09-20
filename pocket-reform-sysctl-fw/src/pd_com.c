@@ -369,7 +369,7 @@ bool pd_tick(battery_info_s* battery_info) {
                   pdo_current = current;
                 }
               } else {
-                printf("# [pd] PD_STATE_ATTACHED_SNK not a fixed PDO: 0x%08x\n", pdo);
+                printf("# [pd] PD_STATE_ATTACHED_SNK not a fixed PDO: 0x%08lx\n", pdo);
               }
             }
 

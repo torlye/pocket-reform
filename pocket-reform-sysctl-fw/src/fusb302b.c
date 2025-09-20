@@ -61,7 +61,7 @@ void fusb_send_message(const union pd_msg *msg)
     FUSB_FIFO_TX_SOP2,
     FUSB_FIFO_TX_PACKSYM
   };
-  static uint8_t eop_seq[4] = {
+  static const uint8_t eop_seq[4] = {
     FUSB_FIFO_TX_JAM_CRC,
     FUSB_FIFO_TX_EOP,
     FUSB_FIFO_TX_TXOFF,

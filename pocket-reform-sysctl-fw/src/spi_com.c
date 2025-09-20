@@ -22,7 +22,7 @@ void init_spi_client()
   printf("# [spi] init_spi_client done\n");
 }
 
-static int spi_debug_enabled = 0;
+#define SPI_DEBUG_ENABLED 0
 
 void handle_spi_commands(battery_info_s *battery_info)
 {
@@ -44,7 +44,7 @@ void handle_spi_commands(battery_info_s *battery_info)
 
   // commands are always 4 bytes, starting with 0xb5
   // dump the buffer to serial
-  if (spi_debug_enabled || spi_buf[0] != 0xb5 || spi_rxlen != 4) {
+  if (SPI_DEBUG_ENABLED || spi_buf[0] != 0xb5 || spi_rxlen != 4) {
     printf("# [spi rx %d] ", spi_rxlen);
     for (int i = 0; i < spi_rxlen; i++) {
       printf("%2x ", spi_buf[i]);
@@ -95,10 +95,9 @@ void handle_spi_commands(battery_info_s *battery_info)
   }
   else if (spi_command == 'v') {
     // get cell voltage
-    int volts = 0;
     if (spi_arg1 == 0) {
       // pack 0
-      volts = battery_info->cell1_volts;
+      int volts = battery_info->cell1_volts;
       spi_buf[0] = (uint8_t)volts;
       spi_buf[1] = (uint8_t)(volts >> 8);
 
@@ -135,10 +134,8 @@ void handle_spi_commands(battery_info_s *battery_info)
   }
   else if (spi_command == 'b') {
     // only for display v2
-    int brightness = spi_arg1;
+    unsigned int brightness = spi_arg1;
     // 80% is a limit of the hardware (above, the backlight can flicker)
-    if (brightness < 0)
-      brightness = 0;
     if (brightness > 80)
       brightness = 80;
     set_display_backlight(brightness);

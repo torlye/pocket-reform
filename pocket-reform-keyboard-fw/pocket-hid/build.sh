@@ -1,12 +1,9 @@
-#!/bin/bash
+#!/bin/sh
 
-export PICO_SDK_PATH=/usr/src/pico-sdk
-if [ -z "$MNTRE_FIRMWARE_VERSION" ]; then
-    export MNTRE_FIRMWARE_VERSION=$(date +%Y%m%d)
-fi
+set -exu
 
-mkdir -p build
-cd build
-cmake ..
+# set MNTRE_FIRMWARE_VERSION to current date by default
+: "${MNTRE_FIRMWARE_VERSION:=$(date +%Y%m%d)}"
 
-make
+cmake -B build -S. -DFAMILY=rp2040
+cmake --build build

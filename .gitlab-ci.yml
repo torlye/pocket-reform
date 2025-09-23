@@ -12,7 +12,6 @@ build:
       - pocket-reform-keyboard-fw/pocket-hid/build/pocket-hid.cab
   script:
     - ./install-fw-dependencies.sh
-    - export SOURCE_ROOT="$PWD"
     - |
       # use the timestamp of the latest git commit to set reproducible S_D_E
       if [ -z ${SOURCE_DATE_EPOCH:+x} ] && git -C . rev-parse 2>/dev/null; then
@@ -24,23 +23,17 @@ build:
       else
         VERSION="g$(git rev-parse --short=7 HEAD)"
       fi
-    - export PICO_SDK_PATH="$SOURCE_ROOT/pico-sdk"
+    - export MNTRE_FIRMWARE_VERSION="$VERSION"
     #
     # find bugs like dynamic memory allocation in firmware
     - scripts/cppcheck.sh
     #
     - echo "Building sysctl-recovery-mode firmware"
-    - cd "$SOURCE_ROOT/pocket-reform-sysctl-fw"
-    - mkdir -p build && cd build
-    - MNTRE_FIRMWARE_VERSION="${VERSION}" MNTRE_FACTORY_MODE=1 cmake .. && make -j $(nproc)
-    - cp sysctl.uf2 sysctl-recovery-mode.uf2
+    - env --chdir=pocket-reform-sysctl-fw MNTRE_FACTORY_MODE=1 ./build.sh
+    - cp pocket-reform-sysctl-fw/build/sysctl.uf2 pocket-reform-sysctl-fw/build/sysctl-recovery-mode.uf2
     #
     - echo "Building sysctl firmware"
-    - cd "$SOURCE_ROOT/pocket-reform-sysctl-fw"
-    - mkdir -p build && cd build
-    - MNTRE_FIRMWARE_VERSION="${VERSION}" cmake .. && make -j $(nproc)
+    - env --chdir=pocket-reform-sysctl-fw ./build.sh
     #
     - echo "Building keyboard firmware"
-    - cd "$SOURCE_ROOT/pocket-reform-keyboard-fw/pocket-hid"
-    - mkdir -p build && cd build
-    - MNTRE_FIRMWARE_VERSION="${VERSION}" cmake -DFAMILY=rp2040 .. && make -j $(nproc)
+    - env --chdir=pocket-reform-keyboard-fw/pocket-hid ./build.sh

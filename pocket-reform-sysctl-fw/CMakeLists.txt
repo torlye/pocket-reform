@@ -1,5 +1,11 @@
 cmake_minimum_required(VERSION 3.13)
 
+if (NOT DEFINED ENV{PICO_SDK_PATH} AND (NOT PICO_SDK_PATH))
+	set(PICO_SDK_PATH "${CMAKE_SOURCE_DIR}/../pico-sdk")
+	cmake_path(NORMAL_PATH PICO_SDK_PATH)
+	message("Using PICO_SDK_PATH=${PICO_SDK_PATH}")
+endif()
+
 include(lib/pico_sdk_import.cmake)
 set(SHARED_FW_INC "${CMAKE_CURRENT_LIST_DIR}/../pocket-reform-shared-fw/inc")
 set(SHARED_FW_SRC "${CMAKE_CURRENT_LIST_DIR}/../pocket-reform-shared-fw/src")

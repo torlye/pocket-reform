@@ -93,13 +93,14 @@ set(FWCAB_RELEASE_VERSION_FORMAT "number")
 set(FWCAB_DEVICE_GUID "a515e8b3-d950-5228-a136-ebaed3e376e8") # GUID(USB\VID_1209&PID_6D06)
 set(FWCAB_DEVICE_INTEGRITY "unsigned")
 set(FWCAB_UPDATE_PROTOCOL "com.microsoft.uf2")
+set(FWCAB_INSTALL_DURATION "120")
 set(FWCAB_HOMEPAGE "https://mntre.com")
 
 add_custom_command(
     TARGET ${PROJECT}
     POST_BUILD
     VERBATIM
-    COMMAND "${SCRIPTS}/firmware_packager.py" --bin "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT}.uf2" --out "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT}.cab" --firmware-id "${FWCAB_FIRMWARE_ID}" --firmware-name "${FWCAB_FIRMWARE_NAME}" --firmware-description "${FWCAB_FIRMWARE_DESCRIPTION}" --firmware-license "${FWCAB_FIRMWARE_LICENSE}" --device-guid "${FWCAB_DEVICE_GUID}" --device-integrity "${FWCAB_DEVICE_INTEGRITY}" --homepage "${FWCAB_HOMEPAGE}" --firmware-summary "${FWCAB_SUMMARY}" --category "${FWCAB_CATEGORY}" --version-format "${FWCAB_RELEASE_VERSION_FORMAT}" --release-version "${FWCAB_RELEASE_VERSION}" --release-description-file "${FWCAB_RELEASE_DESCRIPTION_FILE}" --release-source-url "${FWCAB_RELEASE_SOURCE_URL}" --developer-name "${FWCAB_DEVELOPER_NAME}" --update-protocol "${FWCAB_UPDATE_PROTOCOL}"
+    COMMAND "${SCRIPTS}/firmware_packager.py" --bin "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT}.uf2" --out "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT}.cab" --firmware-id "${FWCAB_FIRMWARE_ID}" --firmware-name "${FWCAB_FIRMWARE_NAME}" --firmware-description "${FWCAB_FIRMWARE_DESCRIPTION}" --firmware-license "${FWCAB_FIRMWARE_LICENSE}" --device-guid "${FWCAB_DEVICE_GUID}" --device-integrity "${FWCAB_DEVICE_INTEGRITY}" --homepage "${FWCAB_HOMEPAGE}" --firmware-summary "${FWCAB_SUMMARY}" --category "${FWCAB_CATEGORY}" --version-format "${FWCAB_RELEASE_VERSION_FORMAT}" --release-version "${FWCAB_RELEASE_VERSION}" --release-description-file "${FWCAB_RELEASE_DESCRIPTION_FILE}" --release-source-url "${FWCAB_RELEASE_SOURCE_URL}" --developer-name "${FWCAB_DEVELOPER_NAME}" --update-protocol "${FWCAB_UPDATE_PROTOCOL}" --install-duration "${FWCAB_INSTALL_DURATION}"
 )
 
 configure_file("ds20.quirk.tpl" "ds20.quirk" @ONLY)

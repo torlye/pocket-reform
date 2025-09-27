@@ -3,16 +3,16 @@
 uint8_t max_read_byte(uint8_t addr)
 {
   uint8_t buf;
-  i2c_write_blocking(i2c0, MAX_ADDR1, &addr, 1, true);
-  i2c_read_blocking(i2c0, MAX_ADDR1, &buf, 1, false);
+  i2c_write_timeout_us(i2c0, MAX_ADDR1, &addr, 1, true, I2C_TIMEOUT);
+  i2c_read_timeout_us(i2c0, MAX_ADDR1, &buf, 1, false, I2C_TIMEOUT);
   return buf;
 }
 
 uint16_t max_read_word(uint8_t addr)
 {
   uint8_t buf[2];
-  i2c_write_blocking(i2c0, MAX_ADDR1, &addr, 1, true);
-  i2c_read_blocking(i2c0, MAX_ADDR1, buf, 2, false);
+  i2c_write_timeout_us(i2c0, MAX_ADDR1, &addr, 1, true, I2C_TIMEOUT);
+  i2c_read_timeout_us(i2c0, MAX_ADDR1, buf, 2, false, I2C_TIMEOUT);
   uint16_t result = ((uint16_t)buf[1]<<8) | (uint16_t)buf[0];
   return result;
 }
@@ -20,34 +20,34 @@ uint16_t max_read_word(uint8_t addr)
 uint16_t max_read_word_100(uint8_t addr)
 {
   uint8_t buf[2];
-  i2c_write_blocking(i2c0, MAX_ADDR2, &addr, 1, true);
-  i2c_read_blocking(i2c0, MAX_ADDR2, buf, 2, false);
+  i2c_write_timeout_us(i2c0, MAX_ADDR2, &addr, 1, true, I2C_TIMEOUT);
+  i2c_read_timeout_us(i2c0, MAX_ADDR2, buf, 2, false, I2C_TIMEOUT);
   uint16_t result = ((uint16_t)buf[1]<<8) | (uint16_t)buf[0];
   return result;
 }
 
 void max_read_buf(uint8_t addr, uint8_t size, uint8_t *buf)
 {
-  i2c_write_blocking(i2c0, MAX_ADDR1, &addr, 1, true);
-  i2c_read_blocking(i2c0, MAX_ADDR1, buf, size, false);
+  i2c_write_timeout_us(i2c0, MAX_ADDR1, &addr, 1, true, I2C_TIMEOUT);
+  i2c_read_timeout_us(i2c0, MAX_ADDR1, buf, size, false, I2C_TIMEOUT);
 }
 
 void max_write_byte(uint8_t addr, uint8_t byte)
 {
   uint8_t buf[2] = {addr, byte};
-  i2c_write_blocking(i2c0, MAX_ADDR1, buf, 2, false);
+  i2c_write_timeout_us(i2c0, MAX_ADDR1, buf, 2, false, I2C_TIMEOUT);
 }
 
 void max_write_word(uint8_t addr, uint16_t word)
 {
   uint8_t buf[3] = {addr, word&0xff, word>>8};
-  i2c_write_blocking(i2c0, MAX_ADDR1, buf, 3, false);
+  i2c_write_timeout_us(i2c0, MAX_ADDR1, buf, 3, false, I2C_TIMEOUT);
 }
 
 void max_write_word_100(uint8_t addr, uint16_t word)
 {
   uint8_t buf[3] = {addr, word&0xff, word>>8};
-  i2c_write_blocking(i2c0, MAX_ADDR2, buf, 3, false);
+  i2c_write_timeout_us(i2c0, MAX_ADDR2, buf, 3, false, I2C_TIMEOUT);
 }
 
 void max_write_buf(uint8_t addr, uint8_t size, const uint8_t *buf)
@@ -57,7 +57,7 @@ void max_write_buf(uint8_t addr, uint8_t size, const uint8_t *buf)
   for (int i = 0; i < size; i++) {
     txbuf[i + 1] = buf[i];
   }
-  i2c_write_blocking(i2c0, MAX_ADDR1, txbuf, size + 1, false);
+  i2c_write_timeout_us(i2c0, MAX_ADDR1, txbuf, size + 1, false, I2C_TIMEOUT);
 }
 
 float max_word_to_mv(uint16_t w)

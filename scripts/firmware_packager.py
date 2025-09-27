@@ -41,7 +41,7 @@ firmware_metainfo_template = """<?xml version="1.0" encoding="UTF-8"?>
   <updatecontact>{contact_info}</updatecontact>
   <developer_name>{developer_name}</developer_name>
   <releases>
-    <release version="{release_version}" timestamp="{timestamp}" urgency="high">
+    <release version="{release_version}" timestamp="{timestamp}" urgency="high" install_duration="{install_duration}">
       <url type="source">{release_source_url}</url>
       <description>
         {release_description}
@@ -60,6 +60,17 @@ firmware_metainfo_template = """<?xml version="1.0" encoding="UTF-8"?>
 """
 
 
+def escape_value(key: str, value: None | int | str) -> str | None:
+    if value is None:
+        return value
+    if isinstance(value, int):
+        return str(value)
+    # assume str
+    if key in ['release_description', 'firmware_description']:
+        return value
+    return escxml(value)
+
+
 def make_firmware_metainfo(firmware_info, dst):
     local_info = vars(firmware_info)
     if args.release_description_file:
@@ -67,7 +78,7 @@ def make_firmware_metainfo(firmware_info, dst):
     del local_info["release_description_file"]
 
     local_info = {
-        key: value if key in ['release_description', 'firmware_description'] or value is None else escxml(value)
+        key: escape_value(key, value)
         for key, value in local_info.items()
     }
     firmware_metainfo = firmware_metainfo_template.format(
@@ -164,6 +175,12 @@ if __name__ == "__main__":
     parser.add_argument(
         "--release-source-url",
         help="URL to GPL sources",
+    )
+    parser.add_argument(
+        "--install-duration",
+        type=int,
+        help="Expected duration of installation in seconds",
+        default=0,
     )
     parser.add_argument(
         "--version-format",

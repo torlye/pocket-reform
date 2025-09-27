@@ -37,3 +37,14 @@ build:
     #
     - echo "Building keyboard firmware"
     - env --chdir=pocket-reform-keyboard-fw/pocket-hid ./build.sh
+
+lvfs-upload:
+  needs:
+    - build
+  rules:
+    - if: $CI_COMMIT_REF_PROTECTED == "true" && $LVFS_UPLOAD_NETRC
+  before_script:
+    - apt-get --update --no-install-recommends -y install curl ca-certificates jq
+  script:
+    - ./upload-fw.sh embargo pocket-reform-keyboard-fw/pocket-hid/build/pocket-hid.cab "$LVFS_UPLOAD_NETRC"
+    - ./upload-fw.sh embargo pocket-reform-sysctl-fw/build/sysctl.cab "$LVFS_UPLOAD_NETRC"

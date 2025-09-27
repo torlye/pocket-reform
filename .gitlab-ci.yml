@@ -42,7 +42,7 @@ lvfs-upload:
   needs:
     - build
   rules:
-    - if: $CI_COMMIT_REF_PROTECTED == "true" && $LVFS_UPLOAD_NETRC
+    - if: ($CI_COMMIT_REF_PROTECTED == "true" || $CI_COMMIT_TAG) && $LVFS_UPLOAD_NETRC
   before_script:
     - apt-get --update --no-install-recommends -y install curl ca-certificates jq
   script:

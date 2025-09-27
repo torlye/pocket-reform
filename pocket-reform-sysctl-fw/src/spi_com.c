@@ -4,7 +4,54 @@
  * Ported from MNT Reform reform2-lpc-fw.
  */
 
+#include "hardware/resets.h"
+#include "hardware/clocks.h"
+#include "hardware/spi.h"
+#include "pico/timeout_helper.h"
 #include "spi_com.h"
+
+// this is spi_write_blocking from pico-sdk, with timeout handling.
+static int our_spi_write_timeout_us(spi_inst_t *spi, const uint8_t *src, size_t len, uint timeout_us) {
+  absolute_time_t until = make_timeout_time_us(timeout_us);
+  bool timeout = false;
+
+  invalid_params_if(HARDWARE_SPI, 0 > (int)len);
+  // Write to TX FIFO whilst ignoring RX, then clean up afterward. When RX
+  // is full, PL022 inhibits RX pushes, and sets a sticky flag on
+  // push-on-full, but continues shifting. Safe if SSPIMSC_RORIM is not set.
+  for (size_t i = 0; i < len; ++i) {
+      while (!timeout && !spi_is_writable(spi)) {
+        timeout = time_reached(until);
+        tight_loop_contents();
+      }
+      if (!timeout) {
+        spi_get_hw(spi)->dr = (uint32_t)src[i];
+      }
+  }
+  // Drain RX FIFO, then wait for shifting to finish (which may be *after*
+  // TX FIFO drains), then drain RX FIFO again
+  while (!timeout && spi_is_readable(spi)) {
+    timeout = time_reached(until);
+    (void)spi_get_hw(spi)->dr;
+  }
+  while (!timeout && spi_get_hw(spi)->sr & SPI_SSPSR_BSY_BITS) {
+    timeout = time_reached(until);
+    tight_loop_contents();
+  }
+  while (!timeout && spi_is_readable(spi)) {
+    timeout = time_reached(until);
+    (void)spi_get_hw(spi)->dr;
+  }
+
+  // Don't leave overrun flag set
+  spi_get_hw(spi)->icr = SPI_SSPICR_RORIC_BITS;
+
+  if (timeout) {
+    return PICO_ERROR_TIMEOUT;
+  }
+  return (int)len;
+}
+
 
 void init_spi_client()
 {
@@ -143,6 +190,8 @@ void handle_spi_commands(battery_info_s *battery_info)
 
   /* send response to host (8 bytes) and discard response */
   if (battery_info->som_is_powered) {
-    spi_write_blocking(spi1, (const uint8_t*)spi_buf, 8);
+    if (our_spi_write_timeout_us(spi1, (const uint8_t*)spi_buf, 8, I2C_TIMEOUT) == PICO_ERROR_TIMEOUT) {
+      init_spi_client();
+    }
   }
 }

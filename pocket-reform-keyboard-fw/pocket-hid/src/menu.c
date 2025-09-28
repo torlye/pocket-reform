@@ -113,7 +113,7 @@ int execute_menu_function(int keycode) {
   else if (keycode == KEY_1) {
     if (remote_turn_on_som()) {
       // initial backlight color
-      led_set(0x004040);
+      led_set(KBD_DEFAULT_BACKLIGHT_COLOR);
       anim_hello();
     }
     return 0;

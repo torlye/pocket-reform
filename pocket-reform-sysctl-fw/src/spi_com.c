@@ -23,13 +23,19 @@ void init_spi_client()
 }
 
 #define SPI_DEBUG_ENABLED 0
+#define SPI_PRINTF_ENABLED 0
 
+/* note that this runs in a timer interrupt:
+   - no sleep_ms() calls
+   - don't run longer than 4ms
+*/
 void handle_spi_commands(battery_info_s *battery_info)
 {
   uint8_t spi_command = 0;
   uint8_t spi_arg1 = 0;
   uint8_t spi_buf[SPI_BUF_LEN]; // normally 8 bytes
   int spi_rxlen = 0;
+  bool deferred_power_off = false;
 
   if (!battery_info->som_is_powered) return;
   if (!spi_is_readable(spi1)) return;
@@ -45,24 +51,26 @@ void handle_spi_commands(battery_info_s *battery_info)
   // commands are always 4 bytes, starting with 0xb5
   // dump the buffer to serial
   if (SPI_DEBUG_ENABLED || spi_buf[0] != 0xb5 || spi_rxlen != 4) {
-    printf("# [spi rx %d] ", spi_rxlen);
-    for (int i = 0; i < spi_rxlen; i++) {
-      printf("%2x ", spi_buf[i]);
-    }
-    printf("\t");
-    for (int i = 0; i < spi_rxlen; i++) {
-      if (spi_buf[i] >= 32) {
-        printf("%c", spi_buf[i]);
-      } else {
-        printf(".");
+    if (SPI_PRINTF_ENABLED || SPI_DEBUG_ENABLED) {
+      printf("# [spi rx %d] ", spi_rxlen);
+      for (int i = 0; i < spi_rxlen; i++) {
+        printf("%2x ", spi_buf[i]);
       }
+      printf("\t");
+      for (int i = 0; i < spi_rxlen; i++) {
+        if (spi_buf[i] >= 32) {
+          printf("%c", spi_buf[i]);
+        } else {
+          printf(".");
+        }
+      }
+      printf("\n");
+      printf("# [spi resync]\n");
     }
-    printf("\n");
     // reset SPI0 block
     // this is a workaround for confusion with
     // software spi from BPI-CM4 where we get
     // bit-shifted bytes
-    printf("# [spi resync]\n");
     init_spi_client();
     return;
   }
@@ -122,10 +130,7 @@ void handle_spi_commands(battery_info_s *battery_info)
   else if (spi_command == 'p') {
     // toggle system power off
     if (spi_arg1 == 1) {
-      turn_som_power_off();
-      // don't try to send a response to turned-off SOM,
-      // because SPI will hang otherwise
-      return;
+      deferred_power_off = true;
     }
   }
   else if (spi_command == 'z') {
@@ -141,8 +146,10 @@ void handle_spi_commands(battery_info_s *battery_info)
     set_display_backlight(brightness);
   }
 
-  /* send response to host (8 bytes) and discard response */
-  if (battery_info->som_is_powered) {
+  if (deferred_power_off) {
+    turn_som_power_off();
+  } else {
+    /* send response to host (8 bytes) and discard response */
     spi_write_blocking(spi1, (const uint8_t*)spi_buf, 8);
   }
 }

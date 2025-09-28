@@ -378,6 +378,8 @@ void reset_keyboard_state(void) {
   reset_menu();
 }
 
+// this is called in a timer interrupt, no sleep() functions
+// allowed!
 int process_keyboard(uint8_t* resulting_scancodes) {
   // how many keys are pressed this round
   uint8_t total_pressed = 0;
@@ -417,8 +419,7 @@ int process_keyboard(uint8_t* resulting_scancodes) {
     }
 
     // wait for signal to stabilize
-    //_delay_us(10);
-    sleep_us(1);
+    busy_wait_us(1);
 
     for (int y = 0; y < KBD_ROWS; y++) {
       uint8_t keycode;

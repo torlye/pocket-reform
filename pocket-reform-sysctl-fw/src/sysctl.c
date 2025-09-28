@@ -39,6 +39,7 @@ void clear_boot_magic()
 }
 
 // copied from Pranjal Chanda, "RP2040 PWM Frequency and Duty cycle set algorithm"
+// called from timer interrupt, no sleep allowed here!
 /**
  *  @brief Set frequency and duty cycle for any PWM slice and channel
  *  @param[in] slice_num  The slice number the GPIO is associated to
@@ -87,6 +88,7 @@ int32_t pwm_set_freq_duty(uint32_t slice_num, uint32_t chan, uint32_t freq, int 
 
 // this functionality is only for the second type of display for Pocket Reform
 // that will ship in late 2024 (TOP070F01A)
+// called from timer interrupt, no sleep allowed here!
 void set_display_backlight(int percent)
 {
   // DISP_EN = 7 = PWM3 B
@@ -531,6 +533,12 @@ void turn_som_power_on()
   init_spi_client();
 }
 
+/*
+  this function can be called from a timer interrupt
+  in the spi command handler, no sleep is allowed here.
+  if delays should become necessary, they have to be
+  busy loops.
+*/
 void turn_som_power_off()
 {
   printf("# [action] turn_som_power_off\n");
@@ -556,7 +564,6 @@ void turn_som_power_off()
 
   // Latch power enables
   gpio_put(PIN_PWREN_LATCH, 1);
-  sleep_ms(1);
   gpio_put(PIN_PWREN_LATCH, 0);
   set_display_backlight(0);
 

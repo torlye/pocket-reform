@@ -116,6 +116,7 @@ typedef struct battery_info_s
 void som_wake();
 void turn_som_power_on();
 void turn_som_power_off();
+void turn_som_power_off_spi();
 void set_display_backlight(int percent);
 
 void usb_host_5v_enable();

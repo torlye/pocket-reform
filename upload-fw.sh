@@ -6,7 +6,7 @@ fi
 
 set -uo pipefail
 
-RESULT=$(curl -f \
+RESULT=$(curl --fail-with-body \
     --netrc-file "$3" \
     -X POST \
     -F target="$1" \

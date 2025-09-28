@@ -198,6 +198,7 @@ int main(void)
     gfx_poke_str(1, 1, "Reset by watchdog.");
     gfx_flush();
   }
+
   // reset if main loop is stuck for 1000ms
   watchdog_enable(1000, 1);
 
@@ -213,6 +214,15 @@ int main(void)
   // call USB task every 5ms
   struct repeating_timer timer;
   add_repeating_timer_ms(-5, hid_task, NULL, &timer);
+
+  // try to determine system controller power state
+  for (int i=0; i<2; i++) {
+    remote_get_voltages(1);
+  }
+  if (remote_get_power_state()) {
+    // initial backlight color
+    led_set(KBD_DEFAULT_BACKLIGHT_COLOR);
+  }
 
   unsigned int cycles = 0;
   while (1) {

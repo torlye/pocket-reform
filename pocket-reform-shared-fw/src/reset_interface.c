@@ -6,13 +6,13 @@
  Forked from pico_sdk stdio_usb.
 */
 #include "reset_interface.h"
+#include "device/usbd_pvt.h"
 #include "mntre_reset_priv.h"
 
 #include "tusb.h"
 
 #include "pico/bootrom.h"
 #include "hardware/watchdog.h"
-#include "device/usbd_pvt.h"
 
 static uint8_t itf_num;
 
@@ -67,7 +67,7 @@ static bool resetd_xfer_cb(uint8_t __unused rhport, uint8_t __unused ep_addr, xf
     return true;
 }
 
-static usbd_class_driver_t const resetd_driver =
+const usbd_class_driver_t mntre_reset_class_driver =
 {
 #if CFG_TUSB_DEBUG >= 2
     .name = "RESET",
@@ -79,12 +79,6 @@ static usbd_class_driver_t const resetd_driver =
     .xfer_cb          = resetd_xfer_cb,
     .sof              = NULL
 };
-
-// Implement callback to add our custom driver
-usbd_class_driver_t const *usbd_app_driver_get_cb(uint8_t *driver_count) {
-    *driver_count = 1;
-    return &resetd_driver;
-}
 
 #if RESET_INTERFACE_ENABLE_RESET_VIA_BAUD_RATE
 // Support for default BOOTSEL reset by changing baud rate

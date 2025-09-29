@@ -47,4 +47,5 @@ lvfs-upload:
     - apt-get --update --no-install-recommends -y install curl ca-certificates jq
   script:
     - ./upload-fw.sh embargo pocket-reform-keyboard-fw/pocket-hid/build/pocket-hid.cab "$LVFS_UPLOAD_NETRC"
+    - sleep 5  # https://gitlab.com/fwupd/lvfs-website/-/issues/1037#note_2786314058
     - ./upload-fw.sh embargo pocket-reform-sysctl-fw/build/sysctl.cab "$LVFS_UPLOAD_NETRC"

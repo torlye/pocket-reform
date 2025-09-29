@@ -102,7 +102,7 @@ unsigned int pd_get_state_for_debug() {
   return pd_state;
 }
 
-inline void pd_set_fusb_switches1() {
+static inline void pd_set_fusb_switches1() {
   uint8_t fusb_datarole = (pd_datarole == PD_DATAROLE_DFP) ? FUSB_SWITCHES1_DATAROLE_SRC_DFP : FUSB_SWITCHES1_DATAROLE_SNK_UFP;
   fusb_write_byte(FUSB_SWITCHES1, FUSB_SWITCHES1_SPECREV_REV2_0 | fusb_datarole);
 }

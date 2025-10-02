@@ -6947,7 +6947,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "2199119-4"
+		(property "Manufacturer_No" "2199230-4"
 			(at 199.39 91.44 0)
 			(effects
 				(font
@@ -6956,7 +6956,7 @@
 				(hide yes)
 			)
 		)
-		(property "Notes" ""
+		(property "Notes" "original was 2199119-4, 1mm less height. match with nut height!"
 			(at 199.39 91.44 0)
 			(effects
 				(font
@@ -6974,7 +6974,7 @@
 				(hide yes)
 			)
 		)
-		(property "Alt_Part_No" ""
+		(property "Alt_Part_No" "2199119-4 (with nut SMTSO2015CTJ)"
 			(at 199.39 91.44 0)
 			(effects
 				(font
@@ -6983,7 +6983,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "global sourcing"
+		(property "LCSC" "C41447443"
 			(at 199.39 91.44 0)
 			(effects
 				(font
@@ -8835,7 +8835,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Vishay Dale"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 107.95 120.65 0)
 			(effects
 				(font
@@ -8844,7 +8844,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CRCW0603453KFKEA"
+		(property "Manufacturer_No" "0603WAF4533T5E"
 			(at 107.95 120.65 0)
 			(effects
 				(font
@@ -8880,7 +8880,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C2079749"
+		(property "LCSC" "C25818"
 			(at 107.95 120.65 0)
 			(effects
 				(font
@@ -9244,7 +9244,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "SMTSO2015CTJ"
+		(property "Manufacturer_No" "SMTSO2025CTJ"
 			(at 157.48 154.94 0)
 			(effects
 				(font
@@ -9253,7 +9253,7 @@
 				(hide yes)
 			)
 		)
-		(property "Notes" ""
+		(property "Notes" "match height with m.2 socket!"
 			(at 157.48 154.94 0)
 			(effects
 				(font
@@ -9262,7 +9262,7 @@
 				(hide yes)
 			)
 		)
-		(property "Alt_Manufacturer" "Wuerth"
+		(property "Alt_Manufacturer" ""
 			(at 157.48 154.94 0)
 			(effects
 				(font
@@ -9271,7 +9271,7 @@
 				(hide yes)
 			)
 		)
-		(property "Alt_Part_No" "9774015243"
+		(property "Alt_Part_No" "SMTSO2015CTJ for lower height m.2 socket"
 			(at 157.48 154.94 0)
 			(effects
 				(font
@@ -9280,7 +9280,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C2916320"
+		(property "LCSC" "C2916321"
 			(at 157.48 154.94 0)
 			(effects
 				(font
@@ -11033,7 +11033,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "ECS"
+		(property "Manufacturer" "SCTF"
 			(at 101.6 171.45 0)
 			(effects
 				(font
@@ -11042,7 +11042,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ECS-327MVATX-2-CN-TR3"
+		(property "Manufacturer_No" "SX2M32.768KM20F30TNN"
 			(at 101.6 171.45 0)
 			(effects
 				(font
@@ -11078,7 +11078,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C5375606"
+		(property "LCSC" "C2901603"
 			(at 101.6 171.45 0)
 			(effects
 				(font

@@ -6,6 +6,9 @@
 */
 #pragma once
 
+// tinyusb device header
+#include "device/usbd_pvt.h"
+
 // VENDOR sub-class for the reset interface
 #define MNTRE_RESET_INTERFACE_SUBCLASS 0x00
 // VENDOR protocol for the reset interface
@@ -26,4 +29,6 @@
 // TinyUSB descriptor
 #define MNTRE_RESET_TUD_DESCRIPTOR(_itfnum, _stridx) \
   /* Interface */\
-  MNTRE_RESET_TUD_DESC_LEN, TUSB_DESC_INTERFACE, _itfnum, 0, 0, TUSB_CLASS_VENDOR_SPECIFIC, MNTRE_RESET_INTERFACE_SUBCLASS, MNTRE_RESET_INTERFACE_PROTOCOL, _stridx,
+  MNTRE_RESET_TUD_DESC_LEN, TUSB_DESC_INTERFACE, _itfnum, 0, 0, TUSB_CLASS_VENDOR_SPECIFIC, MNTRE_RESET_INTERFACE_SUBCLASS, MNTRE_RESET_INTERFACE_PROTOCOL, _stridx
+
+extern const usbd_class_driver_t mntre_reset_class_driver;

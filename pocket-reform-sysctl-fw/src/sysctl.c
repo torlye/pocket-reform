@@ -6,6 +6,7 @@
   fusb_read/write functions based on:
   https://git.clarahobbs.com/pd-buddy/pd-buddy-firmware/src/branch/master/lib/src/fusb302b.c
 */
+#include <math.h>
 #include "sysctl.h"
 #include "pico/divider.h"
 #include "tusb.h"
@@ -38,6 +39,7 @@ void clear_boot_magic()
 }
 
 // copied from Pranjal Chanda, "RP2040 PWM Frequency and Duty cycle set algorithm"
+// called from timer interrupt, no sleep allowed here!
 /**
  *  @brief Set frequency and duty cycle for any PWM slice and channel
  *  @param[in] slice_num  The slice number the GPIO is associated to
@@ -51,7 +53,6 @@ int32_t pwm_set_freq_duty(uint32_t slice_num, uint32_t chan, uint32_t freq, int 
 {
   uint8_t clk_divider = 0;
   uint32_t wrap = 0;
-  uint32_t clock_div = 0;
   uint32_t clock = clock_get_hz(clk_sys);
 
   if (freq < 8 || freq > clock)
@@ -62,7 +63,7 @@ int32_t pwm_set_freq_duty(uint32_t slice_num, uint32_t chan, uint32_t freq, int 
   for (clk_divider = 1; clk_divider < UINT8_MAX; clk_divider++)
   {
     /* Find clock_division to fit current frequency */
-    clock_div = div_u32u32(clock, clk_divider);
+    uint32_t clock_div = div_u32u32(clock, clk_divider);
     wrap = div_u32u32(clock_div, freq);
     if (div_u32u32(clock_div, UINT16_MAX) <= freq && wrap <= UINT16_MAX)
     {
@@ -87,6 +88,7 @@ int32_t pwm_set_freq_duty(uint32_t slice_num, uint32_t chan, uint32_t freq, int 
 
 // this functionality is only for the second type of display for Pocket Reform
 // that will ship in late 2024 (TOP070F01A)
+// called from timer interrupt, no sleep allowed here!
 void set_display_backlight(int percent)
 {
   // DISP_EN = 7 = PWM3 B
@@ -104,16 +106,34 @@ void set_display_backlight(int percent)
 
 void charger_tick();
 
+// Assumes mps_reg_status and battery_info->charge_percentage were recently updated.
+//
+static void derive_emergency_charge_necessary(void) {
+  if (mps_reg_status.status.chg_stat == MPS_CHGSTAT_TRICKLE && battery_info.charge_percentage == 0) {
+    battery_info.emergency_charge_necessary = true;
+  } else {
+    battery_info.emergency_charge_necessary = false;
+  }
+}
+
 void charger_init()
 {
   // TODO: check all MP2650 registers, esp. 4, 7, b
+
+  mps_read_buf(MPS_REGSTART_STATUS, sizeof(mps_reg_status.all_regs), mps_reg_status.all_regs);
+  derive_emergency_charge_necessary();
 
   // reset all registers
   mps_reg_config.config0.reg_rst = 1;
   mps_write_byte(MPS_REG_CONFIG0, mps_reg_config.config0.reg_byte);
 
-  // turn off charging until PD allows it
-  mps_reg_config.config0.chg_en = 0;
+  if (battery_info.emergency_charge_necessary) {
+    // continue emergency charging
+    mps_reg_config.config0.chg_en = 1;
+  } else {
+    // turn off charging until PD allows it
+    mps_reg_config.config0.chg_en = 0;
+  }
   mps_reg_config.config0.susp_en = 0;
   mps_reg_config.config0.ntc_gcomp_sel = 0;  // disable OTG pin
   mps_write_byte(MPS_REG_CONFIG0, mps_reg_config.config0.reg_byte);
@@ -123,14 +143,22 @@ void charger_init()
   mps_read_buf(MPS_REGSTART_STATUS, sizeof(mps_reg_status.all_regs), mps_reg_status.all_regs);
 
   // 2A max charge current, assumes 4000mAh cells.
-  // will be written into register by charger_disable_charge.
   mps_reg_limits.charge_current = 1<<5 | 1<<3;
-  charger_disable_charge();
+  // set all current limits to 500mA (should always be safe)
+  int current_limit = 1<<3 | 1<<1;
+  mps_reg_limits.input_i_limit1 = current_limit;
+  mps_write_buf(MPS_REGSTART_LIMITS, sizeof(mps_reg_limits.all_regs), mps_reg_limits.all_regs);
+  mps_read_buf(MPS_REGSTART_LIMITS, sizeof(mps_reg_limits.all_regs), mps_reg_limits.all_regs);
+  mps_write_byte(0x0F, current_limit); // Input Limit 2
+
+  gpio_put(PIN_LED_R, mps_reg_config.config0.chg_en);
 
   charger_tick();
 }
 
 void charger_tick() {
+  derive_emergency_charge_necessary();
+
   uint8_t old_config3 = mps_reg_config.config3.reg_byte;
   if (battery_info.som_is_powered) {
     mps_reg_config.config3.prochot_psys_cfg = 0b11;  // enable PSYS/ADC feature, even on battery
@@ -365,7 +393,18 @@ void charger_dump(battery_info_s *battery_info)
   // can we lower the charging voltage temporarily?
   // alternatively, the current
 
+  // Read charging status every 10ms
+  if (battery_info->ticks % 100 != 0) {
+    return;
+  }
+
   mps_read_buf(MPS_REGSTART_STATUS, sizeof(mps_reg_status.all_regs), mps_reg_status.all_regs);
+
+  // Read ADC values and update stuff every 100ms
+  if (battery_info->ticks % 1000 != 0) {
+    return;
+  }
+
   mps_read_buf(MPS_REGSTART_ADC, sizeof(mps_reg_adc.all_regs), mps_reg_adc.all_regs);
 
   uint16_t adc_sys_v = mps_word_to_6400(mps_reg_adc.sys_v);
@@ -409,11 +448,54 @@ void charger_dump(battery_info_s *battery_info)
   }
 }
 
+void charger_led_indication(battery_info_s *battery_info) {
+  // update LED every 10ms, although data might be older
+  if (battery_info->ticks % 100 != 0) {
+    return;
+  }
+
+  static float phase = 0.0f;
+
+  if (mps_reg_status.status.chg_stat == MPS_CHGSTAT_FAST) {
+    uint pwm_max = 0xffff;
+    if (gpio_get_function(PIN_LED_R) != GPIO_FUNC_PWM) {
+      gpio_set_function(PIN_LED_R, GPIO_FUNC_PWM);
+      pwm_set_wrap(PIN_LED_R_PWM_SLICE, pwm_max);
+      pwm_set_enabled(PIN_LED_R_PWM_SLICE, true);
+    }
+
+    float sine_val = sin(phase);
+    float normalized = (sine_val + 1.0f) / 2.0f;
+    float breathing_curve = normalized * normalized;
+    uint16_t pwm_level = (uint16_t)(breathing_curve * pwm_max);
+    pwm_set_chan_level(PIN_LED_R_PWM_SLICE, PIN_LED_R_PWM_CHAN, pwm_level);
+    phase += 0.02f;
+    if (phase > 2.0f * M_PI) {
+        phase = 0.0f;
+    }
+  } else {
+    phase = 0.0f;
+    if (gpio_get_function(PIN_LED_R) != GPIO_FUNC_SIO) {
+      gpio_set_function(PIN_LED_R, GPIO_FUNC_SIO);
+    }
+    if (mps_reg_status.status.chg_stat == MPS_CHGSTAT_OFF || mps_reg_status.status.chg_stat == MPS_CHGSTAT_DONE) {
+      // not charging
+      gpio_put(PIN_LED_R, 0);
+    } else {
+      // trickle charging
+      gpio_put(PIN_LED_R, 1);
+    }
+  }
+}
+
+void som_power_indication() {
+  pwm_set_freq_duty(PIN_LED_B_PWM_SLICE, PIN_LED_B_PWM_CHAN, 25000, battery_info.som_is_powered ? 30 : 0);
+}
+
 void turn_som_power_on()
 {
   printf("# [action] turn_som_power_on\n");
 
-  gpio_put(PIN_LED_B, 1);
   gpio_put(PIN_PWREN_LATCH, 0);
 
   set_boot_magic();
@@ -447,9 +529,16 @@ void turn_som_power_on()
   gpio_put(PIN_PWREN_LATCH, 0);
 
   battery_info.som_is_powered = true;
+  som_power_indication();
   init_spi_client();
 }
 
+/*
+  this function can be called from a timer interrupt
+  in the spi command handler, no sleep is allowed here.
+  if delays should become necessary, they have to be
+  busy loops.
+*/
 void turn_som_power_off()
 {
   printf("# [action] turn_som_power_off\n");
@@ -475,11 +564,10 @@ void turn_som_power_off()
 
   // Latch power enables
   gpio_put(PIN_PWREN_LATCH, 1);
-  sleep_ms(1);
   gpio_put(PIN_PWREN_LATCH, 0);
   set_display_backlight(0);
 
-  gpio_put(PIN_LED_B, 0);
+  som_power_indication();
 }
 
 void som_wake()
@@ -524,12 +612,13 @@ void setup()
   i2c_init(i2c0, 100 * 1000);
 
   // RGB LED
-  gpio_init(PIN_LED_R);
+  gpio_init(PIN_LED_R);  // Red is used as charge indicator
   gpio_init(PIN_LED_G);
-  gpio_init(PIN_LED_B);
+  gpio_init(PIN_LED_B);  // Blue is used as SOM-powered indicator
   gpio_set_dir(PIN_LED_R, GPIO_OUT);
   gpio_set_dir(PIN_LED_G, GPIO_OUT);
   gpio_set_dir(PIN_LED_B, GPIO_OUT);
+  gpio_set_function(PIN_LED_B, GPIO_FUNC_PWM);
 
   // Power regulator pins
   gpio_init(PIN_1V1_ENABLE);
@@ -576,7 +665,6 @@ void setup()
   // Turn off RGB LED
   gpio_put(PIN_LED_R, 0);
   gpio_put(PIN_LED_G, 0);
-  gpio_put(PIN_LED_B, 0);
 
   // USB charger-port power rail
   gpio_init(PIN_USB_SRC_ENABLE);
@@ -690,12 +778,13 @@ void loop()
 
   battery_info.ticks++;
 
-  // every 100ms: query gauge and charger, update battery status
+  // every 100ms: query gauge, update battery status
   if (battery_info.ticks % 1000 == 0)
   {
     gauge_tick(&battery_info);
-    charger_dump(&battery_info);
   }
+  charger_dump(&battery_info);
+  charger_led_indication(&battery_info);
 
   // every 1000ms: report to serial
   if (battery_info.ticks % 10000 == 0)

@@ -8673,7 +8673,7 @@
 				)
 			)
 		)
-		(property "Value" "220nH XAL4020-221MEB"
+		(property "Value" "220nH 10A"
 			(at 83.82 111.76 90)
 			(effects
 				(font
@@ -8681,7 +8681,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Inductor_SMD:L_Coilcraft_XAL4020-XXX"
+		(property "Footprint" "EasyEDA:IND-SMD_L3.0-W3.0_FTC303020D"
 			(at 83.82 114.3 0)
 			(effects
 				(font
@@ -8717,7 +8717,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "FXL0412-R22-M"
+		(property "Manufacturer_No" "FTC303018DR22MBCA"
 			(at 83.82 114.3 0)
 			(effects
 				(font
@@ -8753,7 +8753,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C524578"
+		(property "LCSC" "C5832405"
 			(at 83.82 114.3 0)
 			(effects
 				(font

@@ -5083,6 +5083,16 @@
 	)
 	(wire
 		(pts
+			(xy 227.33 142.24) (xy 254 142.24)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "331e2c77-cfc6-4a58-a4a4-36e7592fd29a")
+	)
+	(wire
+		(pts
 			(xy 167.64 154.94) (xy 207.01 154.94)
 		)
 		(stroke
@@ -6613,7 +6623,7 @@
 	)
 	(wire
 		(pts
-			(xy 260.35 142.24) (xy 266.7 142.24)
+			(xy 259.08 142.24) (xy 266.7 142.24)
 		)
 		(stroke
 			(width 0)
@@ -7250,16 +7260,6 @@
 			(type default)
 		)
 		(uuid "f6022c37-b52f-42ac-b8cb-3937600a0291")
-	)
-	(wire
-		(pts
-			(xy 255.27 142.24) (xy 227.33 142.24)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "f6e486f9-67c6-4ebb-b4fa-43947fafb086")
 	)
 	(wire
 		(pts
@@ -8846,7 +8846,7 @@
 	)
 	(symbol
 		(lib_id "Device:Fuse_Small")
-		(at 257.81 142.24 0)
+		(at 256.54 142.24 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -8855,7 +8855,7 @@
 		(fields_autoplaced yes)
 		(uuid "182f1fe8-eb3f-4128-849d-7fd413f07478")
 		(property "Reference" "F1"
-			(at 257.81 137.16 0)
+			(at 256.54 137.16 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8863,7 +8863,7 @@
 			)
 		)
 		(property "Value" "1206L300/12SLYR"
-			(at 257.81 139.7 0)
+			(at 256.54 139.7 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8871,7 +8871,7 @@
 			)
 		)
 		(property "Footprint" "Fuse:Fuse_1206_3216Metric"
-			(at 257.81 142.24 0)
+			(at 256.54 142.24 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8880,7 +8880,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 257.81 142.24 0)
+			(at 256.54 142.24 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8889,7 +8889,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 257.81 142.24 0)
+			(at 256.54 142.24 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8898,7 +8898,7 @@
 			)
 		)
 		(property "LCSC" "C1512043"
-			(at 257.81 142.24 0)
+			(at 256.54 142.24 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8907,7 +8907,7 @@
 			)
 		)
 		(property "Manufacturer" "Littelfuse"
-			(at 257.81 142.24 0)
+			(at 256.54 142.24 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8916,7 +8916,7 @@
 			)
 		)
 		(property "Manufacturer_No" "1206L300/12SLYR"
-			(at 257.81 142.24 0)
+			(at 256.54 142.24 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8964,7 +8964,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+		(property "Footprint" "Resistor_SMD:R_1206_3216Metric"
 			(at 234.95 190.5 0)
 			(effects
 				(font
@@ -8991,7 +8991,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C403255"
+		(property "LCSC" "C4014562"
 			(at 234.95 190.5 0)
 			(effects
 				(font
@@ -9000,7 +9000,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "VISHAY"
 			(at 234.95 190.5 0)
 			(effects
 				(font
@@ -9009,7 +9009,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ3EKF49R9V"
+		(property "Manufacturer_No" "CRCW120649R9FKEAHP"
 			(at 234.95 190.5 0)
 			(effects
 				(font
@@ -12299,7 +12299,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+		(property "Footprint" "Resistor_SMD:R_1206_3216Metric"
 			(at 234.95 208.28 0)
 			(effects
 				(font
@@ -12326,7 +12326,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C403255"
+		(property "LCSC" "C4014562"
 			(at 234.95 208.28 0)
 			(effects
 				(font
@@ -12335,7 +12335,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "VISHAY"
 			(at 234.95 208.28 0)
 			(effects
 				(font
@@ -12344,7 +12344,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ3EKF49R9V"
+		(property "Manufacturer_No" "CRCW120649R9FKEAHP "
 			(at 234.95 208.28 0)
 			(effects
 				(font

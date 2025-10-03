@@ -285,6 +285,19 @@
 				)
 			)
 		)
+		(property "LCSC" "C7457894"
+			(at 0 0 180)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "693bcfa8-d555-454a-a078-38ead86c0621")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
 		(path "/2adae7f6-b422-4783-8f8a-55f414f12184")
 		(sheetname "/")
 		(sheetfile "pocket-reform-charger.kicad_sch")
@@ -5237,38 +5250,12 @@
 				)
 			)
 		)
-		(property "Digikey" ""
-			(at 0 0 90)
-			(unlocked yes)
-			(layer "F.Fab")
-			(hide yes)
-			(uuid "8f18b9d0-36bd-49d7-bef2-9026d80dc8b1")
-			(effects
-				(font
-					(size 1 1)
-					(thickness 0.15)
-				)
-			)
-		)
-		(property "Manufacturer" ""
+		(property "Manufacturer" "NXP"
 			(at 0 0 90)
 			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "c16cbd89-76be-4d6f-8141-47fc9d7c678a")
-			(effects
-				(font
-					(size 1 1)
-					(thickness 0.15)
-				)
-			)
-		)
-		(property "MPN" ""
-			(at 0 0 90)
-			(unlocked yes)
-			(layer "F.Fab")
-			(hide yes)
-			(uuid "3770bda7-24b8-419a-b4d4-96b243420fdc")
 			(effects
 				(font
 					(size 1 1)
@@ -5289,12 +5276,25 @@
 				)
 			)
 		)
-		(property "LCSC" ""
+		(property "LCSC" "NX20P5090UKAZ"
 			(at 0 0 90)
 			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "845519d9-76ad-4f11-829c-1775f5447354")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Manufacturer_No" "NX20P5090"
+			(at 0 0 90)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "0400f53c-5c76-4393-8d85-8cbb0d917b97")
 			(effects
 				(font
 					(size 1 1)
@@ -7744,7 +7744,7 @@
 		(path "/918341ca-2041-4676-8e18-effe0b09a380")
 		(sheetname "/")
 		(sheetfile "pocket-reform-charger.kicad_sch")
-		(attr exclude_from_pos_files)
+		(attr exclude_from_pos_files exclude_from_bom dnp)
 		(fp_line
 			(start -0.7 0.7)
 			(end -0.7 -0.7)
@@ -9084,38 +9084,38 @@
 				)
 			)
 		)
-		(property "Digikey" "DMG9926USD-13DICT-ND"
-			(at 0 0 270)
-			(unlocked yes)
-			(layer "F.Fab")
-			(hide yes)
-			(uuid "7e7f6959-940e-41c8-bb41-3144e2094671")
-			(effects
-				(font
-					(size 1 1)
-					(thickness 0.15)
-				)
-			)
-		)
-		(property "MPN" "DMG9926USD-13"
-			(at 0 0 270)
-			(unlocked yes)
-			(layer "F.Fab")
-			(hide yes)
-			(uuid "d9c74280-c2bf-4590-8226-3af0ddf3d421")
-			(effects
-				(font
-					(size 1 1)
-					(thickness 0.15)
-				)
-			)
-		)
 		(property "Manufacturer" "Diodes Incorporated"
 			(at 0 0 270)
 			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "e4f3e0dd-25ea-4352-81bd-6ea6bb8f0db0")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Manufacturer_No" "DMG9926USD-13"
+			(at 0 0 270)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "f0e657e6-290c-47b3-99b9-c14be5997ffc")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "LCSC" "C154896"
+			(at 0 0 270)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "202f176b-e1a1-489f-94d0-41228f382d1a")
 			(effects
 				(font
 					(size 1 1)
@@ -10242,7 +10242,7 @@
 		(path "/e21e7132-a581-42c7-8782-6d092649daaa")
 		(sheetname "/")
 		(sheetfile "pocket-reform-charger.kicad_sch")
-		(attr exclude_from_pos_files)
+		(attr exclude_from_pos_files exclude_from_bom dnp)
 		(fp_line
 			(start -0.7 0.7)
 			(end -0.7 -0.7)
@@ -12758,7 +12758,7 @@
 		(path "/a0c6d3a2-9112-4481-947f-48f457725929")
 		(sheetname "/")
 		(sheetfile "pocket-reform-charger.kicad_sch")
-		(attr exclude_from_pos_files)
+		(attr exclude_from_pos_files exclude_from_bom dnp)
 		(fp_line
 			(start -0.7 -0.7)
 			(end 0.7 -0.7)
@@ -14907,7 +14907,7 @@
 				)
 			)
 		)
-		(property "Manufacturer_No" "CRCW120649R9FKEAHP "
+		(property "Manufacturer_No" "CRCW120649R9FKEAHP"
 			(at 0 0 270)
 			(unlocked yes)
 			(layer "F.Fab")
@@ -15366,11 +15366,24 @@
 				)
 			)
 		)
-		(property "Manufacturer_No" "MP2650"
+		(property "Manufacturer_No" "MP2650GV-0000-Z"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "d32b8ca9-47ba-4725-8cc6-c2fe7c2c0e63")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "LCSC" "C6097090"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "0a2ec476-92d5-450a-9c0d-81ee21b878c6")
 			(effects
 				(font
 					(size 1 1)
@@ -20772,7 +20785,7 @@
 		(path "/630b2b1d-b6c5-413e-836d-23796f95154e")
 		(sheetname "/")
 		(sheetfile "pocket-reform-charger.kicad_sch")
-		(attr exclude_from_pos_files)
+		(attr exclude_from_pos_files exclude_from_bom dnp)
 		(fp_line
 			(start -0.7 -0.7)
 			(end 0.7 -0.7)

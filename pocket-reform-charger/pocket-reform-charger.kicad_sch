@@ -8495,25 +8495,7 @@
 				(hide yes)
 			)
 		)
-		(property "Digikey" ""
-			(at 134.62 240.03 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Manufacturer" ""
-			(at 134.62 240.03 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "MPN" ""
+		(property "Manufacturer" "NXP"
 			(at 134.62 240.03 0)
 			(effects
 				(font
@@ -8530,13 +8512,21 @@
 				)
 			)
 		)
-		(property "LCSC" ""
+		(property "LCSC" "NX20P5090UKAZ"
 			(at 134.62 240.03 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 				(hide yes)
+			)
+		)
+		(property "Manufacturer_No" "NX20P5090"
+			(at 134.62 240.03 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
 			)
 		)
 		(pin "E1"
@@ -8675,24 +8665,6 @@
 				(hide yes)
 			)
 		)
-		(property "Digikey" ""
-			(at 113.03 232.41 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "MPN" ""
-			(at 113.03 232.41 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
 		(property "DNP" ""
 			(at 113.03 232.41 0)
 			(effects
@@ -8789,24 +8761,6 @@
 			)
 		)
 		(property "Manufacturer_No" "MFJ06HR010FT"
-			(at 86.36 100.33 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Digikey" ""
-			(at 86.36 100.33 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "MPN" ""
 			(at 86.36 100.33 0)
 			(effects
 				(font
@@ -9115,24 +9069,6 @@
 				(hide yes)
 			)
 		)
-		(property "Digikey" ""
-			(at 107.95 256.54 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "MPN" ""
-			(at 107.95 256.54 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
 		(property "DNP" ""
 			(at 107.95 256.54 0)
 			(effects
@@ -9421,6 +9357,14 @@
 					(size 1.27 1.27)
 				)
 				(hide yes)
+			)
+		)
+		(property "LCSC" "C7457894"
+			(at 284.48 185.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
 			)
 		)
 		(pin "1"
@@ -9782,24 +9726,6 @@
 				(hide yes)
 			)
 		)
-		(property "Digikey" ""
-			(at 59.69 105.41 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "MPN" ""
-			(at 59.69 105.41 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
 		(property "DNP" ""
 			(at 59.69 105.41 0)
 			(effects
@@ -10069,24 +9995,6 @@
 				(hide yes)
 			)
 		)
-		(property "Digikey" "DMG9926USD-13DICT-ND"
-			(at 278.13 144.78 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "MPN" "DMG9926USD-13"
-			(at 278.13 144.78 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
 		(property "Manufacturer" "Diodes Incorporated"
 			(at 278.13 144.78 0)
 			(effects
@@ -10094,6 +10002,22 @@
 					(size 1.27 1.27)
 				)
 				(hide yes)
+			)
+		)
+		(property "Manufacturer_No" "DMG9926USD-13"
+			(at 278.13 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C154896"
+			(at 278.13 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
 			)
 		)
 		(pin "1"
@@ -10300,24 +10224,6 @@
 			)
 		)
 		(property "Manufacturer_No" "GRM21BR61E226ME44L"
-			(at 69.85 105.41 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Digikey" ""
-			(at 69.85 105.41 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "MPN" ""
 			(at 69.85 105.41 0)
 			(effects
 				(font
@@ -11438,9 +11344,9 @@
 		(at 389.89 172.72 270)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "630b2b1d-b6c5-413e-836d-23796f95154e")
 		(property "Reference" "TP5"
@@ -12070,24 +11976,6 @@
 				(hide yes)
 			)
 		)
-		(property "Digikey" ""
-			(at 102.87 232.41 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "MPN" ""
-			(at 102.87 232.41 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
 		(property "DNP" ""
 			(at 102.87 232.41 0)
 			(effects
@@ -12344,7 +12232,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CRCW120649R9FKEAHP "
+		(property "Manufacturer_No" "CRCW120649R9FKEAHP"
 			(at 234.95 208.28 0)
 			(effects
 				(font
@@ -12663,9 +12551,9 @@
 		(at 74.93 142.24 90)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "918341ca-2041-4676-8e18-effe0b09a380")
 		(property "Reference" "TP2"
@@ -13376,9 +13264,9 @@
 		(at 337.82 189.23 270)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "a0c6d3a2-9112-4481-947f-48f457725929")
 		(property "Reference" "TP4"
@@ -13492,24 +13380,6 @@
 				(hide yes)
 			)
 		)
-		(property "Digikey" "DMG9926USD-13DICT-ND"
-			(at 290.83 144.78 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "MPN" "DMG9926USD-13"
-			(at 290.83 144.78 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
 		(property "Manufacturer" "Diodes Incorporated"
 			(at 290.83 144.78 0)
 			(effects
@@ -13517,6 +13387,22 @@
 					(size 1.27 1.27)
 				)
 				(hide yes)
+			)
+		)
+		(property "Manufacturer_No" "DMG9926USD-13"
+			(at 290.83 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C154896"
+			(at 290.83 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
 			)
 		)
 		(pin "1"
@@ -14356,13 +14242,21 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "MP2650"
+		(property "Manufacturer_No" "MP2650GV-0000-Z"
 			(at 139.7 128.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 				(hide yes)
+			)
+		)
+		(property "LCSC" "C6097090"
+			(at 139.7 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
 			)
 		)
 		(pin "1"
@@ -15022,24 +14916,6 @@
 				(hide yes)
 			)
 		)
-		(property "Digikey" ""
-			(at 96.52 242.57 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "MPN" ""
-			(at 96.52 242.57 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
 		(property "DNP" ""
 			(at 96.52 242.57 0)
 			(effects
@@ -15068,9 +14944,9 @@
 		(at 68.58 146.05 90)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "e21e7132-a581-42c7-8782-6d092649daaa")
 		(property "Reference" "TP1"
@@ -15586,24 +15462,6 @@
 			)
 		)
 		(property "Manufacturer_No" "LMJ12MF1P0R005"
-			(at 284.48 231.14 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Digikey" ""
-			(at 284.48 231.14 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "MPN" ""
 			(at 284.48 231.14 0)
 			(effects
 				(font

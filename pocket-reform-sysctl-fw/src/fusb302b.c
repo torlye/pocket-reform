@@ -21,29 +21,31 @@
 
 #include <pd.h>
 
-void fusb_read_buf(uint8_t addr, uint8_t size, uint8_t *buf)
+bool fusb_read_buf(uint8_t addr, uint8_t size, uint8_t *buf)
 {
-  i2c_write_timeout_us(i2c0, FUSB_ADDR, &addr, 1, true, I2C_TIMEOUT);
-  i2c_read_timeout_us(i2c0, FUSB_ADDR, buf, size, false, I2C_TIMEOUT);
+  if (1 != i2c_write_timeout_us(i2c0, FUSB_ADDR, &addr, 1, true, I2C_TIMEOUT)) {
+    return false;
+  }
+  return size == i2c_read_timeout_us(i2c0, FUSB_ADDR, buf, size, false, I2C_TIMEOUT);
 }
 
-void fusb_write_byte(uint8_t addr, uint8_t byte)
+bool fusb_write_byte(uint8_t addr, uint8_t byte)
 {
   uint8_t buf[2] = {addr, byte};
-  i2c_write_timeout_us(i2c0, FUSB_ADDR, buf, 2, false, I2C_TIMEOUT);
+  return 2 == i2c_write_timeout_us(i2c0, FUSB_ADDR, buf, 2, false, I2C_TIMEOUT);
 }
 
-void fusb_write_buf(uint8_t addr, uint8_t size, const uint8_t *buf)
+bool fusb_write_buf(uint8_t addr, uint8_t size, const uint8_t *buf)
 {
   uint8_t txbuf[size + 1];
   txbuf[0] = addr;
   for (int i = 0; i < size; i++) {
     txbuf[i + 1] = buf[i];
   }
-  i2c_write_timeout_us(i2c0, FUSB_ADDR, txbuf, size + 1, false, I2C_TIMEOUT);
+  return size + 1 == i2c_write_timeout_us(i2c0, FUSB_ADDR, txbuf, size + 1, false, I2C_TIMEOUT);
 }
 
-void fusb_send_message(const union pd_msg *msg)
+bool fusb_send_message(const union pd_msg *msg)
 {
   /* Token sequences for the FUSB302B */
   static uint8_t sop_seq[5] = {
@@ -68,9 +70,15 @@ void fusb_send_message(const union pd_msg *msg)
   sop_seq[4] = FUSB_FIFO_TX_PACKSYM | msg_len;
 
   /* Write all three parts of the message to the TX FIFO */
-  fusb_write_buf(FUSB_FIFOS, 5, sop_seq);
-  fusb_write_buf(FUSB_FIFOS, msg_len, msg->bytes);
-  fusb_write_buf(FUSB_FIFOS, 4, eop_seq);
+  bool success = fusb_write_buf(FUSB_FIFOS, 5, sop_seq);
+  if (!success) {
+    return false;
+  }
+  success = fusb_write_buf(FUSB_FIFOS, msg_len, msg->bytes);
+  if (!success) {
+    return false;
+  }
+  return fusb_write_buf(FUSB_FIFOS, 4, eop_seq);
 }
 
 bool fusb_read_message(union pd_msg *msg)

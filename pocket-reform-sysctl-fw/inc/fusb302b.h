@@ -265,10 +265,10 @@ union fusb_status {
 
 /* FUSB functions */
 
-void fusb_read_buf(uint8_t addr, uint8_t size, uint8_t *buf);
-void fusb_write_byte(uint8_t addr, uint8_t byte);
-void fusb_write_buf(uint8_t addr, uint8_t size, const uint8_t *buf);
-void fusb_send_message(const union pd_msg *msg);
+bool fusb_read_buf(uint8_t addr, uint8_t size, uint8_t *buf);
+bool fusb_write_byte(uint8_t addr, uint8_t byte);
+bool fusb_write_buf(uint8_t addr, uint8_t size, const uint8_t *buf);
+bool fusb_send_message(const union pd_msg *msg);
 bool fusb_read_message(union pd_msg *msg);
 
 #endif /* PDB_FUSB302B_H */

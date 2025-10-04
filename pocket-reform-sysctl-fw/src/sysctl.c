@@ -671,11 +671,8 @@ void setup()
   gpio_set_dir(PIN_USB_SRC_ENABLE, GPIO_OUT);
   gpio_put(PIN_USB_SRC_ENABLE, 0);
 
-  // TODO: [zeha] ...
   gpio_init(PIN_FUSB_INT);
   gpio_set_dir(PIN_FUSB_INT, 0);
-  // TODO: figure out why the FUSB_INT irq does not trigger
-  //gpio_set_irq_enabled_with_callback(PIN_FUSB_INT, GPIO_IRQ_EDGE_FALL | GPIO_IRQ_EDGE_RISE, true, &fusb_interrupt);
 
   // if this is a warm boot, then we need to avoid latching the PWR and display
   // pins.

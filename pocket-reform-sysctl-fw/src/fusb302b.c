@@ -21,14 +21,6 @@
 
 #include <pd.h>
 
-uint8_t fusb_read_byte(uint8_t addr)
-{
-  uint8_t buf;
-  i2c_write_timeout_us(i2c0, FUSB_ADDR, &addr, 1, true, I2C_TIMEOUT);
-  i2c_read_timeout_us(i2c0, FUSB_ADDR, &buf, 1, false, I2C_TIMEOUT);
-  return buf;
-}
-
 void fusb_read_buf(uint8_t addr, uint8_t size, uint8_t *buf)
 {
   i2c_write_timeout_us(i2c0, FUSB_ADDR, &addr, 1, true, I2C_TIMEOUT);

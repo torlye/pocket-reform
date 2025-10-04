@@ -265,7 +265,6 @@ union fusb_status {
 
 /* FUSB functions */
 
-uint8_t fusb_read_byte(uint8_t addr);
 void fusb_read_buf(uint8_t addr, uint8_t size, uint8_t *buf);
 void fusb_write_byte(uint8_t addr, uint8_t byte);
 void fusb_write_buf(uint8_t addr, uint8_t size, const uint8_t *buf);

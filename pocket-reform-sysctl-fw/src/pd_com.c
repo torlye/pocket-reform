@@ -172,17 +172,6 @@ bool pd_tick(battery_info_s* battery_info) {
       // Interrupt
       // FIFOs
 
-      // Mask I_GCRCSENT.
-      if (!fusb_write_byte(FUSB_MASKB, 0x01))
-        goto out;
-
-      // disable interrupt mask, flush tx buffer
-      if (!fusb_write_byte(FUSB_CONTROL0, FUSB_CONTROL0_HOST_CUR | FUSB_CONTROL0_TX_FLUSH))
-        goto out;
-      // flush rx buffer
-      if (!fusb_write_byte(FUSB_CONTROL1, FUSB_CONTROL1_RX_FLUSH))
-        goto out;
-
       // automatic retransmission + auto hard+soft reset
       if (!fusb_write_byte(FUSB_CONTROL3,
                            FUSB_CONTROL3_AUTO_HARDRESET |

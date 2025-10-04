@@ -298,7 +298,7 @@ bool pd_tick(battery_info_s* battery_info) {
     // detect detach by VBUS going away.
     uint8_t status0;
     if (fusb_read_buf(FUSB_STATUS0, 1, &status0) && (status0 & FUSB_STATUS0_VBUSOK) == 0) {
-      printf("# [pd] state PD_STATE_ATTACHED_SNK VBUS is now BAAAAD\n");
+      printf("# [pd] state PD_STATE_ATTACHED_SNK VBUS went away\n");
       t = 0;
       pd_state = PD_STATE_SETUP;
       goto out;

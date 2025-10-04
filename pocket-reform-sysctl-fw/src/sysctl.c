@@ -126,6 +126,10 @@ void charger_init()
   // reset all registers
   mps_reg_config.config0.reg_rst = 1;
   mps_write_byte(MPS_REG_CONFIG0, mps_reg_config.config0.reg_byte);
+  sleep_us(50);
+
+  // It should be possible to read this after writing to MPS_REG_CONFIG0 below, but apparently then we read the resetted registers (again?).
+  mps_read_buf(MPS_REGSTART_CONFIG, sizeof(mps_reg_config.all_regs), mps_reg_config.all_regs);
 
   if (battery_info.emergency_charge_necessary) {
     // continue emergency charging
@@ -138,7 +142,6 @@ void charger_init()
   mps_reg_config.config0.ntc_gcomp_sel = 0;  // disable OTG pin
   mps_write_byte(MPS_REG_CONFIG0, mps_reg_config.config0.reg_byte);
 
-  mps_read_buf(MPS_REGSTART_CONFIG, sizeof(mps_reg_config.all_regs), mps_reg_config.all_regs);
   mps_read_buf(MPS_REGSTART_LIMITS, sizeof(mps_reg_limits.all_regs), mps_reg_limits.all_regs);
   mps_read_buf(MPS_REGSTART_STATUS, sizeof(mps_reg_status.all_regs), mps_reg_status.all_regs);
 

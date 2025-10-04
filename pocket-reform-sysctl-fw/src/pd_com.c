@@ -228,12 +228,16 @@ bool pd_tick(battery_info_s* battery_info) {
         printf("# [pd] PD_STATE_UNATTACHED -> SNK CC2, going to PD_STATE_UNATTACHED_SNK\n");
         pd_state = PD_STATE_UNATTACHED_SNK;
         pd_ccpin = 2;
-      } else if (togss == 1 || togss == 2) {
-        // SRC ...
-        // FIXME: store ccpin
-        // TODO: test (and then implement) this with an actual PD-speaking device.
-        printf("# [pd] PD_STATE_UNATTACHED -> SRC, going to PD_STATE_UNATTACHED_SRC\n");
+      } else if (togss == 1) {
+        // SRC CC1
+        printf("# [pd] PD_STATE_UNATTACHED -> SRC CC1, going to PD_STATE_UNATTACHED_SRC\n");
         pd_state = PD_STATE_UNATTACHED_SRC;
+        pd_ccpin = 1;
+      } else if (togss == 2) {
+        // SRC CC2
+        printf("# [pd] PD_STATE_UNATTACHED -> SRC CC2, going to PD_STATE_UNATTACHED_SRC\n");
+        pd_state = PD_STATE_UNATTACHED_SRC;
+        pd_ccpin = 2;
       } else {
         // Audio accessory or something else we do not understand. Reset.
         pd_state = PD_STATE_SETUP;
@@ -433,11 +437,24 @@ bool pd_tick(battery_info_s* battery_info) {
     }
 #endif
   } else if (pd_state == PD_STATE_UNATTACHED_SRC) {
-    // TODO: should do a lot of stuff
-    fusb_write_byte(FUSB_POWER, 0xF);
+    // TODO: should do a lot of stuff, but for now keep USB2.0 devices happy
+    if (t % 10000 == 0) {
+      uint8_t status0;
+      if (fusb_read_buf(FUSB_STATUS0, 1, &status0)) {
+        printf("# [pd] state PD_STATE_UNATTACHED_SRC, status0 = %02x bc_lvl = %02x\n", status0, status0 & FUSB_STATUS0_BC_LVL);
+        status0 &= FUSB_STATUS0_BC_LVL;
+        if (status0 == 1) {
+          // device is still connected, stay.
+        } else {
+          pd_state = PD_STATE_SETUP;
+        }
+        t = 0;
+      }
+    }
 
-    t = 0;
-    pd_state = PD_STATE_ATTACHED_SRC;
+    if (t > 100000) {
+      pd_state = PD_STATE_ATTACHED_SRC;
+    }
   } else if (pd_state == PD_STATE_ATTACHED_SRC) {
     // TODO: everything
     // TODO: timeout

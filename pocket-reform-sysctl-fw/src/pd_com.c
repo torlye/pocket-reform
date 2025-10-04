@@ -209,15 +209,16 @@ bool pd_tick(battery_info_s* battery_info) {
     pd_sent_soft_reset = false;
 
     // read and clear all interrupts - FIXME: do it in one I2C transaction
-    int i_irq = fusb_read_byte(FUSB_INTERRUPT);
-    int i_irqa = fusb_read_byte(FUSB_INTERRUPTA);
-    int i_irqb = fusb_read_byte(FUSB_INTERRUPTB);
-    (void)i_irqb;
-    (void)i_irq;
+    uint8_t i_irq_temp = 0, i_irqa = 0;
+    fusb_read_buf(FUSB_INTERRUPT, 1, &i_irq_temp);
+    fusb_read_buf(FUSB_INTERRUPTA, 1, &i_irqa);
+    fusb_read_buf(FUSB_INTERRUPTB, 1, &i_irq_temp);
 
     //printf("# [pd] PD_STATE_UNATTACHED FUSB_INTERRUPT = 0x%02x FUSB_INTERRUPTA = 0x%02x FUSB_INTERRUPTB = 0x%02x\n", i_irq, i_irqa, i_irqb);
     if (i_irqa & FUSB_INTERRUPTA_I_TOGDONE) {
-      int togss = (fusb_read_byte(FUSB_STATUS1A) & FUSB_STATUS1A_TOGSS) >> FUSB_STATUS1A_TOGSS_SHIFT;
+      uint8_t status1a = 0;
+      fusb_read_buf(FUSB_STATUS1A, 1, &status1a);
+      int togss = (status1a & FUSB_STATUS1A_TOGSS) >> FUSB_STATUS1A_TOGSS_SHIFT;
       if (togss == 5) {
         // SNK CC1
         printf("# [pd] PD_STATE_UNATTACHED -> SNK CC1, going to PD_STATE_UNATTACHED_SNK\n");
@@ -282,11 +283,10 @@ bool pd_tick(battery_info_s* battery_info) {
     // Instead, we measure VBUS ourselves using the COMP block, and thus wait for I_COMP_CHNG.
 
     // read and clear all interrupts - FIXME: do it in one I2C transaction
-    int i_irq = fusb_read_byte(FUSB_INTERRUPT);
-    int i_irqa = fusb_read_byte(FUSB_INTERRUPTA);
-    int i_irqb = fusb_read_byte(FUSB_INTERRUPTB);
-    (void)i_irqb;
-    (void)i_irqa;
+    uint8_t i_irq_temp, i_irq = 0;
+    fusb_read_buf(FUSB_INTERRUPT, 1, &i_irq);
+    fusb_read_buf(FUSB_INTERRUPTA, 1, &i_irq_temp);
+    fusb_read_buf(FUSB_INTERRUPTB, 1, &i_irq_temp);
 
     // printf("# [pd] PD_STATE_UNATTACHED_SNK FUSB_INTERRUPT = 0x%02x FUSB_INTERRUPTA = 0x%02x FUSB_INTERRUPTB = 0x%02x\n", i_irq, i_irqa, i_irqb);
 
@@ -294,15 +294,20 @@ bool pd_tick(battery_info_s* battery_info) {
       // Attached.SNK
       // Host software uses FUSB302B comparators and DAC to determine attach orientation and port type
 
-      /* Measure CC1 */
+      // Measure CC1
       fusb_write_byte(FUSB_SWITCHES0, FUSB_SWITCHES0_MEAS_CC1|FUSB_SWITCHES0_PDWN_2|FUSB_SWITCHES0_PDWN_1);
       sleep_us(250);
-      uint8_t cc1 = fusb_read_byte(FUSB_STATUS0) & FUSB_STATUS0_BC_LVL;
+      uint8_t cc1 = 0;
+      fusb_read_buf(FUSB_STATUS0, 1, &cc1);
 
-      /* Measure CC2 */
+      // Measure CC2
       fusb_write_byte(FUSB_SWITCHES0, FUSB_SWITCHES0_MEAS_CC2|FUSB_SWITCHES0_PDWN_2|FUSB_SWITCHES0_PDWN_1);
       sleep_us(250);
-      uint8_t cc2 = fusb_read_byte(FUSB_STATUS0) & FUSB_STATUS0_BC_LVL;
+      uint8_t cc2 = 0;
+      fusb_read_buf(FUSB_STATUS0, 1, &cc2);
+
+      cc1 = cc1 & FUSB_STATUS0_BC_LVL;
+      cc2 = cc2 & FUSB_STATUS0_BC_LVL;
 
       // detect orientation
       if (cc1 > cc2) {
@@ -330,8 +335,9 @@ bool pd_tick(battery_info_s* battery_info) {
   } else if (pd_state == PD_STATE_ATTACHED_SNK) {
     // attached.snk.
     // need to handshake charging capability and wait for ps_ok
-    int irq = fusb_read_byte(FUSB_INTERRUPT);
-    if (irq & FUSB_INTERRUPT_I_VBUSOK) {
+    uint8_t i_irq = 0;
+    fusb_read_buf(FUSB_INTERRUPT, 1, &i_irq);
+    if (i_irq & FUSB_INTERRUPT_I_VBUSOK) {
       t = 0;
       pd_state = PD_STATE_SETUP;
       printf("# [pd] state PD_STATE_ATTACHED_SNK FUSB_INTERRUPT_I_VBUSOK detach \n");

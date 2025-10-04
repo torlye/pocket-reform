@@ -121,6 +121,117 @@ static void pd_set_fusb_switches() {
   fusb_write_byte(FUSB_SWITCHES1, buf);
 }
 
+// Returns if state was "changed" in some form and we expect to maybe be called again.
+static bool pd_comm_pd(battery_info_s* battery_info) {
+  if (pd_datarole_changed) {
+    pd_set_fusb_switches();
+    pd_datarole_changed = false;
+  }
+  // FIXME: this does not enforce the proper message order. maybe ok as is, maybe not.
+  if (!fusb_read_message(&rx_msg)) {
+    return false;
+  }
+
+  uint8_t msgtype = PD_MSGTYPE_GET(&rx_msg);
+  uint8_t numobj = PD_NUMOBJ_GET(&rx_msg);
+  uint8_t msgrole = PD_POWERROLE_GET(&rx_msg);
+  printf("# [pd] remote responds msg type: 0x%x msgrole: %d numobj: %d\n", msgtype, msgrole, numobj);
+  if (msgrole == PD_POWERROLE_SOURCE && msgtype == PD_MSGTYPE_SOURCE_CAPABILITIES) {
+    if (numobj == 0) {
+      // FIXME: trigger a reset without sending a message first / or send reject?
+      // TODO: figure out if this is actually caused by an overrun of the FUSB RX FIFO
+      //usbpd_state = PD_STATE_SETUP;
+    } else {
+      int max_voltage = 0;
+      int power_objects = 0;
+      int pdo_current = 0;
+      for (int i=0; i<numobj; i++) {
+        uint32_t pdo = rx_msg.obj[i];
+
+        if ((pdo & PD_PDO_TYPE) == PD_PDO_TYPE_FIXED) {
+          print_src_fixed_pdo(i + 1, pdo);
+          int voltage = PD_PDV_V(PD_PDO_SRC_FIXED_VOLTAGE_GET(pdo));
+          // PD reports power in 10mA steps
+          int current = PD_PDO_SRC_FIXED_CURRENT_GET(pdo);
+          if (voltage > max_voltage && voltage <= 20 && current >= 10) {
+            power_objects = i+1;
+            max_voltage = voltage;
+            pdo_current = current;
+          }
+        } else {
+          printf("# [pd] not a fixed PDO: 0x%08lx\n", pdo);
+        }
+      }
+
+      // FIXME: what about headroom for passing power to other USB devices?
+      requested_current = pdo_current;
+      if (requested_current > 300) {
+        requested_current = 300;
+      }
+
+      printf("# [pd] requesting PO %d, %d V at %d mA\n", power_objects, max_voltage, requested_current * 10);
+      tx.hdr = PD_MSGTYPE_REQUEST | PD_NUMOBJ(1) | pd_datarole | (pd_powerrole << PD_HDR_POWERROLE_SHIFT) | PD_SPECREV_2_0;
+
+      tx.hdr &= ~PD_HDR_MESSAGEID;
+      tx.hdr |= (tx_id_count % 8) << PD_HDR_MESSAGEID_SHIFT;
+
+      tx.obj[0] = PD_RDO_FV_MAX_CURRENT_SET(requested_current)
+        | PD_RDO_FV_CURRENT_SET(requested_current)
+        | PD_RDO_USB_COMMS
+        | PD_RDO_NO_USB_SUSPEND
+        | PD_RDO_OBJPOS_SET(power_objects);
+
+      fusb_send_message(&tx);
+
+      tx_id_count++;
+    }
+    return true;
+  } else if (msgrole == PD_POWERROLE_SOURCE && msgtype == PD_MSGTYPE_ACCEPT) {
+    printf("# [pd] charger accepted our requested PDO.\n");
+    return true;
+  } else if (msgrole == PD_POWERROLE_SOURCE && msgtype == PD_MSGTYPE_PS_RDY) {
+    // power supply is ready
+    printf("# [pd] power supply ready.\n");
+
+    charger_enable_charge(requested_current);
+
+    return true;
+  } else if (msgrole == PD_POWERROLE_SOURCE && msgtype == PD_MSGTYPE_DR_SWAP) {
+    // other side wants to swap data role.
+    if (pd_datarole == PD_DATAROLE_DFP) {
+      // we cannot switch away from DFP role. reject the message
+      printf("# [pd] rejecting data-role swap\n");
+      tx.hdr = PD_MSGTYPE_REJECT | pd_datarole | (pd_powerrole << PD_HDR_POWERROLE_SHIFT);
+      fusb_send_message(&tx);
+    } else {
+      // we started as UFP. Partner wants to become UFP.
+      if (!battery_info->som_is_powered) {
+        // SOM is not powered, so it will not act as a host. Tell partner to try later.
+        printf("# [pd] replying with wait to data-role swap request\n");
+        tx.hdr = PD_MSGTYPE_WAIT | pd_datarole | (pd_powerrole << PD_HDR_POWERROLE_SHIFT);
+        fusb_send_message(&tx);
+      } else {
+        // Accept. We become the DFP (host).
+        printf("# [pd] accepting data-role swap\n");
+        // TODO: switch pd_dr_role only after GOOD_CRC
+        tx.hdr = PD_MSGTYPE_ACCEPT | pd_datarole | (pd_powerrole << PD_HDR_POWERROLE_SHIFT);
+        fusb_send_message(&tx);
+        pd_datarole = PD_DATAROLE_DFP;
+        pd_datarole_changed = true;
+      }
+    }
+    return true;
+  } else if (msgrole != PD_POWERROLE_SOURCE) {
+    printf("# [pd] discarding non-source msg type: 0x%x numobj: %d\n", msgtype, numobj);
+    return true;
+  } else {
+    printf("# [pd] msg type: 0x%x numobj: %d\n", msgtype, numobj);
+    tx.hdr = PD_MSGTYPE_REJECT | pd_datarole | (pd_powerrole << PD_HDR_POWERROLE_SHIFT);
+    fusb_send_message(&tx);
+    return false;
+  }
+}
+
 bool pd_tick(battery_info_s* battery_info) {
   if (pd_state == PD_STATE_SETUP) {
     // setup/timeout state
@@ -303,109 +414,8 @@ bool pd_tick(battery_info_s* battery_info) {
       pd_state = PD_STATE_SETUP;
       goto out;
     } else {
-      if (pd_datarole_changed) {
-        pd_set_fusb_switches();
-        pd_datarole_changed = false;
-      }
-      // FIXME: this does not enforce the proper message order. maybe ok as is, maybe not.
-      if (fusb_read_message(&rx_msg)) {
-        uint8_t msgtype = PD_MSGTYPE_GET(&rx_msg);
-        uint8_t numobj = PD_NUMOBJ_GET(&rx_msg);
-        uint8_t msgrole = PD_POWERROLE_GET(&rx_msg);
-        printf("# [pd] PD_STATE_ATTACHED_SNK: charger responds msg type: 0x%x msgrole: %d numobj: %d\n", msgtype, msgrole, numobj);
-        if (msgrole == PD_POWERROLE_SOURCE && msgtype == PD_MSGTYPE_SOURCE_CAPABILITIES) {
-          if (numobj == 0) {
-            // FIXME: trigger a reset without sending a message first / or send reject?
-            // TODO: figure out if this is actually caused by an overrun of the FUSB RX FIFO
-            //usbpd_state = PD_STATE_SETUP;
-          } else {
-            int max_voltage = 0;
-            int power_objects = 0;
-            int pdo_current = 0;
-            for (int i=0; i<numobj; i++) {
-              uint32_t pdo = rx_msg.obj[i];
-
-              if ((pdo & PD_PDO_TYPE) == PD_PDO_TYPE_FIXED) {
-                print_src_fixed_pdo(i + 1, pdo);
-                int voltage = PD_PDV_V(PD_PDO_SRC_FIXED_VOLTAGE_GET(pdo));
-                // PD reports power in 10mA steps
-                int current = PD_PDO_SRC_FIXED_CURRENT_GET(pdo);
-                if (voltage > max_voltage && voltage <= 20 && current >= 10) {
-                  power_objects = i+1;
-                  max_voltage = voltage;
-                  pdo_current = current;
-                }
-              } else {
-                printf("# [pd] PD_STATE_ATTACHED_SNK not a fixed PDO: 0x%08lx\n", pdo);
-              }
-            }
-
-            // FIXME: what about headroom for passing power to other USB devices?
-            requested_current = pdo_current;
-            if (requested_current > 300) {
-              requested_current = 300;
-            }
-
-            printf("# [pd] requesting PO %d, %d V at %d mA\n", power_objects, max_voltage, requested_current * 10);
-            tx.hdr = PD_MSGTYPE_REQUEST | PD_NUMOBJ(1) | pd_datarole | (pd_powerrole << PD_HDR_POWERROLE_SHIFT) | PD_SPECREV_2_0;
-
-            tx.hdr &= ~PD_HDR_MESSAGEID;
-            tx.hdr |= (tx_id_count % 8) << PD_HDR_MESSAGEID_SHIFT;
-
-            tx.obj[0] = PD_RDO_FV_MAX_CURRENT_SET(requested_current)
-              | PD_RDO_FV_CURRENT_SET(requested_current)
-              | PD_RDO_USB_COMMS
-              | PD_RDO_NO_USB_SUSPEND
-              | PD_RDO_OBJPOS_SET(power_objects);
-
-            fusb_send_message(&tx);
-
-            tx_id_count++;
-          }
-          t = 0;
-        } else if (msgrole == PD_POWERROLE_SOURCE && msgtype == PD_MSGTYPE_ACCEPT) {
-          printf("# [pd] charger accepted our requested PDO.\n");
-          t = 0;
-        } else if (msgrole == PD_POWERROLE_SOURCE && msgtype == PD_MSGTYPE_PS_RDY) {
-          // power supply is ready
-          printf("# [pd] power supply ready.\n");
-
-          charger_enable_charge(requested_current);
-
-          t = 0;
-        } else if (msgrole == PD_POWERROLE_SOURCE && msgtype == PD_MSGTYPE_DR_SWAP) {
-          // other side wants to swap data role.
-          if (pd_datarole == PD_DATAROLE_DFP) {
-            // we cannot switch away from DFP role. reject the message
-            printf("# [pd] rejecting data-role swap\n");
-            tx.hdr = PD_MSGTYPE_REJECT | pd_datarole | (pd_powerrole << PD_HDR_POWERROLE_SHIFT);
-            fusb_send_message(&tx);
-          } else {
-            // we started as UFP. Partner wants to become UFP.
-            if (!battery_info->som_is_powered) {
-              // SOM is not powered, so it will not act as a host. Tell partner to try later.
-              printf("# [pd] replying with wait to data-role swap request\n");
-              tx.hdr = PD_MSGTYPE_WAIT | pd_datarole | (pd_powerrole << PD_HDR_POWERROLE_SHIFT);
-              fusb_send_message(&tx);
-            } else {
-              // Accept. We become the DFP (host).
-              printf("# [pd] accepting data-role swap\n");
-              // TODO: switch pd_dr_role only after GOOD_CRC
-              tx.hdr = PD_MSGTYPE_ACCEPT | pd_datarole | (pd_powerrole << PD_HDR_POWERROLE_SHIFT);
-              fusb_send_message(&tx);
-              pd_datarole = PD_DATAROLE_DFP;
-              pd_datarole_changed = true;
-            }
-          }
-          t = 0;
-        } else if (msgrole != PD_POWERROLE_SOURCE) {
-          printf("# [pd] discarding non-source msg type: 0x%x numobj: %d\n", msgtype, numobj);
-          t = 0;
-        } else {
-          printf("# [pd] msg type: 0x%x numobj: %d\n", msgtype, numobj);
-          tx.hdr = PD_MSGTYPE_REJECT | pd_datarole | (pd_powerrole << PD_HDR_POWERROLE_SHIFT);
-          fusb_send_message(&tx);
-        }
+      if (pd_comm_pd(battery_info)) {
+        t = 0;
       } else if (t>10000 && !mps_reg_config.config0.chg_en) {
         // for some reason charging did not start.
         // TODO: send soft reset first.
@@ -438,7 +448,22 @@ bool pd_tick(battery_info_s* battery_info) {
 #endif
   } else if (pd_state == PD_STATE_UNATTACHED_SRC) {
     // TODO: should do a lot of stuff, but for now keep USB2.0 devices happy
-    if (t % 10000 == 0) {
+
+#if 0
+    if (pd_comm_pd(battery_info)) {
+      t = 0;
+    }
+#endif
+
+    if (t == 1 || t % 10000 == 0) {
+#if 0
+      printf("# [pd] state PD_STATE_UNATTACHED_SRC - sending PD_MSGTYPE_SOURCE_CAPABILITIES\n");
+      tx.hdr = PD_MSGTYPE_SOURCE_CAPABILITIES | PD_NUMOBJ(1) | pd_datarole | (pd_powerrole << PD_HDR_POWERROLE_SHIFT);
+      tx.hdr |= (tx_id_count % 8) << PD_HDR_MESSAGEID_SHIFT;
+      tx.obj[0] = 0x26019064;  // 5V/1A with DRP and DRD
+      fusb_send_message(&tx);
+#endif
+
       uint8_t status0;
       if (fusb_read_buf(FUSB_STATUS0, 1, &status0)) {
         printf("# [pd] state PD_STATE_UNATTACHED_SRC, status0 = %02x bc_lvl = %02x\n", status0, status0 & FUSB_STATUS0_BC_LVL);

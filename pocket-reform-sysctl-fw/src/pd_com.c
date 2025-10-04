@@ -146,10 +146,6 @@ bool pd_tick(battery_info_s* battery_info) {
 
       fusb_write_byte(FUSB_CONTROL2, FUSB_CONTROL2_TOGGLE | mode);
 
-      fusb_write_byte(FUSB_MASK1, 0); //0xEE);  // enable I_VBUSOK
-      fusb_write_byte(FUSB_MASKA, 0); //0xBF);  // enable I_TOGDONE
-      fusb_write_byte(FUSB_MASKB, 0x01);
-
       // state is now:
       // Switches0 PDWN1=1 PDWN2=1
       // Switches1 SpecRev=Rev2.0
@@ -160,7 +156,7 @@ bool pd_tick(battery_info_s* battery_info) {
       // Control2 MODE=01 Enable DRP polling functionality if TOGGLE=1
       // Control3 N_RETRIES=11 (Three)   - AUTO_HARDRESET=0 AUTO_SOFTRESET=0
       // Mask all zero
-      // Power PWR0=1
+      // Power PWR0=1 (Bandgap and wake circuit only)
       // Reset 0
       // OCPReg OCP_CUR=111 max range ; OCP_RANGE=1 OCP range between 100−800 mA
       // MaskA all zero
@@ -175,13 +171,14 @@ bool pd_tick(battery_info_s* battery_info) {
       // Interrupt
       // FIFOs
 
+      // Mask I_GCRCSENT.
+      fusb_write_byte(FUSB_MASKB, 0x01);
+
       // disable interrupt mask, flush tx buffer
       fusb_write_byte(FUSB_CONTROL0, FUSB_CONTROL0_HOST_CUR | FUSB_CONTROL0_TX_FLUSH);
       // flush rx buffer
       fusb_write_byte(FUSB_CONTROL1, FUSB_CONTROL1_RX_FLUSH);
 
-      // turn on low power
-      fusb_write_byte(FUSB_POWER, 0x01);
       // automatic retransmission + auto hard+soft reset
       fusb_write_byte(FUSB_CONTROL3,
                       FUSB_CONTROL3_AUTO_HARDRESET |
@@ -207,13 +204,12 @@ bool pd_tick(battery_info_s* battery_info) {
     // setup done, wait for attach irq
     pd_sent_soft_reset = false;
 
-    // read and clear all interrupts - FIXME: do it in one I2C transaction
+    // read and clear interrupts - FIXME: do it in one I2C transaction
     uint8_t i_irq_temp = 0, i_irqa = 0;
     fusb_read_buf(FUSB_INTERRUPT, 1, &i_irq_temp);
     fusb_read_buf(FUSB_INTERRUPTA, 1, &i_irqa);
-    fusb_read_buf(FUSB_INTERRUPTB, 1, &i_irq_temp);
 
-    //printf("# [pd] PD_STATE_UNATTACHED FUSB_INTERRUPT = 0x%02x FUSB_INTERRUPTA = 0x%02x FUSB_INTERRUPTB = 0x%02x\n", i_irq, i_irqa, i_irqb);
+    //printf("# [pd] PD_STATE_UNATTACHED FUSB_INTERRUPT = 0x%02x FUSB_INTERRUPTA = 0x%02x\n", i_irq, i_irqa);
     if (i_irqa & FUSB_INTERRUPTA_I_TOGDONE) {
       uint8_t status1a = 0;
       fusb_read_buf(FUSB_STATUS1A, 1, &status1a);
@@ -281,13 +277,12 @@ bool pd_tick(battery_info_s* battery_info) {
     // However, we cannot use it, as in DRP mode I_VBUSOK was already triggered earlier - from our own VUSB feed!
     // Instead, we measure VBUS ourselves using the COMP block, and thus wait for I_COMP_CHNG.
 
-    // read and clear all interrupts - FIXME: do it in one I2C transaction
+    // read and clear interrupts - FIXME: do it in one I2C transaction
     uint8_t i_irq_temp, i_irq = 0;
     fusb_read_buf(FUSB_INTERRUPT, 1, &i_irq);
     fusb_read_buf(FUSB_INTERRUPTA, 1, &i_irq_temp);
-    fusb_read_buf(FUSB_INTERRUPTB, 1, &i_irq_temp);
 
-    // printf("# [pd] PD_STATE_UNATTACHED_SNK FUSB_INTERRUPT = 0x%02x FUSB_INTERRUPTA = 0x%02x FUSB_INTERRUPTB = 0x%02x\n", i_irq, i_irqa, i_irqb);
+    // printf("# [pd] PD_STATE_UNATTACHED_SNK FUSB_INTERRUPT = 0x%02x FUSB_INTERRUPTA = 0x%02x\n", i_irq, i_irqa);
 
     if (i_irq & FUSB_INTERRUPT_I_COMP_CHNG) {
       // Attached.SNK

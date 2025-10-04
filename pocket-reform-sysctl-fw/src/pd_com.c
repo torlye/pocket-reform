@@ -80,13 +80,13 @@ bool pd_sent_soft_reset;
 uint16_t pd_datarole = PD_DATAROLE_UFP;
 uint16_t pd_powerrole = PD_POWERROLE_SINK;
 static bool pd_datarole_changed = false;
+static uint8_t pd_ccpin = 0;
 
 int request_sent = 0;
 
 union pd_msg tx;
 int tx_id_count = 0;
 union pd_msg rx_msg;
-unsigned int ccpin = 0;
 // in 10mA units
 int requested_current = 0;
 
@@ -101,9 +101,24 @@ unsigned int pd_get_state_for_debug() {
   return pd_state;
 }
 
-static inline void pd_set_fusb_switches1() {
-  uint8_t fusb_datarole = (pd_datarole == PD_DATAROLE_DFP) ? FUSB_SWITCHES1_DATAROLE_SRC_DFP : FUSB_SWITCHES1_DATAROLE_SNK_UFP;
-  fusb_write_byte(FUSB_SWITCHES1, FUSB_SWITCHES1_SPECREV_REV2_0 | fusb_datarole);
+static void pd_set_fusb_switches() {
+  uint8_t buf = 0 \
+    | (pd_ccpin == 1 ? FUSB_SWITCHES0_MEAS_CC1 : 0) \
+    | (pd_ccpin == 2 ? FUSB_SWITCHES0_MEAS_CC2 : 0) \
+    | (pd_powerrole == PD_POWERROLE_SINK ? (FUSB_SWITCHES0_PDWN_2|FUSB_SWITCHES0_PDWN_1) : (FUSB_SWITCHES0_PU_EN1|FUSB_SWITCHES0_PU_EN2)) \
+  ;
+  fusb_write_byte(FUSB_SWITCHES0, buf);
+
+  // Uses pd_ccpin as TXCC1/TXCC2.
+  buf = 0 \
+    | FUSB_SWITCHES1_AUTO_CRC
+    | FUSB_SWITCHES1_SPECREV_REV2_0 \
+    | ((pd_datarole == PD_DATAROLE_DFP) ? FUSB_SWITCHES1_DATAROLE_SRC_DFP : FUSB_SWITCHES1_DATAROLE_SNK_UFP) \
+    | ((pd_powerrole == PD_POWERROLE_SOURCE) ? FUSB_SWITCHES1_POWERROLE : 0) \
+    | pd_ccpin
+  ;
+
+  fusb_write_byte(FUSB_SWITCHES1, buf);
 }
 
 bool pd_tick(battery_info_s* battery_info) {
@@ -119,6 +134,7 @@ bool pd_tick(battery_info_s* battery_info) {
     }
     charger_disable_charge();
     request_sent = 0;
+    usb_host_5v_disable();
 
     printf("# [pd] PD_STATE_SETUP\n");
     // probe FUSB302BMPX
@@ -133,11 +149,8 @@ bool pd_tick(battery_info_s* battery_info) {
       // enable toggle and DRP mode
       int mode;
       if (battery_info->som_is_powered) {
-        // enable 5V for host mode
-        usb_host_5v_enable();
         mode = 1 << FUSB_CONTROL2_MODE_SHIFT;  // DRP
       } else {
-        usb_host_5v_disable();
         mode = 0b10 << FUSB_CONTROL2_MODE_SHIFT;  // SNK only
       }
       mps_reg_config.config0.susp_en = 1;
@@ -195,15 +208,12 @@ bool pd_tick(battery_info_s* battery_info) {
     }
 
   } else if (pd_state == PD_STATE_UNATTACHED) {
-    // setup done, wait for attach irq
+    // setup done, wait for toggle-done irq
     pd_sent_soft_reset = false;
 
-    // read and clear interrupts - FIXME: do it in one I2C transaction
-    uint8_t i_irq_temp = 0, i_irqa = 0;
-    fusb_read_buf(FUSB_INTERRUPT, 1, &i_irq_temp);
+    uint8_t i_irqa = 0;
     fusb_read_buf(FUSB_INTERRUPTA, 1, &i_irqa);
 
-    //printf("# [pd] PD_STATE_UNATTACHED FUSB_INTERRUPT = 0x%02x FUSB_INTERRUPTA = 0x%02x\n", i_irq, i_irqa);
     if (i_irqa & FUSB_INTERRUPTA_I_TOGDONE) {
       uint8_t status1a = 0;
       fusb_read_buf(FUSB_STATUS1A, 1, &status1a);
@@ -212,126 +222,85 @@ bool pd_tick(battery_info_s* battery_info) {
         // SNK CC1
         printf("# [pd] PD_STATE_UNATTACHED -> SNK CC1, going to PD_STATE_UNATTACHED_SNK\n");
         pd_state = PD_STATE_UNATTACHED_SNK;
-        ccpin = 1;
+        pd_ccpin = 1;
       } else if (togss == 6) {
         // SNK CC2
         printf("# [pd] PD_STATE_UNATTACHED -> SNK CC2, going to PD_STATE_UNATTACHED_SNK\n");
         pd_state = PD_STATE_UNATTACHED_SNK;
-        ccpin = 2;
+        pd_ccpin = 2;
       } else if (togss == 1 || togss == 2) {
         // SRC ...
         // FIXME: store ccpin
         // TODO: test (and then implement) this with an actual PD-speaking device.
         printf("# [pd] PD_STATE_UNATTACHED -> SRC, going to PD_STATE_UNATTACHED_SRC\n");
         pd_state = PD_STATE_UNATTACHED_SRC;
+      } else {
+        // Audio accessory or something else we do not understand. Reset.
+        pd_state = PD_STATE_SETUP;
+        t = 0;
+        goto out;
       }
+
+      // disable TOGGLE feature
+      fusb_write_byte(FUSB_CONTROL2, 0);  // (1 << FUSB_CONTROL2_MODE_SHIFT));
 
       if (pd_state == PD_STATE_UNATTACHED_SNK) {
         pd_powerrole = PD_POWERROLE_SINK;
         pd_datarole = PD_DATAROLE_UFP;  // default for powerrole SINK
-        usb_host_5v_disable();
-        sleep_us(10); // TODO: get rid of this?
-
-        fusb_write_byte(FUSB_POWER, 0x7);
-
-        // unattached.snk: Host software enables FUSB302B pull−downs and measure block to detect attach
-        if (ccpin == 1) {
-          fusb_write_byte(FUSB_SWITCHES0, FUSB_SWITCHES0_MEAS_CC1|FUSB_SWITCHES0_PDWN_2|FUSB_SWITCHES0_PDWN_1);
-        } else if (ccpin == 2) {
-          fusb_write_byte(FUSB_SWITCHES0, FUSB_SWITCHES0_MEAS_CC2|FUSB_SWITCHES0_PDWN_2|FUSB_SWITCHES0_PDWN_1);
-        }
-        pd_set_fusb_switches1();
-        pd_datarole_changed = false;
-
-        // enable vbus measure for attach
-        int v = (3670 / 420) - 1;
-        uint8_t measure = FUSB_MEASURE_MEAS_VBUS | v;
-        fusb_write_byte(FUSB_MEASURE, measure);
-
-        // disable TOGGLE
-        fusb_write_byte(FUSB_CONTROL2, (1 << FUSB_CONTROL2_MODE_SHIFT));
-
-        printf("[pd] PD_STATE_UNATTACHED_SNK enable pulldown, measure, power; measure=0x%02x\n", measure);
       } else {
         pd_powerrole = PD_POWERROLE_SOURCE;
         pd_datarole = PD_DATAROLE_DFP;  // default for powerrole SOURCE
         usb_host_5v_enable();
-        fusb_write_byte(FUSB_POWER, 0xF);
-        fusb_write_byte(FUSB_SWITCHES0, FUSB_SWITCHES0_PU_EN1|FUSB_SWITCHES0_PU_EN2);
-        pd_set_fusb_switches1();
-        pd_datarole_changed = false;
+      }
+
+      // Enable all FUSB blocks, including PD BMC and measure block.
+      fusb_write_byte(FUSB_POWER, 0xF);
+
+      pd_set_fusb_switches();
+      pd_datarole_changed = false;
+
+      if (pd_state == PD_STATE_UNATTACHED_SNK) {
+        // enable VBUS measure for host/source attach detect.
+        const int v = (3670 / 420) - 1;
+        uint8_t measure = FUSB_MEASURE_MEAS_VBUS | v;
+        fusb_write_byte(FUSB_MEASURE, measure);
+        printf("[pd] PD_STATE_UNATTACHED_SNK measure=0x%02x\n", measure);
       }
 
       t = 0;
     }
   } else if (pd_state == PD_STATE_UNATTACHED_SNK) {
-    // unattached.snk
-
-    // Per FUSB302B docs, I_VBUSOK interrupt alerts host software that an attach has occurred.
-    // However, we cannot use it, as in DRP mode I_VBUSOK was already triggered earlier - from our own VUSB feed!
-    // Instead, we measure VBUS ourselves using the COMP block, and thus wait for I_COMP_CHNG.
-
-    // read and clear interrupts - FIXME: do it in one I2C transaction
-    uint8_t i_irq_temp, i_irq = 0;
-    fusb_read_buf(FUSB_INTERRUPT, 1, &i_irq);
-    fusb_read_buf(FUSB_INTERRUPTA, 1, &i_irq_temp);
-
-    // printf("# [pd] PD_STATE_UNATTACHED_SNK FUSB_INTERRUPT = 0x%02x FUSB_INTERRUPTA = 0x%02x\n", i_irq, i_irqa);
-
-    if (i_irq & FUSB_INTERRUPT_I_COMP_CHNG) {
-      // Attached.SNK
-      // Host software uses FUSB302B comparators and DAC to determine attach orientation and port type
-
-      // Measure CC1
-      fusb_write_byte(FUSB_SWITCHES0, FUSB_SWITCHES0_MEAS_CC1|FUSB_SWITCHES0_PDWN_2|FUSB_SWITCHES0_PDWN_1);
-      sleep_us(250);
-      uint8_t cc1 = 0;
-      fusb_read_buf(FUSB_STATUS0, 1, &cc1);
-
-      // Measure CC2
-      fusb_write_byte(FUSB_SWITCHES0, FUSB_SWITCHES0_MEAS_CC2|FUSB_SWITCHES0_PDWN_2|FUSB_SWITCHES0_PDWN_1);
-      sleep_us(250);
-      uint8_t cc2 = 0;
-      fusb_read_buf(FUSB_STATUS0, 1, &cc2);
-
-      cc1 = cc1 & FUSB_STATUS0_BC_LVL;
-      cc2 = cc2 & FUSB_STATUS0_BC_LVL;
-
-      // detect orientation
-      if (cc1 > cc2) {
-        printf("# [pd] PD_STATE_UNATTACHED_SNK using cc1 to go to PD_STATE_ATTACHED_SNK\n");
-        fusb_write_byte(FUSB_SWITCHES1, FUSB_SWITCHES1_AUTO_CRC|FUSB_SWITCHES1_TXCC1);
-        fusb_write_byte(FUSB_SWITCHES0, FUSB_SWITCHES0_MEAS_CC1|FUSB_SWITCHES0_PDWN_2|FUSB_SWITCHES0_PDWN_1);
-      } else {
-        printf("# [pd] PD_STATE_UNATTACHED_SNK using cc2 to go to PD_STATE_ATTACHED_SNK\n");
-        fusb_write_byte(FUSB_SWITCHES1, FUSB_SWITCHES1_AUTO_CRC|FUSB_SWITCHES1_TXCC2);
-        fusb_write_byte(FUSB_SWITCHES0, FUSB_SWITCHES0_MEAS_CC2|FUSB_SWITCHES0_PDWN_2|FUSB_SWITCHES0_PDWN_1);
+    // unattached.snk. Wait for VBUS to arrive.
+    uint8_t status0;
+    if (fusb_read_buf(FUSB_STATUS0, 1, &status0)) {
+      if (status0 & FUSB_STATUS0_VBUSOK) {
+        printf("# [pd] state PD_STATE_UNATTACHED_SNK VBUS is now OK\n");
+        t = 0;
+        pd_state = PD_STATE_ATTACHED_SNK;
       }
+    }
 
-      fusb_write_byte(FUSB_POWER, 0xF);
-
-      t = 0;
-      pd_state = PD_STATE_ATTACHED_SNK;
-
-    } else if (t>10000) {
-      // timeout, assume unattached.src
+    if (pd_state == PD_STATE_UNATTACHED_SNK && t > 10000) {
+      // timeout
       // FIXME: timeout value?
-      printf("# [pd] state PD_STATE_UNATTACHED_SNK - timeout\n");
+      printf("# [pd] state PD_STATE_UNATTACHED_SNK - timeout waiting for VBUS\n");
       t = 0;
       pd_state = PD_STATE_SETUP; // FIXME: what state should we go to?
     }
   } else if (pd_state == PD_STATE_ATTACHED_SNK) {
     // attached.snk.
     // need to handshake charging capability and wait for ps_ok
-    uint8_t i_irq = 0;
-    fusb_read_buf(FUSB_INTERRUPT, 1, &i_irq);
-    if (i_irq & FUSB_INTERRUPT_I_VBUSOK) {
+
+    // detect detach by VBUS going away.
+    uint8_t status0;
+    if (fusb_read_buf(FUSB_STATUS0, 1, &status0) && (status0 & FUSB_STATUS0_VBUSOK) == 0) {
+      printf("# [pd] state PD_STATE_ATTACHED_SNK VBUS is now BAAAAD\n");
       t = 0;
       pd_state = PD_STATE_SETUP;
-      printf("# [pd] state PD_STATE_ATTACHED_SNK FUSB_INTERRUPT_I_VBUSOK detach \n");
+      goto out;
     } else {
       if (pd_datarole_changed) {
-        pd_set_fusb_switches1();
+        pd_set_fusb_switches();
         pd_datarole_changed = false;
       }
       // FIXME: this does not enforce the proper message order. maybe ok as is, maybe not.
@@ -366,11 +335,6 @@ bool pd_tick(battery_info_s* battery_info) {
                 printf("# [pd] PD_STATE_ATTACHED_SNK not a fixed PDO: 0x%08lx\n", pdo);
               }
             }
-
-            /*printf("# [pd] discarding further messages\n");
-            while (fusb_read_message(&rx_msg)) {
-              // TODO: can probably remove this
-            }*/
 
             // FIXME: what about headroom for passing power to other USB devices?
             requested_current = pdo_current;

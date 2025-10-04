@@ -124,9 +124,9 @@ bool pd_tick(battery_info_s* battery_info) {
     // probe FUSB302BMPX
     uint8_t rxdata[2];
     if (i2c_read_timeout_us(i2c0, FUSB_ADDR, rxdata, 1, false, I2C_TIMEOUT)) {
-      //printf("# [pd] FUSB probed.\n");
       // SW_RES: Reset the FUSB302B including the I2C registers to their default values
-      fusb_write_byte(FUSB_RESET, FUSB_RESET_SW_RES);
+      if (!fusb_write_byte(FUSB_RESET, FUSB_RESET_SW_RES))
+        goto out;
 
       sleep_us(100);
 
@@ -144,7 +144,8 @@ bool pd_tick(battery_info_s* battery_info) {
       mps_reg_config.config0.chg_en = 0;
       mps_write_byte(MPS_REG_CONFIG0, mps_reg_config.config0.reg_byte);
 
-      fusb_write_byte(FUSB_CONTROL2, FUSB_CONTROL2_TOGGLE | mode);
+      if (!fusb_write_byte(FUSB_CONTROL2, FUSB_CONTROL2_TOGGLE | mode))
+        goto out;
 
       // state is now:
       // Switches0 PDWN1=1 PDWN2=1
@@ -172,21 +173,25 @@ bool pd_tick(battery_info_s* battery_info) {
       // FIFOs
 
       // Mask I_GCRCSENT.
-      fusb_write_byte(FUSB_MASKB, 0x01);
+      if (!fusb_write_byte(FUSB_MASKB, 0x01))
+        goto out;
 
       // disable interrupt mask, flush tx buffer
-      fusb_write_byte(FUSB_CONTROL0, FUSB_CONTROL0_HOST_CUR | FUSB_CONTROL0_TX_FLUSH);
+      if (!fusb_write_byte(FUSB_CONTROL0, FUSB_CONTROL0_HOST_CUR | FUSB_CONTROL0_TX_FLUSH))
+        goto out;
       // flush rx buffer
-      fusb_write_byte(FUSB_CONTROL1, FUSB_CONTROL1_RX_FLUSH);
+      if (!fusb_write_byte(FUSB_CONTROL1, FUSB_CONTROL1_RX_FLUSH))
+        goto out;
 
       // automatic retransmission + auto hard+soft reset
-      fusb_write_byte(FUSB_CONTROL3,
-                      FUSB_CONTROL3_AUTO_HARDRESET |
-                      FUSB_CONTROL3_AUTO_SOFTRESET |
-                      (3<<FUSB_CONTROL3_N_RETRIES_SHIFT) |
-                      FUSB_CONTROL3_AUTO_RETRY |
-                      FUSB_CONTROL3_SEND_HARD_RESET
-                      );
+      if (!fusb_write_byte(FUSB_CONTROL3,
+                           FUSB_CONTROL3_AUTO_HARDRESET |
+                           FUSB_CONTROL3_AUTO_SOFTRESET |
+                           (3<<FUSB_CONTROL3_N_RETRIES_SHIFT) |
+                           FUSB_CONTROL3_AUTO_RETRY |
+                           FUSB_CONTROL3_SEND_HARD_RESET
+                           ))
+        goto out;
 
       printf("# [pd] PD_STATE_SETUP done, going to PD_STATE_UNATTACHED\n");
 
@@ -487,6 +492,8 @@ bool pd_tick(battery_info_s* battery_info) {
     pd_state = PD_STATE_SETUP;
   }
 
+
+out:
   bool can_sleep = t > 0;
   t++;
 

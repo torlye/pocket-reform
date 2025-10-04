@@ -9,69 +9,68 @@
 // FIXME: do not include the kitchen sink here
 #include "sysctl.h"
 
-void print_src_fixed_pdo(int number, uint32_t pdo)
+static void print_src_fixed_pdo(int number, uint32_t pdo)
 {
     unsigned int tmp;
 
-    printf("[pd_src_fixed_pdo]\n");
-    printf("\tnumber = %d\n", number);
+    /* Voltage */
+    unsigned int voltage = (pdo & PD_PDO_SRC_FIXED_VOLTAGE) >> PD_PDO_SRC_FIXED_VOLTAGE_SHIFT;
 
-    /* Dual-role power */
-    tmp = (pdo & PD_PDO_SRC_FIXED_DUAL_ROLE_PWR) >> PD_PDO_SRC_FIXED_DUAL_ROLE_PWR_SHIFT;
+    /* Maximum Current */
+    unsigned int i_a = (pdo & PD_PDO_SRC_FIXED_CURRENT) >> PD_PDO_SRC_FIXED_CURRENT_SHIFT;
+
+    printf("pd_src_fixed_pdo#%d: V=%d.%02d Imax=%d.%02d",
+        number, PD_PDV_V(voltage), PD_PDV_CV(voltage), PD_PDI_A(i_a), PD_PDI_CA(i_a));
+
+    /* Peak Current */
+    tmp = (pdo & PD_PDO_SRC_FIXED_PEAK_CURRENT) >> PD_PDO_SRC_FIXED_PEAK_CURRENT_SHIFT;
     if (tmp)
     {
-        printf("\tdual_role_pwr = %u\n", tmp);
-    }
-
-    /* USB Suspend Supported */
-    tmp = (pdo & PD_PDO_SRC_FIXED_USB_SUSPEND) >> PD_PDO_SRC_FIXED_USB_SUSPEND_SHIFT;
-    if (tmp)
-    {
-        printf("\tusb_suspend = %u\n", tmp);
-    }
-
-    /* Unconstrained Power */
-    tmp = (pdo & PD_PDO_SRC_FIXED_UNCONSTRAINED) >> PD_PDO_SRC_FIXED_UNCONSTRAINED_SHIFT;
-    if (tmp)
-    {
-        printf("\tunconstrained_pwr = %u\n", tmp);
-    }
-
-    /* USB Communications Capable */
-    tmp = (pdo & PD_PDO_SRC_FIXED_USB_COMMS) >> PD_PDO_SRC_FIXED_USB_COMMS_SHIFT;
-    if (tmp)
-    {
-        printf("\tusb_comms = %u\n", tmp);
+        printf(" peak=%u", tmp);
     }
 
     /* Dual-Role Data */
     tmp = (pdo & PD_PDO_SRC_FIXED_DUAL_ROLE_DATA) >> PD_PDO_SRC_FIXED_DUAL_ROLE_DATA_SHIFT;
     if (tmp)
     {
-        printf("\tdual_role_data = %u\n", tmp);
+        printf(" dual_role_data");
+    }
+
+    /* Dual-role power */
+    tmp = (pdo & PD_PDO_SRC_FIXED_DUAL_ROLE_PWR) >> PD_PDO_SRC_FIXED_DUAL_ROLE_PWR_SHIFT;
+    if (tmp)
+    {
+        printf(" dual_role_pwr");
+    }
+
+    /* USB Suspend Supported */
+    tmp = (pdo & PD_PDO_SRC_FIXED_USB_SUSPEND) >> PD_PDO_SRC_FIXED_USB_SUSPEND_SHIFT;
+    if (tmp)
+    {
+        printf(" usb_suspend");
+    }
+
+    /* USB Communications Capable */
+    tmp = (pdo & PD_PDO_SRC_FIXED_USB_COMMS) >> PD_PDO_SRC_FIXED_USB_COMMS_SHIFT;
+    if (tmp)
+    {
+        printf(" usb_comms");
     }
 
     /* Unchunked Extended Messages Supported */
     tmp = (pdo & PD_PDO_SRC_FIXED_UNCHUNKED_EXT_MSG) >> PD_PDO_SRC_FIXED_UNCHUNKED_EXT_MSG_SHIFT;
     if (tmp)
     {
-        printf("\tunchunked_ext_msg = %u\n", tmp);
+        printf(" unchunked");
     }
 
-    /* Peak Current */
-    tmp = (pdo & PD_PDO_SRC_FIXED_PEAK_CURRENT) >> PD_PDO_SRC_FIXED_PEAK_CURRENT_SHIFT;
+    /* Unconstrained Power */
+    tmp = (pdo & PD_PDO_SRC_FIXED_UNCONSTRAINED) >> PD_PDO_SRC_FIXED_UNCONSTRAINED_SHIFT;
     if (tmp)
     {
-        printf("\tpeak_i = %u\n", tmp);
+        printf(" unconstrained");
     }
-
-    /* Voltage */
-    tmp = (pdo & PD_PDO_SRC_FIXED_VOLTAGE) >> PD_PDO_SRC_FIXED_VOLTAGE_SHIFT;
-    printf("\tv = %d.%02d\n", PD_PDV_V(tmp), PD_PDV_CV(tmp));
-
-    /* Maximum Current */
-    tmp = (pdo & PD_PDO_SRC_FIXED_CURRENT) >> PD_PDO_SRC_FIXED_CURRENT_SHIFT;
-    printf("\ti_a: %d.%02d\n", PD_PDI_A(tmp), PD_PDI_CA(tmp));
+    printf("\n");
 }
 
 unsigned int t = 0;

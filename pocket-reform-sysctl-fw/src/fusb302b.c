@@ -21,37 +21,31 @@
 
 #include <pd.h>
 
-uint8_t fusb_read_byte(uint8_t addr)
+bool fusb_read_buf(uint8_t addr, uint8_t size, uint8_t *buf)
 {
-  uint8_t buf;
-  i2c_write_timeout_us(i2c0, FUSB_ADDR, &addr, 1, true, I2C_TIMEOUT);
-  i2c_read_timeout_us(i2c0, FUSB_ADDR, &buf, 1, false, I2C_TIMEOUT);
-  return buf;
+  if (1 != i2c_write_timeout_us(i2c0, FUSB_ADDR, &addr, 1, true, I2C_TIMEOUT)) {
+    return false;
+  }
+  return size == i2c_read_timeout_us(i2c0, FUSB_ADDR, buf, size, false, I2C_TIMEOUT);
 }
 
-void fusb_read_buf(uint8_t addr, uint8_t size, uint8_t *buf)
-{
-  i2c_write_timeout_us(i2c0, FUSB_ADDR, &addr, 1, true, I2C_TIMEOUT);
-  i2c_read_timeout_us(i2c0, FUSB_ADDR, buf, size, false, I2C_TIMEOUT);
-}
-
-void fusb_write_byte(uint8_t addr, uint8_t byte)
+bool fusb_write_byte(uint8_t addr, uint8_t byte)
 {
   uint8_t buf[2] = {addr, byte};
-  i2c_write_timeout_us(i2c0, FUSB_ADDR, buf, 2, false, I2C_TIMEOUT);
+  return 2 == i2c_write_timeout_us(i2c0, FUSB_ADDR, buf, 2, false, I2C_TIMEOUT);
 }
 
-void fusb_write_buf(uint8_t addr, uint8_t size, const uint8_t *buf)
+bool fusb_write_buf(uint8_t addr, uint8_t size, const uint8_t *buf)
 {
   uint8_t txbuf[size + 1];
   txbuf[0] = addr;
   for (int i = 0; i < size; i++) {
     txbuf[i + 1] = buf[i];
   }
-  i2c_write_timeout_us(i2c0, FUSB_ADDR, txbuf, size + 1, false, I2C_TIMEOUT);
+  return size + 1 == i2c_write_timeout_us(i2c0, FUSB_ADDR, txbuf, size + 1, false, I2C_TIMEOUT);
 }
 
-void fusb_send_message(const union pd_msg *msg)
+bool fusb_send_message(const union pd_msg *msg)
 {
   /* Token sequences for the FUSB302B */
   static uint8_t sop_seq[5] = {
@@ -76,40 +70,50 @@ void fusb_send_message(const union pd_msg *msg)
   sop_seq[4] = FUSB_FIFO_TX_PACKSYM | msg_len;
 
   /* Write all three parts of the message to the TX FIFO */
-  fusb_write_buf(FUSB_FIFOS, 5, sop_seq);
-  fusb_write_buf(FUSB_FIFOS, msg_len, msg->bytes);
-  fusb_write_buf(FUSB_FIFOS, 4, eop_seq);
+  bool success = fusb_write_buf(FUSB_FIFOS, 5, sop_seq);
+  if (!success) {
+    return false;
+  }
+  success = fusb_write_buf(FUSB_FIFOS, msg_len, msg->bytes);
+  if (!success) {
+    return false;
+  }
+  return fusb_write_buf(FUSB_FIFOS, 4, eop_seq);
 }
 
 bool fusb_read_message(union pd_msg *msg)
 {
-  uint8_t garbage[4];
+  uint8_t rxb[4] = {0};
 
   /* If this isn't an SOP message, return error.
    * Because of our configuration, we should be able to assume this means the
    * buffer is empty, and not try to read past a non-SOP message. */
   // TODO: [zeha] check if the above comment is really true
-  uint8_t rxb = fusb_read_byte(FUSB_FIFOS);
-  if (rxb == 0) {
+  if (!fusb_read_buf(FUSB_FIFOS, 1, rxb)) {
     return false;
   }
-  if ((rxb & FUSB_FIFO_RX_TOKEN_BITS) != FUSB_FIFO_RX_SOP) {
-    printf("# [fusb] rxb = 0x%02x - skipping\n", rxb);
+  if (rxb[0] == 0) {
+    return false;
+  }
+  if ((rxb[0] & FUSB_FIFO_RX_TOKEN_BITS) != FUSB_FIFO_RX_SOP) {
+    printf("# [fusb] rxb = 0x%02x - skipping\n", rxb[0]);
     return false;
   }
 
   /* Read the message header into msg */
-  fusb_read_buf(FUSB_FIFOS, 2, msg->bytes);
+  if (!fusb_read_buf(FUSB_FIFOS, 2, msg->bytes)) {
+    return false;
+  }
   /* Get the number of data objects */
   uint8_t numobj = PD_NUMOBJ_GET(msg);
   /* If there is at least one data object, read the data objects */
   printf("# [fusb] rxb 0x%02x msgtype 0x%02x msgid %d role %s numobj %d size %d\n",
-          rxb, PD_MSGTYPE_GET(msg), PD_MESSAGEID_GET(msg), PD_POWERROLE_STR(msg), numobj, numobj * 4);
+          rxb[0], PD_MSGTYPE_GET(msg), PD_MESSAGEID_GET(msg), PD_POWERROLE_STR(msg), numobj, numobj * 4);
   if (numobj > 0) {
-    fusb_read_buf(FUSB_FIFOS, numobj * 4, msg->bytes + 2);
+    if (!fusb_read_buf(FUSB_FIFOS, numobj * 4, msg->bytes + 2)) {
+      return false;
+    }
   }
   /* Throw the CRC32 in the garbage, since the PHY already checked it. */
-  fusb_read_buf(FUSB_FIFOS, 4, garbage);
-
-  return true;
+  return fusb_read_buf(FUSB_FIFOS, 4, rxb);
 }

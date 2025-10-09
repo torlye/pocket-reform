@@ -720,6 +720,17 @@ void handle_usb_commands()
     {
       battery_info.print_pack_info = !battery_info.print_pack_info;
     }
+    else if (usb_c == '!')
+    {
+      // DONOTMERGE
+      // test a sysctl hang / watchdog reset
+      uint32_t i = 0;
+      while (true) {
+        printf("# lets try writing to ROM... (0x%08lx)\n", i);
+        volatile uint32_t* x = (uint32_t*)i;
+        *x = i;
+      }
+    }
     else if (usb_c == '-')
     {
       // only for PREF_DISPLAY_V2
@@ -756,6 +767,9 @@ void usb_host_5v_disable() {
   mps_write_byte(MPS_REG_CONFIG0, mps_reg_config.config0.reg_byte);
 #endif
 }
+
+// DONOTMERGE
+#define ACM_ENABLED 1
 
 void loop()
 {

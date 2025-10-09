@@ -156,9 +156,12 @@ void handle_commands(char chr, battery_info_s* battery_info)
             }
             else if (uart_state.remote_cmd == 's')
             {
+                // DONOTMERGE
+                uint32_t uptime = to_ms_since_boot(get_absolute_time()) / 1000;
                 char tmp[9];
                 strlcpy(tmp, MNTRE_FIRMWARE_VERSION, sizeof(tmp));
                 snprintf(uart_buffer, UART_BUFSZ, "MNT Pocket Reform   " FW_STRING1 FW_STRING2 "%s\r\n", MNTRE_FIRMWARE_VERSION);
+                snprintf(uart_buffer, UART_BUFSZ, "Uptime %08ld     " FW_STRING1 FW_STRING2 "%s\r\n", uptime, MNTRE_FIRMWARE_VERSION);
                 uart_puts(UART_ID, uart_buffer);
             }
             else if (uart_state.remote_cmd == 'u')

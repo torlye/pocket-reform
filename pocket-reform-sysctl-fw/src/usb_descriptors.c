@@ -29,6 +29,7 @@
  */
 
 #include "tusb.h"
+#include "device/usbd_pvt.h"
 #include "mntre_usbids.h"
 #include "usb_bos.h"
 #include "reform_stdio_usb.h"
@@ -122,6 +123,14 @@ static const char *const usbd_desc_str[] = {
     [USBD_STR_MNTRE_RESET] = MNTRE_RESET_INTERFACE_NAME_STR,
     [USBD_STR_CDC] = "Board CDC",
 };
+
+// Custom USB class drivers. Due to how tinyusb works, the drivers have to be in a contigous array.
+static usbd_class_driver_t usb_class_drivers[1];
+usbd_class_driver_t const *usbd_app_driver_get_cb(uint8_t *driver_count) {
+    *driver_count = sizeof(usb_class_drivers)/sizeof(usb_class_drivers[0]);
+    usb_class_drivers[0] = mntre_reset_class_driver;
+    return &usb_class_drivers[0];
+}
 
 //------------- DS-20 (fwupd) -------------//
 static const uint8_t desc_ds20[] = {

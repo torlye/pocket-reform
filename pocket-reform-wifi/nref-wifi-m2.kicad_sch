@@ -3858,6 +3858,17 @@
 		)
 		(uuid "4e9c2f63-820e-4a90-a989-98ec973de27b")
 	)
+	(text "alternative:\nSCTF SX2M32.768KM20F30TNN"
+		(exclude_from_sim no)
+		(at 118.11 170.18 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "5b0b2bee-a9c9-451a-8e20-81339a628c67")
+	)
 	(text "WiFi/BT/Internal Expansion\n(flipped! need same side contacts cable!)"
 		(exclude_from_sim no)
 		(at 26.416 28.956 0)
@@ -6936,7 +6947,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "2199119-4"
+		(property "Manufacturer_No" "2199230-4"
 			(at 199.39 91.44 0)
 			(effects
 				(font
@@ -6945,7 +6956,7 @@
 				(hide yes)
 			)
 		)
-		(property "Notes" ""
+		(property "Notes" "original was 2199119-4, 1mm less height. match with nut height!"
 			(at 199.39 91.44 0)
 			(effects
 				(font
@@ -6963,7 +6974,7 @@
 				(hide yes)
 			)
 		)
-		(property "Alt_Part_No" ""
+		(property "Alt_Part_No" "2199119-4 (with nut SMTSO2015CTJ)"
 			(at 199.39 91.44 0)
 			(effects
 				(font
@@ -6972,7 +6983,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "global sourcing"
+		(property "LCSC" "C41447443"
 			(at 199.39 91.44 0)
 			(effects
 				(font
@@ -8662,7 +8673,7 @@
 				)
 			)
 		)
-		(property "Value" "220nH XAL4020-221MEB"
+		(property "Value" "220nH 10A"
 			(at 83.82 111.76 90)
 			(effects
 				(font
@@ -8670,7 +8681,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Inductor_SMD:L_Coilcraft_XAL4020-XXX"
+		(property "Footprint" "EasyEDA:IND-SMD_L3.0-W3.0_FTC303020D"
 			(at 83.82 114.3 0)
 			(effects
 				(font
@@ -8706,7 +8717,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "FXL0412-R22-M"
+		(property "Manufacturer_No" "FTC303018DR22MBCA"
 			(at 83.82 114.3 0)
 			(effects
 				(font
@@ -8742,7 +8753,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C524578"
+		(property "LCSC" "C5832405"
 			(at 83.82 114.3 0)
 			(effects
 				(font
@@ -8824,7 +8835,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Vishay Dale"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 107.95 120.65 0)
 			(effects
 				(font
@@ -8833,7 +8844,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CRCW0603453KFKEA"
+		(property "Manufacturer_No" "0603WAF4533T5E"
 			(at 107.95 120.65 0)
 			(effects
 				(font
@@ -8869,7 +8880,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C2079749"
+		(property "LCSC" "C25818"
 			(at 107.95 120.65 0)
 			(effects
 				(font
@@ -9233,7 +9244,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "SMTSO2015CTJ"
+		(property "Manufacturer_No" "SMTSO2025CTJ"
 			(at 157.48 154.94 0)
 			(effects
 				(font
@@ -9242,7 +9253,7 @@
 				(hide yes)
 			)
 		)
-		(property "Notes" ""
+		(property "Notes" "match height with m.2 socket!"
 			(at 157.48 154.94 0)
 			(effects
 				(font
@@ -9251,7 +9262,7 @@
 				(hide yes)
 			)
 		)
-		(property "Alt_Manufacturer" "Wuerth"
+		(property "Alt_Manufacturer" ""
 			(at 157.48 154.94 0)
 			(effects
 				(font
@@ -9260,7 +9271,7 @@
 				(hide yes)
 			)
 		)
-		(property "Alt_Part_No" "9774015243"
+		(property "Alt_Part_No" "SMTSO2015CTJ for lower height m.2 socket"
 			(at 157.48 154.94 0)
 			(effects
 				(font
@@ -9269,7 +9280,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C2916320"
+		(property "LCSC" "C2916321"
 			(at 157.48 154.94 0)
 			(effects
 				(font
@@ -11022,7 +11033,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "ECS"
+		(property "Manufacturer" "SCTF"
 			(at 101.6 171.45 0)
 			(effects
 				(font
@@ -11031,7 +11042,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ECS-327MVATX-2-CN-TR3"
+		(property "Manufacturer_No" "SX2M32.768KM20F30TNN"
 			(at 101.6 171.45 0)
 			(effects
 				(font
@@ -11067,7 +11078,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C5375606"
+		(property "LCSC" "C2901603"
 			(at 101.6 171.45 0)
 			(effects
 				(font

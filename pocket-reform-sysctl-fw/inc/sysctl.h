@@ -41,7 +41,11 @@
 #define PIN_SOM_UART_RX 13
 #define PIN_FUSB_INT 14
 #define PIN_LED_B 15
+#define PIN_LED_B_PWM_SLICE 7
+#define PIN_LED_B_PWM_CHAN PWM_CHAN_B
 #define PIN_LED_R 16
+#define PIN_LED_R_PWM_SLICE 0
+#define PIN_LED_R_PWM_CHAN PWM_CHAN_A
 #define PIN_LED_G 17
 #define PIN_MODEM_POWER 18
 #define PIN_SOM_WAKE 19
@@ -95,6 +99,7 @@ typedef struct battery_info_s
     float time_to_empty;
 
     // metadata
+    bool emergency_charge_necessary;
     bool print_pack_info;
     uint16_t max17320_devname;
     uint16_t ticks;

@@ -13,6 +13,7 @@
 #include "pico/bootrom.h"
 #include "hardware/watchdog.h"
 #include "tusb.h"
+#include <malloc.h>
 
 int current_menu_y = 0;
 int current_scroll_y = 0;
@@ -34,6 +35,17 @@ const MenuItem menu_items[] = {
   { "Reset USB           u", KEY_U },
 };
 #endif
+
+// via https://forums.raspberrypi.com/viewtopic.php?p=2082565&sid=7f7f0999d6a9e8001755ca7793806fa8#p2082565
+uint32_t get_total_heap(void) {
+   extern char __StackLimit, __bss_end__;
+   return &__StackLimit - &__bss_end__;
+}
+
+uint32_t get_free_heap(void) {
+   struct mallinfo m = mallinfo();
+   return get_total_heap() - m.uordblks;
+}
 
 void rp2040_reset() {
   watchdog_enable(1, 1);
@@ -62,7 +74,7 @@ void render_menu(int y) {
   gfx_clear();
   gfx_invert_row((uint8_t)(current_menu_y-y));
   for (int i=0; i<MENU_NUM_ITEMS; i++) {
-    gfx_poke_cstr(0,(uint8_t)(i-y),menu_items[i].title);
+    gfx_poke_str(0,(uint8_t)(i-y),(char*)menu_items[i].title);
   }
   gfx_on();
   gfx_contrast(0xff);
@@ -101,7 +113,7 @@ int execute_menu_function(int keycode) {
   else if (keycode == KEY_1) {
     if (remote_turn_on_som()) {
       // initial backlight color
-      led_set(0x004040);
+      led_set(KBD_DEFAULT_BACKLIGHT_COLOR);
       anim_hello();
     }
     return 0;
@@ -128,8 +140,8 @@ int execute_menu_function(int keycode) {
   else if (keycode == KEY_H) {
     // turn-on hint page
     gfx_clear();
-    gfx_poke_cstr(0,1,"Press \x8a + \x8b for menu.");
-    gfx_poke_cstr(0,2,"Hold to power up.");
+    gfx_poke_str(0,1,"Press \x8a + \x8b for menu.");
+    gfx_poke_str(0,2,"Hold to power up.");
     gfx_flush();
     logo_timeout_ticks = 5;
     current_menu_page = MENU_PAGE_MNT_LOGO;
@@ -142,6 +154,16 @@ int execute_menu_function(int keycode) {
   }
   else if (keycode == KEY_S) {
     remote_get_status();
+    return 0;
+  }
+  else if (keycode == KEY_M) {
+    // show free memory and soon, more stats
+    char tmp[32];
+    uint32_t free_heap = get_free_heap();
+    snprintf(tmp, 32, "free: %lu", (unsigned long)free_heap);
+    gfx_clear();
+    gfx_poke_str(0,0,tmp);
+    gfx_flush();
     return 0;
   }
   else if (keycode == KEY_F1) {
@@ -176,8 +198,8 @@ int execute_menu_function(int keycode) {
   }
   else if (keycode == KEY_X) {
     gfx_clear();
-    gfx_poke_cstr(1, 1, "Entered firmware");
-    gfx_poke_cstr(1, 2, "update mode.");
+    gfx_poke_str(1, 1, "Entered firmware");
+    gfx_poke_str(1, 2, "update mode.");
     gfx_on();
     gfx_flush();
     rp2040_reset_to_bootloader();
@@ -202,14 +224,8 @@ void render_tina(void) {
   for (int f=13; f>=0; f--) {
     for (uint8_t y=0; y<4; y++) {
       for (uint8_t x=0; x<6; x++) {
-        if (x==6) {
-          if (x+8+f<21) {
-            gfx_poke((uint8_t)(x+8+f),y,' ');
-          }
-        } else {
-          if (x+8+f<21) {
-            gfx_poke((uint8_t)(x+8+f),y,(uint8_t)((4+y)*32+x+12));
-          }
+        if (x+8+f<21) {
+          gfx_poke((uint8_t)(x+8+f),y,(uint8_t)((4+y)*32+x+12));
         }
       }
     }

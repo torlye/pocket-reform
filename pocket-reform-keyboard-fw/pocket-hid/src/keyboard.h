@@ -7,6 +7,8 @@
 #ifndef _KEYBOARD_H_
 #define _KEYBOARD_H_
 
+#define KBD_DEFAULT_BACKLIGHT_COLOR 0x004040
+
 void reset_keyboard_state(void);
 
 void led_set(uint32_t rgb);

@@ -193,7 +193,7 @@ int main(void)
 
   led_set_brightness(0x0);
 
-  gfx_init(false);
+  gfx_init();
 
   // watchdog crash recovery
   if (watchdog_caused_reboot()) {
@@ -202,6 +202,7 @@ int main(void)
     gfx_poke_str(1, 1, "Reset by watchdog.");
     gfx_flush();
   }
+
   // reset if main loop is stuck for 1000ms
   watchdog_enable(1000, 1);
 
@@ -217,6 +218,15 @@ int main(void)
   // call USB task every 5ms
   struct repeating_timer timer;
   add_repeating_timer_ms(-5, hid_task, NULL, &timer);
+
+  // try to determine system controller power state
+  for (int i=0; i<2; i++) {
+    remote_get_voltages(1);
+  }
+  if (remote_get_power_state()) {
+    // initial backlight color
+    led_set(KBD_DEFAULT_BACKLIGHT_COLOR);
+  }
 
   unsigned int cycles = 0;
   while (1) {
@@ -382,6 +392,8 @@ void reset_keyboard_state(void) {
   reset_menu();
 }
 
+// this is called in a timer interrupt, no sleep() functions
+// allowed!
 int process_keyboard(uint8_t* resulting_scancodes) {
   // how many keys are pressed this round
   uint8_t total_pressed = 0;
@@ -421,8 +433,7 @@ int process_keyboard(uint8_t* resulting_scancodes) {
     }
 
     // wait for signal to stabilize
-    //_delay_us(10);
-    sleep_us(1);
+    busy_wait_us(1);
 
     for (int y = 0; y < KBD_ROWS; y++) {
       uint8_t keycode;

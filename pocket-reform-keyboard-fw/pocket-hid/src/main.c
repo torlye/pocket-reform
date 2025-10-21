@@ -773,8 +773,8 @@ void led_set_hsv() {
 }
 
 void led_mod_brightness(int d) {
-  led_brightness+=d;
-  if (led_brightness>0xff) led_brightness = 0xff;
+  led_brightness+=(d/2);
+  if (led_brightness>0x96) led_brightness = 0x96;
   if (led_brightness<0) led_brightness = 0;
   led_set_hsv();
 }

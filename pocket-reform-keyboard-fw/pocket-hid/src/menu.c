@@ -78,7 +78,7 @@ void render_menu(int y) {
     gfx_poke_str(0,(uint8_t)(i-y),(char*)menu_items[i].title);
   }
   gfx_on();
-  gfx_contrast(0xff);
+  gfx_contrast(0x7f);
   gfx_flush();
 }
 

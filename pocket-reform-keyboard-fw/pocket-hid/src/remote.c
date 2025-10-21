@@ -23,15 +23,11 @@ static int uart_rx_i = 0;
 static int uart_print_response = 0;
 static int uart_response_complete = 0;
 
-uint8_t term_x = 0;
-uint8_t term_y = 0;
-double voltages[8];
-int alert_low_battery = 0;
-int alert_blink = 0;
-uint8_t remote_som_power_expected_state = 0;
+static uint8_t term_x = 0;
+static uint8_t term_y = 0;
+static double voltages[8];
 
-int command_sent = 0;
-int soc_power_on = 0; // fixme
+static int soc_power_on = 0; // fixme
 
 void insert_bat_icon(char* str, int x, double v) {
   char icon = 0;

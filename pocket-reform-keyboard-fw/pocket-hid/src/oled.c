@@ -14,8 +14,8 @@
 
 #define OLED_I2C_TIMEOUT 100
 
-uint8_t oledbrt = 0;
-struct CharacterMatrix display;
+static uint8_t oledbrt = 0;
+static struct CharacterMatrix display;
 
 // Write command sequence.
 static inline bool _send_cmd1(uint8_t cmd) {

@@ -470,6 +470,8 @@ void charger_led_indication(battery_info_s *battery_info) {
     float sine_val = sin(phase);
     float normalized = (sine_val + 1.0f) / 2.0f;
     float breathing_curve = normalized * normalized;
+    // 10%..100% brightness (i.e. never completely off)
+    breathing_curve = 0.1f + (breathing_curve * 0.9f);
     uint16_t pwm_level = (uint16_t)(breathing_curve * pwm_max);
     pwm_set_chan_level(PIN_LED_R_PWM_SLICE, PIN_LED_R_PWM_CHAN, pwm_level);
     phase += 0.02f;

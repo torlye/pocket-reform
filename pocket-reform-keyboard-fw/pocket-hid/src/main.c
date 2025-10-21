@@ -1,7 +1,7 @@
 /*
   SPDX-License-Identifier: GPL-3.0-or-later
   MNT Pocket Reform Keyboard/Trackball Controller Firmware for RP2040
-  Copyright 2021-2024 MNT Research GmbH (mntre.com)
+  Copyright 2021-2025 MNT Research GmbH (mntre.com)
 
   TinyUSB callbacks/code based on code
   Copyright 2019 Ha Thach (tinyusb.org)
@@ -25,47 +25,14 @@
 
 #include "usb_descriptors.h"
 #include "oled.h"
+#include "leds.h"
 #include "menu.h"
 #include "remote.h"
+#include "matrix.h"
 #include "keyboard.h"
+#include "pins.h"
 
 #include "ws2812.pio.h"
-
-#define KBD_VARIANT_QWERTY_US
-#define KBD_COLS 12
-#define KBD_ROWS 6
-#define KBD_MATRIX_SZ KBD_COLS * KBD_ROWS + 4
-#define TRACKBALL_FACTOR 2
-
-#include "matrix.h"
-
-#define PIN_SDA 0
-#define PIN_SCL 1
-
-#define PIN_UART_TX 4
-#define PIN_UART_RX 5
-
-#define PIN_ROW1 19
-#define PIN_ROW2 20
-#define PIN_ROW3 23
-#define PIN_ROW4 22
-#define PIN_ROW5 21
-#define PIN_ROW6 18
-
-#define PIN_COL1 6
-#define PIN_COL2 7
-#define PIN_COL3 8
-#define PIN_COL4 9
-#define PIN_COL5 10
-#define PIN_COL6 11
-#define PIN_COL7 12
-#define PIN_COL8 13
-#define PIN_COL9 14
-#define PIN_COL10 15
-#define PIN_COL11 16
-#define PIN_COL12 17
-
-#define PIN_LEDS 24
 
 #define ADDR_SENSOR (0x79)
 
@@ -73,10 +40,6 @@
 static uint8_t pressed_scancodes[MAX_SCANCODES] = {0,0,0,0,0,0};
 static int pressed_keys = 0;
 static volatile uint32_t led_value = 0;
-
-int led_brightness = 0;
-int led_saturation = 255;
-int led_hue = 127;
 
 bool hid_task(struct repeating_timer *t);
 int process_keyboard(uint8_t* resulting_scancodes);
@@ -181,13 +144,8 @@ int main(void)
   buf[1] = 0x01;
   i2c_write_blocking(i2c0, ADDR_SENSOR, buf, 2, false);
 
-  PIO pio = pio0;
-  uint sm = 0;
-  uint offset = (uint)pio_add_program(pio, &ws2812_program);
-
-  ws2812_program_init(pio, sm, offset, PIN_LEDS, 800000, false);
-
-  led_set_brightness(0x0);
+  led_init();
+  led_turn_off();
 
   gfx_init();
 
@@ -221,7 +179,7 @@ int main(void)
   }
   if (remote_get_power_state()) {
     // initial backlight color
-    led_set(KBD_DEFAULT_BACKLIGHT_COLOR);
+    led_set_rgb(KBD_DEFAULT_BACKLIGHT_COLOR);
   }
 
   unsigned int cycles = 0;
@@ -643,47 +601,6 @@ static void send_hid_report(uint8_t report_id)
   }
 }
 
-void led_task(uint32_t color) {
-  uint32_t pixel_grb = color;
-
-  for (int y=0; y<6; y++) {
-    int w = 12;
-    if (y==5) w = 4;
-    for (int x=0; x<w; x++) {
-      pio_sm_put_blocking(pio0, 0, pixel_grb << 8u);
-    }
-  }
-}
-
-uint8_t led_rgb_buf[12*3*6];
-
-void led_bitmap(uint8_t row, const uint8_t* row_rgb) {
-  // row = 5 -> commit
-  if (row > 5) return;
-
-  uint8_t* store = &led_rgb_buf[row*3*12];
-  int offset = 0;
-  for (int x=0; x<3*12; x++) {
-    if (row == 5 && x == 0*3) offset = 3*3;
-    if (row == 5 && x == 2*3) offset = 7*3;
-    store[x] = row_rgb[x+offset];
-    if (row == 5 && x == 4*3) break;
-  }
-
-  if (row == 5) {
-    for (int y=0; y<6; y++) {
-      int w = 12;
-      if (y==5) w = 4;
-      uint8_t* bitmap = &led_rgb_buf[y*3*12];
-      for (int x=0; x<w; x++) {
-        uint32_t pixel_grb = (uint32_t)((bitmap[1]<<16u) | (bitmap[2]<<8u) | bitmap[0]);
-        pio_sm_put_blocking(pio0, 0, pixel_grb << 8u);
-        bitmap+=3;
-      }
-    }
-  }
-}
-
 // Every 5ms, we will sent 1 report for each HID profile (keyboard, mouse etc ..)
 // tud_hid_report_complete_cb() is used to send the next report after previous one is complete
 bool hid_task(__unused struct repeating_timer *t)
@@ -698,116 +615,6 @@ bool hid_task(__unused struct repeating_timer *t)
   return true;
 }
 
-typedef struct RgbColor
-{
-  unsigned char r;
-  unsigned char g;
-  unsigned char b;
-} RgbColor;
-
-typedef struct HsvColor
-{
-  unsigned char h;
-  unsigned char s;
-  unsigned char v;
-} HsvColor;
-
-RgbColor HsvToRgb(HsvColor hsv)
-{
-  RgbColor rgb;
-  unsigned char region, remainder, p, q, t;
-
-  if (hsv.s == 0)
-    {
-      rgb.r = hsv.v;
-      rgb.g = hsv.v;
-      rgb.b = hsv.v;
-      return rgb;
-    }
-
-  region = hsv.h / 43;
-  remainder = (unsigned char)((hsv.h - (region * 43)) * 6);
-
-  p = (unsigned char)((hsv.v * (255 - hsv.s)) >> 8);
-  q = (unsigned char)((hsv.v * (255 - ((hsv.s * remainder) >> 8))) >> 8);
-  t = (unsigned char)((hsv.v * (255 - ((hsv.s * (255 - remainder)) >> 8))) >> 8);
-
-  switch (region)
-    {
-    case 0:
-      rgb.r = hsv.v; rgb.g = t; rgb.b = p;
-      break;
-    case 1:
-      rgb.r = q; rgb.g = hsv.v; rgb.b = p;
-      break;
-    case 2:
-      rgb.r = p; rgb.g = hsv.v; rgb.b = t;
-      break;
-    case 3:
-      rgb.r = p; rgb.g = q; rgb.b = hsv.v;
-      break;
-    case 4:
-      rgb.r = t; rgb.g = p; rgb.b = hsv.v;
-      break;
-    default:
-      rgb.r = hsv.v; rgb.g = p; rgb.b = q;
-      break;
-    }
-
-  return rgb;
-}
-
-void led_set(uint32_t rgb) {
-  led_task(rgb);
-}
-
-void led_set_hsv() {
-  HsvColor hsv;
-  RgbColor rgb;
-  hsv.h = (unsigned char)led_hue;
-  hsv.s = (unsigned char)led_saturation;
-  hsv.v = (unsigned char)led_brightness;
-
-  rgb = HsvToRgb(hsv);
-  led_set((uint32_t)((rgb.r<<16u)|(rgb.g<<8u)|(rgb.b)));
-}
-
-void led_mod_brightness(int d) {
-  led_brightness+=(d/2);
-  if (led_brightness>0x96) led_brightness = 0x96;
-  if (led_brightness<0) led_brightness = 0;
-  led_set_hsv();
-}
-
-void led_mod_hue(int d) {
-  led_hue+=d;
-  if (led_hue>0xff) led_hue = 0xff;
-  if (led_hue<0) led_hue = 0;
-  led_set_hsv();
-}
-
-void led_mod_saturation(int d) {
-  led_saturation+=d;
-  if (led_saturation>0xff) led_saturation = 0xff;
-  if (led_saturation<0) led_saturation = 0;
-  led_set_hsv();
-}
-
-void led_set_saturation(int s) {
-  led_saturation = s;
-}
-
-void led_set_brightness(int b) {
-  led_brightness = b;
-  led_set_hsv();
-}
-
-void led_cycle_hue() {
-  led_hue++;
-  if (led_hue>0xff) led_hue = 0;
-  led_set_hsv();
-}
-
 // Invoked when sent REPORT successfully to host
 // Application can use this to send the next report
 // Note: For composite reports, report[0] is report ID
@@ -818,8 +625,7 @@ void tud_hid_report_complete_cb(uint8_t instance, uint8_t const* report, uint16_
 
   uint8_t next_report_id = report[0] + 1;
 
-  if (next_report_id < REPORT_ID_COUNT)
-  {
+  if (next_report_id < REPORT_ID_COUNT) {
     send_hid_report(next_report_id);
   }
 }
@@ -906,8 +712,8 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
         led_bitmap(buffer[4], &buffer[5]);
       }
       else if (cmd == strnstr(cmd, CMD_RGB_BACKLIGHT, 4)) {
-        uint32_t pixel_grb = (uint32_t)((buffer[5]<<16u) | (buffer[6]<<8u) | buffer[4]);
-        led_set(pixel_grb);
+        uint32_t pixel_rgb = (uint32_t)((buffer[6]<<16u) | (buffer[5]<<8u) | buffer[4]);
+        led_set_rgb(pixel_rgb);
       }
       else if (cmd == strnstr(cmd, CMD_LOGO, 4)) {
         anim_hello();

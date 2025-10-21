@@ -9,6 +9,7 @@
 #include "remote.h"
 #include "usb_hid_keys.h"
 #include "keyboard.h"
+#include "leds.h"
 #include "pico/stdlib.h"
 #include "pico/bootrom.h"
 #include "hardware/watchdog.h"
@@ -103,8 +104,8 @@ int execute_menu_row_function(int y) {
 // returns 1 for navigation function (stay in menu mode), 0 for terminal function
 int execute_menu_function(int keycode) {
   if (keycode == KEY_0) {
-    // TODO: are you sure?
-    led_set_brightness(0);
+    // TODO: are you sure? (port from kbd4)
+    led_turn_off();
     anim_goodbye();
     remote_turn_off_som();
     reset_keyboard_state();
@@ -112,8 +113,15 @@ int execute_menu_function(int keycode) {
   }
   else if (keycode == KEY_1) {
     if (remote_turn_on_som()) {
-      // initial backlight color
-      led_set(KBD_DEFAULT_BACKLIGHT_COLOR);
+      // the keyboard backlight turning on
+      // is a visual signal that people are used
+      // to--so if the remembered brightess was
+      // too dark, revert to the default
+      if (led_get_brightness() < 0x20) {
+        led_set_rgb(KBD_DEFAULT_BACKLIGHT_COLOR);
+      } else {
+        led_turn_on();
+      }
       anim_hello();
     }
     return 0;

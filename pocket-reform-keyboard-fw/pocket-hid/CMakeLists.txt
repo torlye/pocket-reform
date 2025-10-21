@@ -22,10 +22,10 @@ add_executable(${PROJECT})
 # Example source
 target_sources(${PROJECT} PUBLIC
         src/main.c
-        src/usb_descriptors.c
+        src/leds.c
+        src/menu.c
         src/oled.c
         src/remote.c
-        src/menu.c
         src/usb_descriptors.c
         "${CMAKE_CURRENT_BINARY_DIR}/inc-generated/ds20-descriptor.h"
         "${SHARED_FW_SRC}/reset_interface.c"

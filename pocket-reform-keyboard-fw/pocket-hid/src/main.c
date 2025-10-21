@@ -87,48 +87,18 @@ int main(void)
   gpio_init(PIN_LEDS);
   gpio_set_dir(PIN_LEDS, true); // output
 
-  gpio_init(PIN_COL1);
-  gpio_set_dir(PIN_COL1, true);
-  gpio_init(PIN_COL2);
-  gpio_set_dir(PIN_COL2, true);
-  gpio_init(PIN_COL3);
-  gpio_set_dir(PIN_COL3, true);
-  gpio_init(PIN_COL4);
-  gpio_set_dir(PIN_COL4, true);
-  gpio_init(PIN_COL5);
-  gpio_set_dir(PIN_COL5, true);
-  gpio_init(PIN_COL6);
-  gpio_set_dir(PIN_COL6, true);
-  gpio_init(PIN_COL7);
-  gpio_set_dir(PIN_COL7, true);
-  gpio_init(PIN_COL8);
-  gpio_set_dir(PIN_COL8, true);
-  gpio_init(PIN_COL9);
-  gpio_set_dir(PIN_COL9, true);
-  gpio_init(PIN_COL10);
-  gpio_set_dir(PIN_COL10, true);
-  gpio_init(PIN_COL11);
-  gpio_set_dir(PIN_COL11, true);
-  gpio_init(PIN_COL12);
-  gpio_set_dir(PIN_COL12, true);
+  /* Configure columns to output, bring low */
+  gpio_init_mask(PIN_COL_MASK);
+  gpio_set_dir_out_masked(PIN_COL_MASK);
+  gpio_put_masked(PIN_COL_MASK, 0);
 
-  gpio_init(PIN_ROW1);
-  gpio_set_dir(PIN_ROW1, false);
+  /* Configure rows as input and enable pull-downs */
+  gpio_init_mask(PIN_ROW_MASK);
   gpio_pull_down(PIN_ROW1);
-  gpio_init(PIN_ROW2);
-  gpio_set_dir(PIN_ROW2, false);
   gpio_pull_down(PIN_ROW2);
-  gpio_init(PIN_ROW3);
-  gpio_set_dir(PIN_ROW3, false);
   gpio_pull_down(PIN_ROW3);
-  gpio_init(PIN_ROW4);
-  gpio_set_dir(PIN_ROW4, false);
   gpio_pull_down(PIN_ROW4);
-  gpio_init(PIN_ROW5);
-  gpio_set_dir(PIN_ROW5, false);
   gpio_pull_down(PIN_ROW5);
-  gpio_init(PIN_ROW6);
-  gpio_set_dir(PIN_ROW6, false);
   gpio_pull_down(PIN_ROW6);
 
   i2c_init(i2c0, 400 * 1000);
@@ -358,18 +328,7 @@ int process_keyboard(uint8_t* resulting_scancodes) {
   }
 
   for (int x = 0; x < KBD_COLS; x++) {
-    gpio_put(PIN_COL1, 0);
-    gpio_put(PIN_COL2, 0);
-    gpio_put(PIN_COL3, 0);
-    gpio_put(PIN_COL4, 0);
-    gpio_put(PIN_COL5, 0);
-    gpio_put(PIN_COL6, 0);
-    gpio_put(PIN_COL7, 0);
-    gpio_put(PIN_COL8, 0);
-    gpio_put(PIN_COL9, 0);
-    gpio_put(PIN_COL10, 0);
-    gpio_put(PIN_COL11, 0);
-    gpio_put(PIN_COL12, 0);
+    gpio_put_masked(PIN_COL_MASK, 0);
 
     switch (x) {
     case 0: gpio_put(PIN_COL1, 1); break;

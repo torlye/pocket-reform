@@ -14,6 +14,9 @@
 #define PIN_ROW5 21
 #define PIN_ROW6 18
 
+#define PIN_ROW_MASK ((1<<PIN_ROW1) | (1<<PIN_ROW2) | (1<<PIN_ROW3) \
+                      | (1<<PIN_ROW4) | (1<<PIN_ROW5) | (1<<PIN_ROW6))
+
 #define PIN_COL1 6
 #define PIN_COL2 7
 #define PIN_COL3 8
@@ -26,6 +29,11 @@
 #define PIN_COL10 15
 #define PIN_COL11 16
 #define PIN_COL12 17
+
+#define PIN_COL_MASK ((1<<PIN_COL1) | (1<<PIN_COL2) | (1<<PIN_COL3) \
+                      | (1<<PIN_COL4) | (1<<PIN_COL5) | (1<<PIN_COL6) \
+                      | (1<<PIN_COL7) | (1<<PIN_COL8) | (1<<PIN_COL9) \
+                      | (1<<PIN_COL10) | (1<<PIN_COL11) | (1<<PIN_COL12))
 
 #define PIN_LEDS 24
 

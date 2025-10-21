@@ -1,10 +1,14 @@
 /*
   SPDX-License-Identifier: GPL-3.0-or-later
   MNT Pocket Reform Keyboard/Trackball Controller Firmware for RP2040
-  Copyright 2021-2024 MNT Research GmbH (mntre.com)
+  Copyright 2021-2025 MNT Research GmbH (mntre.com)
 */
 
+#ifndef _MATRIX_H
+#define _MATRIX_H
+
 #include "usb_hid_keys.h"
+#include "keyboard.h"
 
 // Top row, left to right
 #define MATRIX_DEFAULT_ROW_1 \
@@ -147,8 +151,8 @@ uint8_t matrix_fn[KBD_MATRIX_SZ] = {
   KEY_RIGHTSHIFT,
 
   KEY_COMPOSE,
-  KEY_RIGHTMETA,
-  KEY_RIGHTALT,
+  KEY_LEFTMETA,
+  KEY_LEFTALT,
   KEY_BACKSLASH,
   KEY_EQUAL,
   KEY_SPACE,
@@ -159,3 +163,5 @@ uint8_t matrix_fn[KBD_MATRIX_SZ] = {
   KEY_PAGEDOWN,
   KEY_END
 };
+
+#endif

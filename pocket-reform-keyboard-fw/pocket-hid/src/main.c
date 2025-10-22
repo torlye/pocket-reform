@@ -41,11 +41,11 @@ static uint8_t pressed_scancodes[MAX_SCANCODES] = {0,0,0,0,0,0};
 static int pressed_keys = 0;
 static volatile uint32_t led_value = 0;
 
-bool hid_task(struct repeating_timer *t);
-int process_keyboard(uint8_t* resulting_scancodes);
-int poll_trackball(void);
-void enter_menu_mode(void);
-void exit_menu_mode(void);
+static bool hid_task(struct repeating_timer *t);
+static int process_keyboard(uint8_t* resulting_scancodes);
+static int poll_trackball(void);
+static void enter_menu_mode(void);
+static void exit_menu_mode(void);
 
 #define UART_ID uart1
 #define BAUD_RATE 115200
@@ -54,17 +54,17 @@ void exit_menu_mode(void);
 #define PARITY    UART_PARITY_NONE
 
 // can be used as a global clock, incrementing around every ~5ms
-int hid_task_counter = 0;
-int trackball_motion = 0;
-int request_enter_menu_mode = 0;
-int request_exit_menu_mode = 0;
-int request_menu_function = 0;
-int active_menu_mode = 0;
-bool hyper_key = 0; // holding HYPER?
-bool shift_key = 0; // holding SHIFT?
-uint8_t last_menu_key = 0;
-double tb_nx = 0;
-double tb_ny = 0;
+static int hid_task_counter = 0;
+static int trackball_motion = 0;
+static int request_enter_menu_mode = 0;
+static int request_exit_menu_mode = 0;
+static int request_menu_function = 0;
+static int active_menu_mode = 0;
+static bool hyper_key = 0; // holding HYPER?
+static bool shift_key = 0; // holding SHIFT?
+static uint8_t last_menu_key = 0;
+static double tb_nx = 0;
+static double tb_ny = 0;
 
 static inline uint32_t board_millis(void) {
   return to_ms_since_boot(get_absolute_time());
@@ -290,20 +290,20 @@ bool tud_hid_trackball_report(uint8_t report_id,
   return tud_hid_report(report_id, &report, sizeof(report));
 }
 
-uint8_t matrix_debounce[KBD_COLS*KBD_ROWS];
-uint8_t matrix_state[KBD_COLS*KBD_ROWS];
+static uint8_t matrix_debounce[KBD_COLS*KBD_ROWS];
+static uint8_t matrix_state[KBD_COLS*KBD_ROWS];
 
-uint32_t hyper_enter_long_press_start_ms = 0;
+static uint32_t hyper_enter_long_press_start_ms = 0;
 
-uint8_t* active_matrix = matrix;
+static uint8_t* active_matrix = matrix;
 
 // enter the menu
-void enter_menu_mode(void) {
+static void enter_menu_mode(void) {
   active_menu_mode = 1;
   reset_and_render_menu();
 }
 
-void exit_menu_mode(void) {
+static void exit_menu_mode(void) {
   active_menu_mode = 0;
 }
 
@@ -318,7 +318,7 @@ void reset_keyboard_state(void) {
 
 // this is called in a timer interrupt, no sleep() functions
 // allowed!
-int process_keyboard(uint8_t* resulting_scancodes) {
+static int process_keyboard(uint8_t* resulting_scancodes) {
   // how many keys are pressed this round
   uint8_t total_pressed = 0;
   uint8_t used_key_codes = 0;
@@ -448,20 +448,20 @@ int process_keyboard(uint8_t* resulting_scancodes) {
   return used_key_codes;
 }
 
-int scroll_toggle = 0;
+static int scroll_toggle = 0;
 
-int tb_btn_left = 0;
-int tb_btn_right = 0;
-int tb_btn_scroll = 0;
-int tb_btn_middle = 0;
+static int tb_btn_left = 0;
+static int tb_btn_right = 0;
+static int tb_btn_scroll = 0;
+static int tb_btn_middle = 0;
 // TODO: implement HID commands to update these
-int tb_btn_left_idx = KBD_COLS*5+4;
-int tb_btn_right_idx = KBD_COLS*5+8;
-int tb_btn_scroll_idx = KBD_COLS*5+7;
-int tb_btn_middle_idx = KBD_COLS*5+3;
+static int tb_btn_left_idx = KBD_COLS*5+4;
+static int tb_btn_right_idx = KBD_COLS*5+8;
+static int tb_btn_scroll_idx = KBD_COLS*5+7;
+static int tb_btn_middle_idx = KBD_COLS*5+3;
 
 // returns motion yes/no
-int poll_trackball()
+static int poll_trackball()
 {
   tb_btn_left = matrix_state[tb_btn_left_idx]>0;
   tb_btn_middle = matrix_state[tb_btn_middle_idx]>0;
@@ -562,7 +562,7 @@ static void send_hid_report(uint8_t report_id)
 
 // Every 5ms, we will sent 1 report for each HID profile (keyboard, mouse etc ..)
 // tud_hid_report_complete_cb() is used to send the next report after previous one is complete
-bool hid_task(__unused struct repeating_timer *t)
+static bool hid_task(__unused struct repeating_timer *t)
 {
   tud_task();
   pressed_keys = process_keyboard(pressed_scancodes);

@@ -16,10 +16,10 @@
 #include "tusb.h"
 #include <malloc.h>
 
-int current_menu_y = 0;
-int current_scroll_y = 0;
-int current_menu_page = 0;
-int8_t logo_timeout_ticks = 0;
+static int current_menu_y = 0;
+static int current_scroll_y = 0;
+static int current_menu_page = 0;
+static int8_t logo_timeout_ticks = 0;
 
 #ifdef KBD_MODE_STANDALONE
 // TODO

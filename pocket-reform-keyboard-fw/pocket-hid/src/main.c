@@ -44,6 +44,8 @@ static volatile uint32_t led_value = 0;
 static bool hid_task(struct repeating_timer *t);
 static int process_keyboard(uint8_t* resulting_scancodes);
 static int poll_trackball(void);
+
+static void service_menu(void);
 static void enter_menu_mode(void);
 static void exit_menu_mode(void);
 
@@ -56,15 +58,25 @@ static void exit_menu_mode(void);
 // can be used as a global clock, incrementing around every ~5ms
 static int hid_task_counter = 0;
 static int trackball_motion = 0;
-static int request_enter_menu_mode = 0;
-static int request_exit_menu_mode = 0;
-static int request_menu_function = 0;
-static int active_menu_mode = 0;
 static bool hyper_key = 0; // holding HYPER?
 static bool shift_key = 0; // holding SHIFT?
-static uint8_t last_menu_key = 0;
 static double tb_nx = 0;
 static double tb_ny = 0;
+
+// This state machine describes the global interaction state of the
+// OLED-displayed menu.
+enum MenuState {
+  MENU_STATE_INACTIVE, // not displayed
+  MENU_STATE_ACTIVE,   // displayed and the user is interacting
+  MENU_STATE_ENTER,    // the user has requested the menu be displayed
+  MENU_STATE_EXIT      // the menu interaction is over
+};
+static enum MenuState menu_state = MENU_STATE_INACTIVE;
+
+// The next menu item (by key code) to invoke
+static int request_menu_function = 0;
+// The last key pressed while the menu was active
+static uint8_t last_menu_key = 0;
 
 static inline uint32_t board_millis(void) {
   return to_ms_since_boot(get_absolute_time());
@@ -165,22 +177,7 @@ int main(void)
     trackball_motion = poll_trackball();
 
     // service menu requests
-    if (request_enter_menu_mode) {
-      enter_menu_mode();
-      request_enter_menu_mode = 0;
-    }
-    if (request_exit_menu_mode) {
-      exit_menu_mode();
-      request_exit_menu_mode = 0;
-    }
-    if (request_menu_function) {
-      int stay_menu = execute_menu_function(request_menu_function);
-      request_menu_function = 0;
-      // exit menu mode
-      if (!stay_menu) {
-        exit_menu_mode();
-      }
-    }
+    service_menu();
 
     // notifications / page refreshing
     cycles++;
@@ -194,7 +191,7 @@ int main(void)
       // if device is off and user is pressing random keys,
       // show a hint for turning on the device
       if (!remote_get_power_state()) {
-        if (pressed_keys>0 && !active_menu_mode && !hyper_key && !last_menu_key) {
+        if (pressed_keys>0 && menu_state != MENU_STATE_ACTIVE && !hyper_key && !last_menu_key) {
           execute_menu_function(KEY_H);
         }
       }
@@ -297,14 +294,32 @@ static uint32_t hyper_enter_long_press_start_ms = 0;
 
 static uint8_t* active_matrix = matrix;
 
+static void service_menu() {
+  // These items should be in this order, because the state
+  // transitions in each clause may trigger a transition to the next
+  // clause.
+  if (menu_state == MENU_STATE_ENTER) {
+    enter_menu_mode();
+  }
+  if (request_menu_function != 0) {
+    if (!execute_menu_function(request_menu_function)) {
+      menu_state = MENU_STATE_EXIT;
+    }
+    request_menu_function = 0;
+  }
+  if (menu_state == MENU_STATE_EXIT) {
+    exit_menu_mode();
+  }
+}
+
 // enter the menu
 static void enter_menu_mode(void) {
-  active_menu_mode = 1;
+  menu_state = MENU_STATE_ACTIVE;
   reset_and_render_menu();
 }
 
 static void exit_menu_mode(void) {
-  active_menu_mode = 0;
+  menu_state = MENU_STATE_INACTIVE;
 }
 
 void reset_keyboard_state(void) {
@@ -381,8 +396,8 @@ static int process_keyboard(uint8_t* resulting_scancodes) {
         // hyper + enter? open OLED menu
         if (keycode == KEY_ENTER && hyper_key) {
           if (!last_menu_key) {
-            if (!active_menu_mode) {
-              request_enter_menu_mode = 1;
+            if (menu_state != MENU_STATE_ACTIVE) {
+              menu_state = MENU_STATE_ENTER;
             }
             uint32_t now_ms = board_millis();
             if (!now_ms) now_ms++;
@@ -394,7 +409,7 @@ static int process_keyboard(uint8_t* resulting_scancodes) {
             if (now_ms - hyper_enter_long_press_start_ms > 1000) {
               // turn on computer after 2 seconds of holding hyper + enter
               request_menu_function = KEY_1;
-              request_exit_menu_mode = 1;
+              menu_state = MENU_STATE_EXIT;
               last_menu_key = KEY_1;
               hyper_enter_long_press_start_ms = 0;
             }
@@ -403,7 +418,7 @@ static int process_keyboard(uint8_t* resulting_scancodes) {
           hyper_key = 1;
           active_matrix = matrix_fn;
         } else {
-          if (active_menu_mode) {
+          if (menu_state == MENU_STATE_ACTIVE) {
             // not holding the same key?
             if (last_menu_key != keycode) {
               // hyper/menu functions

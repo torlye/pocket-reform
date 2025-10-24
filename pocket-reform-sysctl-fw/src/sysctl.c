@@ -577,7 +577,9 @@ void turn_som_power_off()
 
 void som_wake()
 {
-  // TODO: toggle gpio 19!
+  gpio_put(PIN_SOM_WAKE, 1);
+  sleep_ms(5);
+  gpio_put(PIN_SOM_WAKE, 0);
   uart_puts(uart0, "wake\r\n");
 }
 
@@ -640,6 +642,11 @@ void setup()
   gpio_init(PIN_PWREN_LATCH);
   gpio_set_dir(PIN_PWREN_LATCH, 1);
   gpio_put(PIN_PWREN_LATCH, 0);
+
+  // SoM / SoC wake GPIO
+  gpio_init(PIN_SOM_WAKE);
+  gpio_set_dir(PIN_SOM_WAKE, GPIO_OUT);
+  gpio_put(PIN_SOM_WAKE, 0);
 
   // Display control pins
   gpio_init(PIN_DISP_RESET);

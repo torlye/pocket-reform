@@ -343,7 +343,7 @@ static int process_keyboard(uint8_t* resulting_scancodes) {
   }
 
   for (int x = 0; x < KBD_COLS; x++) {
-    gpio_put_masked(PIN_COL_MASK, 0);
+    uint32_t rows = 0;
 
     switch (x) {
     case 0: gpio_put(PIN_COL1, 1); break;
@@ -363,6 +363,11 @@ static int process_keyboard(uint8_t* resulting_scancodes) {
     // wait for signal to stabilize
     busy_wait_us(1);
 
+    rows = gpio_get_all();
+
+    // clear the column pin for idle/the next iteration
+    gpio_put_masked(PIN_COL_MASK, 0);
+
     for (int y = 0; y < KBD_ROWS; y++) {
       uint8_t keycode;
       int loc = y*KBD_COLS+x;
@@ -371,12 +376,12 @@ static int process_keyboard(uint8_t* resulting_scancodes) {
       uint8_t debounced_pressed = 0;
 
       switch (y) {
-      case 0:  pressed = gpio_get(PIN_ROW1); break;
-      case 1:  pressed = gpio_get(PIN_ROW2); break;
-      case 2:  pressed = gpio_get(PIN_ROW3); break;
-      case 3:  pressed = gpio_get(PIN_ROW4); break;
-      case 4:  pressed = gpio_get(PIN_ROW5); break;
-      case 5:  pressed = gpio_get(PIN_ROW6); break;
+      case 0:  pressed = (rows & (1u<<PIN_ROW1)) != 0; break;
+      case 1:  pressed = (rows & (1u<<PIN_ROW2)) != 0; break;
+      case 2:  pressed = (rows & (1u<<PIN_ROW3)) != 0; break;
+      case 3:  pressed = (rows & (1u<<PIN_ROW4)) != 0; break;
+      case 4:  pressed = (rows & (1u<<PIN_ROW5)) != 0; break;
+      case 5:  pressed = (rows & (1u<<PIN_ROW6)) != 0; break;
       }
 
       // shift new state as bit into debounce "register"

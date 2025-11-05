@@ -132,7 +132,6 @@
 			(psnegative no)
 			(psa4output no)
 			(plot_black_and_white yes)
-			(plotinvisibletext no)
 			(sketchpadsonfab no)
 			(plotpadnumbers no)
 			(hidednponfab no)
@@ -285,7 +284,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C7457894"
+		(property "LCSC" "C2914309"
 			(at 0 0 180)
 			(unlocked yes)
 			(layer "F.Fab")
@@ -910,7 +909,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 180)
 			(unlocked yes)
 			(layer "F.Fab")
@@ -1189,7 +1188,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -1424,7 +1423,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 270)
 			(layer "F.Fab")
 			(hide yes)
@@ -1659,7 +1658,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 270)
 			(unlocked yes)
 			(layer "F.Fab")
@@ -1938,7 +1937,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -1966,7 +1965,7 @@
 		(path "/a719517b-d305-458c-84b1-d34ab2763814")
 		(sheetname "/")
 		(sheetfile "pocket-reform-charger.kicad_sch")
-		(attr board_only exclude_from_pos_files)
+		(attr board_only exclude_from_pos_files exclude_from_bom dnp)
 		(fp_poly
 			(pts
 				(xy 5.386916 -0.4445) (xy 5.386916 -0.381) (xy 5.228166 -0.381) (xy 5.069416 -0.381) (xy 5.069416 -0.4445)
@@ -4058,7 +4057,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 270)
 			(unlocked yes)
 			(layer "F.Fab")
@@ -4298,7 +4297,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 270)
 			(layer "F.Fab")
 			(hide yes)
@@ -4521,7 +4520,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -4545,7 +4544,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C100775"
+		(property "LCSC" "C22874"
 			(at 196.67 -4.48 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -4756,7 +4755,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -4991,7 +4990,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -5015,7 +5014,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C385964"
+		(property "LCSC" "C14663"
 			(at 209.75 5.25 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -5276,7 +5275,7 @@
 				)
 			)
 		)
-		(property "LCSC" "NX20P5090UKAZ"
+		(property "LCSC" "C2802659"
 			(at 0 0 90)
 			(unlocked yes)
 			(layer "F.Fab")
@@ -5289,7 +5288,7 @@
 				)
 			)
 		)
-		(property "Manufacturer_No" "NX20P5090"
+		(property "Manufacturer_No" "NX20P5090UKAZ"
 			(at 0 0 90)
 			(unlocked yes)
 			(layer "F.Fab")
@@ -5585,7 +5584,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -5820,7 +5819,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -6221,7 +6220,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 270)
 			(layer "F.Fab")
 			(hide yes)
@@ -6505,7 +6504,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -6740,7 +6739,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -6975,7 +6974,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -6999,7 +6998,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C385964"
+		(property "LCSC" "C14663"
 			(at 206 160.5 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -7210,7 +7209,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 0)
 			(unlocked yes)
 			(layer "F.Fab")
@@ -7489,7 +7488,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 90)
 			(unlocked yes)
 			(layer "F.Fab")
@@ -7716,7 +7715,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 270)
 			(layer "F.Fab")
 			(hide yes)
@@ -7875,7 +7874,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -8110,7 +8109,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -8134,7 +8133,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C403469"
+		(property "LCSC" "C22977"
 			(at 192.5 166 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -8345,7 +8344,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 270)
 			(layer "F.Fab")
 			(hide yes)
@@ -8580,7 +8579,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 0)
 			(unlocked yes)
 			(layer "F.Fab")
@@ -8606,7 +8605,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C385964"
+		(property "LCSC" "C14663"
 			(at 0 0 0)
 			(unlocked yes)
 			(layer "F.Fab")
@@ -8820,7 +8819,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 270)
 			(unlocked yes)
 			(layer "F.Fab")
@@ -9060,7 +9059,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -9402,7 +9401,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 270)
 			(layer "F.Fab")
 			(hide yes)
@@ -9641,7 +9640,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -9669,7 +9668,7 @@
 		(path "/9e447b37-b36e-41e1-aaca-7207ba323c56")
 		(sheetname "/")
 		(sheetfile "pocket-reform-charger.kicad_sch")
-		(attr exclude_from_pos_files)
+		(attr exclude_from_pos_files exclude_from_bom dnp)
 		(fp_circle
 			(center 0 0)
 			(end 2.2 0)
@@ -9744,7 +9743,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -9768,7 +9767,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C153015"
+		(property "LCSC" "C14663"
 			(at 188.8 27.2 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -9979,7 +9978,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -10003,7 +10002,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C403469"
+		(property "LCSC" "C22977"
 			(at 192.5 162.58 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -10214,7 +10213,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 270)
 			(layer "F.Fab")
 			(hide yes)
@@ -10373,7 +10372,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 270)
 			(unlocked yes)
 			(layer "F.Fab")
@@ -10613,7 +10612,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -10849,7 +10848,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 180)
 			(layer "F.Fab")
 			(hide yes)
@@ -11084,7 +11083,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -11108,7 +11107,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C385964"
+		(property "LCSC" "C14663"
 			(at 207.5 15 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -11319,7 +11318,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -11555,7 +11554,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -11790,7 +11789,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 270)
 			(layer "F.Fab")
 			(hide yes)
@@ -12025,7 +12024,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 270)
 			(layer "F.Fab")
 			(hide yes)
@@ -12049,7 +12048,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C193335"
+		(property "LCSC" "C22859"
 			(at -7.25 215.25 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -12260,7 +12259,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 270)
 			(layer "F.Fab")
 			(hide yes)
@@ -12495,7 +12494,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -12730,7 +12729,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -12889,7 +12888,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -12913,7 +12912,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C1512043"
+		(property "LCSC" "C1512052"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -13124,7 +13123,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 0)
 			(unlocked yes)
 			(layer "F.Fab")
@@ -13403,7 +13402,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -13638,7 +13637,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 90)
 			(unlocked yes)
 			(layer "F.Fab")
@@ -13917,7 +13916,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -14152,7 +14151,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 270)
 			(layer "F.Fab")
 			(hide yes)
@@ -14387,7 +14386,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -14622,7 +14621,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -14857,7 +14856,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 270)
 			(layer "F.Fab")
 			(hide yes)
@@ -15095,7 +15094,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -15829,7 +15828,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -16230,7 +16229,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -16254,7 +16253,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C2937388"
+		(property "LCSC" "C2988648"
 			(at 0 0 270)
 			(unlocked yes)
 			(layer "F.Fab")
@@ -16544,7 +16543,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -16779,7 +16778,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 270)
 			(layer "F.Fab")
 			(hide yes)
@@ -17014,7 +17013,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -17327,7 +17326,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -17351,7 +17350,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C385964"
+		(property "LCSC" "C14663"
 			(at 180.75 -16.25 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -17562,7 +17561,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 180)
 			(layer "F.Fab")
 			(hide yes)
@@ -17797,7 +17796,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -18033,7 +18032,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -18057,7 +18056,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C203565"
+		(property "LCSC" "C23033"
 			(at 0.75 193.25 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -18268,7 +18267,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 0)
 			(unlocked yes)
 			(layer "F.Fab")
@@ -18547,7 +18546,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 180)
 			(layer "F.Fab")
 			(hide yes)
@@ -18571,7 +18570,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C278795"
+		(property "LCSC" "C395365"
 			(at 201 137.5 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -19019,7 +19018,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -19043,7 +19042,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C203293"
+		(property "LCSC" "C22793"
 			(at 5.5 184 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -19255,7 +19254,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -19283,7 +19282,7 @@
 		(path "/a7998200-e59c-44f4-af41-a72c7a5d7367")
 		(sheetname "/")
 		(sheetfile "pocket-reform-charger.kicad_sch")
-		(attr exclude_from_pos_files)
+		(attr exclude_from_pos_files exclude_from_bom dnp)
 		(fp_circle
 			(center 0 0)
 			(end 2.2 0)
@@ -19358,7 +19357,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -19382,7 +19381,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C385964"
+		(property "LCSC" "C14663"
 			(at 212.25 10.25 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -19593,7 +19592,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -19829,7 +19828,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -19853,7 +19852,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C385964"
+		(property "LCSC" "C14663"
 			(at 225.5 236 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -20064,7 +20063,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -20299,7 +20298,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -20534,7 +20533,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 270)
 			(layer "F.Fab")
 			(hide yes)
@@ -20757,7 +20756,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)

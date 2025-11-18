@@ -628,12 +628,12 @@ uint16_t tud_hid_get_report_cb(uint8_t instance, uint8_t report_id, hid_report_t
 #define CMD_OLED_CLEAR      "WCLR"     // clear the oled display
 #define CMD_OLED_BITMAP     "WBIT"     // (u16 offset, u8 bytes...) write raw bytes into the oled framebuffer
 #define CMD_POWER_OFF       "PWR0"     // turn off power rails
-#define CMD_BACKLIGHT       "LITE"     // keyboard backlight level
 #define CMD_RGB_BACKLIGHT   "LRGB"     // keyboard backlight rgb
+#define CMD_RGB_BRT         "LBRT"     // keyboard backlight brightness
+#define CMD_RGB_SAT         "LSAT"     // keyboard backlight saturation
+#define CMD_RGB_HUE         "LHUE"     // keyboard backlight saturation
 #define CMD_RGB_BITMAP      "XRGB"     // push rgb backlight bitmap
 #define CMD_LOGO            "LOGO"     // play logo animation
-#define CMD_OLED_BRITE      "OBRT"     // OLED brightness level
-#define CMD_OLED_BRITE2     "OBR2"     // OLED brightness level
 
 // Invoked when received SET_REPORT control request or
 // received data on OUT endpoint ( Report ID = 0, Type = 0 )
@@ -644,8 +644,8 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
 
   if (bufsize < 5) return;
 
-  if (report_type == 2) {
-    // Big Reform style
+  if (report_type == HID_REPORT_TYPE_OUTPUT) {
+    // TODO this should really be REPORT_ID_KEYBOARD instead of 'x'
     if (report_id == 'x') {
       const char* cmd = (const char*)buffer;
 
@@ -656,6 +656,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
       gfx_flush();*/
 
       if (cmd == strnstr(cmd, CMD_TEXT_FRAME, 4)) {
+        // print up to 4 lines (with 21 chars each) of text
         gfx_clear();
         gfx_on();
 
@@ -675,58 +676,50 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
         gfx_flush();
       }
       else if (cmd == strnstr(cmd, CMD_POWER_OFF, 4)) {
+        // power the computer off
         reset_menu();
         remote_turn_off_som();
         reset_keyboard_state();
       }
       else if (cmd == strnstr(cmd, CMD_OLED_CLEAR, 4)) {
+        // clear the OLED display
         gfx_clear();
         gfx_flush();
       }
       else if (cmd == strnstr(cmd, CMD_OLED_BITMAP, 4)) {
+        // render a monochrome (1-bit) bitmap to the OLED display
         matrix_render_direct(&buffer[4]);
       }
       else if (cmd == strnstr(cmd, CMD_RGB_BITMAP, 4)) {
+        // set a row of keyboard LEDs at once as 12 "pixels"
         // row, data (12 * 3 rgb bytes)
         led_bitmap(buffer[4], &buffer[5]);
       }
       else if (cmd == strnstr(cmd, CMD_RGB_BACKLIGHT, 4)) {
+        // set a uniform colored RGB backlight
         uint32_t pixel_rgb = (uint32_t)((buffer[6]<<16u) | (buffer[5]<<8u) | buffer[4]);
         led_set_rgb(pixel_rgb);
+      }
+      else if (cmd == strnstr(cmd, CMD_RGB_BRT, 4)) {
+        // modify brightness component of RGB backlight
+        int val = (int)buffer[4];
+        led_set_brightness(val);
+      }
+      else if (cmd == strnstr(cmd, CMD_RGB_SAT, 4)) {
+        // modify saturation component of RGB backlight
+        int val = (int)buffer[4];
+        led_set_saturation(val);
+      }
+      else if (cmd == strnstr(cmd, CMD_RGB_HUE, 4)) {
+        // modify hue component of RGB backlight
+        int val = (int)buffer[4];
+        led_set_hue(val);
       }
       else if (cmd == strnstr(cmd, CMD_LOGO, 4)) {
         anim_hello();
       }
-      else if (cmd == strnstr(cmd, CMD_OLED_BRITE, 4)) {
-        uint8_t val = (uint8_t)atoi((const char*)&buffer[4]);
-        gfx_poke(0,0,'0'+(val/100));
-        gfx_poke(1,0,'0'+((val%100)/10));
-        gfx_poke(2,0,'0'+(val%10));
-        gfx_flush();
-        gfx_contrast(val);
-      }
-      else if (cmd == strnstr(cmd, CMD_OLED_BRITE2, 4)) {
-        uint8_t val = (uint8_t)atoi((const char*)&buffer[4]);
-        gfx_poke(0,0,'0'+(val/100));
-        gfx_poke(1,0,'0'+((val%100)/10));
-        gfx_poke(2,0,'0'+(val%10));
-        gfx_flush();
-        gfx_precharge(val);
-      }
     }
   }
-
-  /*if (report_type == HID_REPORT_TYPE_OUTPUT)
-  {
-    // Set keyboard LED e.g Capslock, Numlock etc...
-    if (report_id == REPORT_ID_KEYBOARD)
-    {
-      // bufsize should be (at least) 1
-      if ( bufsize < 1 ) return;
-
-      //uint8_t const kbd_leds = buffer[0];
-    }
-  }*/
 }
 
 // TODO

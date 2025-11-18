@@ -229,3 +229,8 @@ void led_cycle_hue() {
   if (led_hue>0xff) led_hue = 0;
   led_set_hsv();
 }
+
+void led_set_hue(int h) {
+  led_hue = h;
+  led_set_hsv();
+}

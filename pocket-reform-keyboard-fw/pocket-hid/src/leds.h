@@ -12,6 +12,8 @@ void led_mod_brightness(int d);
 void led_set_brightness(int b);
 int led_get_brightness();
 void led_mod_saturation(int d);
+void led_set_saturation(int b);
+void led_set_hue(int b);
 void led_cycle_hue();
 void led_bitmap(uint8_t row, const uint8_t* row_rgb);
 

@@ -825,19 +825,26 @@ void loop()
 					 );
   }
 
-	if (battery_info.ticks % 2000 == 0) {
+	if (battery_info.ticks % 1000 == 0) {
 		int tref_powbtn = gpio_get(PIN_TREF_POWBTN);
-		printf("# tref_powbtn: %d (cycles: %d)\n", tref_powbtn, tref_prev_powbtn_cycles);
-		if (tref_powbtn && !tref_prev_powbtn && !battery_info.som_is_powered) {
-			turn_som_power_on();
-			tref_prev_powbtn_cycles = 0;
+		if (tref_powbtn && !tref_prev_powbtn) {
+			if (!battery_info.som_is_powered) {
+				printf("# tref_powbtn: turn_som_power_on()\n");
+				turn_som_power_on();
+				tref_prev_powbtn_cycles = 0;
+			} else {
+				printf("# tref_powbtn: som_wake()\n");
+				som_wake();
+			}
 		}
 		if (tref_powbtn && tref_prev_powbtn) {
 			// holding power button
 			tref_prev_powbtn_cycles++;
+			printf("# tref_powbtn: %d (cycles: %d)\n", tref_powbtn, tref_prev_powbtn_cycles);
 		}
-		if (tref_prev_powbtn_cycles > 3) {
-			//turn_som_power_off();
+		if (tref_prev_powbtn_cycles > 4) {
+			printf("# tref_powbtn: turn_som_power_off()\n");
+			turn_som_power_off();
 			tref_prev_powbtn_cycles = 0;
 		}
 		tref_prev_powbtn = tref_powbtn;

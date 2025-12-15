@@ -470,8 +470,8 @@ void charger_led_indication(battery_info_s *battery_info) {
     float sine_val = sin(phase);
     float normalized = (sine_val + 1.0f) / 2.0f;
     float breathing_curve = normalized * normalized;
-    // 10%..100% brightness (i.e. never completely off)
-    breathing_curve = 0.1f + (breathing_curve * 0.9f);
+    // 50%..100% brightness (i.e. never completely off)
+    breathing_curve = 0.5f + (breathing_curve * 0.5f);
     uint16_t pwm_level = (uint16_t)(breathing_curve * pwm_max);
     pwm_set_chan_level(PIN_LED_R_PWM_SLICE, PIN_LED_R_PWM_CHAN, pwm_level);
     phase += 0.02f;
@@ -583,6 +583,10 @@ void som_wake()
   uart_puts(uart0, "wake\r\n");
 }
 
+#define PIN_TREF_POWBTN PIN_KBD_UART_TX
+static int tref_prev_powbtn = 0;
+static int tref_prev_powbtn_cycles = 0;
+
 void setup()
 {
   tusb_init();
@@ -601,8 +605,14 @@ void setup()
   uart_set_format(UART_ID, DATA_BITS, STOP_BITS, PARITY);
   uart_set_hw_flow(UART_ID, false, false);
   uart_set_fifo_enabled(UART_ID, true);
-  gpio_set_function(PIN_KBD_UART_TX, GPIO_FUNC_UART);
+	// FIXME TREF prototype re-use
+  //gpio_set_function(PIN_KBD_UART_TX, GPIO_FUNC_UART);
   gpio_set_function(PIN_KBD_UART_RX, GPIO_FUNC_UART);
+
+	// TREF prototype on/off switch
+	gpio_init(PIN_KBD_UART_TX);
+  gpio_set_dir(PIN_KBD_UART_TX, GPIO_IN);
+	gpio_set_pulls(PIN_KBD_UART_TX, false, true); // pulldown
 
   // UART to som
   uart_init(uart0, BAUD_RATE);
@@ -812,6 +822,21 @@ void loop()
             mps_word_to_watt(mps_reg_adc.sys_p),
             (unsigned int)battery_info.time_to_empty/60
             );
+
+		int tref_powbtn = gpio_get(PIN_TREF_POWBTN);
+		if (tref_powbtn && !tref_prev_powbtn && !battery_info.som_is_powered) {
+			turn_som_power_on();
+			tref_prev_powbtn_cycles = 0;
+		}
+		if (tref_powbtn && tref_prev_powbtn) {
+			// holding power button
+			tref_prev_powbtn_cycles++;
+		}
+		if (tref_prev_powbtn_cycles > 5) {
+			turn_som_power_off();
+			tref_prev_powbtn_cycles = 0;
+		}
+		tref_prev_powbtn = tref_powbtn;
   }
 
   if (can_sleep) {

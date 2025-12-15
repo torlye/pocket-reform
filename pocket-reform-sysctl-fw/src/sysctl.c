@@ -805,6 +805,7 @@ void loop()
   charger_dump(&battery_info);
   charger_led_indication(&battery_info);
 
+	// FIXME: it's more like 5 seconds
   // every 1000ms: report to serial
   if (battery_info.ticks % 10000 == 0)
   {
@@ -821,9 +822,12 @@ void loop()
             mps_word_to_6400(mps_reg_adc.bat_discharge_i),
             mps_word_to_watt(mps_reg_adc.sys_p),
             (unsigned int)battery_info.time_to_empty/60
-            );
+					 );
+  }
 
+	if (battery_info.ticks % 2000 == 0) {
 		int tref_powbtn = gpio_get(PIN_TREF_POWBTN);
+		printf("# tref_powbtn: %d (cycles: %d)\n", tref_powbtn, tref_prev_powbtn_cycles);
 		if (tref_powbtn && !tref_prev_powbtn && !battery_info.som_is_powered) {
 			turn_som_power_on();
 			tref_prev_powbtn_cycles = 0;
@@ -832,12 +836,12 @@ void loop()
 			// holding power button
 			tref_prev_powbtn_cycles++;
 		}
-		if (tref_prev_powbtn_cycles > 5) {
-			turn_som_power_off();
+		if (tref_prev_powbtn_cycles > 3) {
+			//turn_som_power_off();
 			tref_prev_powbtn_cycles = 0;
 		}
 		tref_prev_powbtn = tref_powbtn;
-  }
+	}
 
   if (can_sleep) {
     sleep_us(100); // one tick is 0.1ms

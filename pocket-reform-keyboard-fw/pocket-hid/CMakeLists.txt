@@ -1,18 +1,18 @@
 cmake_minimum_required(VERSION 3.17)
 
 if (NOT DEFINED ENV{PICO_SDK_PATH} AND (NOT PICO_SDK_PATH))
-       set(PICO_SDK_PATH "${CMAKE_SOURCE_DIR}/../../pico-sdk")
-       cmake_path(NORMAL_PATH PICO_SDK_PATH)
-       message("Using PICO_SDK_PATH=${PICO_SDK_PATH}")
+        set(PICO_SDK_PATH "${CMAKE_SOURCE_DIR}/../../pico-sdk")
+        cmake_path(NORMAL_PATH PICO_SDK_PATH)
+        message("Using PICO_SDK_PATH=${PICO_SDK_PATH}")
 endif()
+message("Using PICO_SDK_PATH=${PICO_SDK_PATH}")
 
-include(pico_sdk_import.cmake)
+include(lib/pico_sdk_import.cmake)
 set(SHARED_FW_INC "${CMAKE_CURRENT_LIST_DIR}/../../pocket-reform-shared-fw/inc")
 set(SHARED_FW_SRC "${CMAKE_CURRENT_LIST_DIR}/../../pocket-reform-shared-fw/src")
 set(SCRIPTS "${CMAKE_CURRENT_LIST_DIR}/../../scripts")
 
 set(PROJECT pocket-hid)
-
 project(${PROJECT} C CXX ASM)
 
 pico_sdk_init()
@@ -25,11 +25,16 @@ target_sources(${PROJECT} PUBLIC
         src/menu.c
         src/oled.c
         src/remote.c
+	      src/usb_descriptors.c
+	      "${CMAKE_CURRENT_BINARY_DIR}/inc-generated/ds20-descriptor.h"
+	      "${SHARED_FW_SRC}/reset_interface.c"
         )
 
-target_include_directories(${PROJECT} PUBLIC
+target_include_directories(${PROJECT} PRIVATE
+        "${CMAKE_CURRENT_LIST_DIR}/inc"
         "${CMAKE_CURRENT_LIST_DIR}/src"
-#        "${SHARED_FW_INC}"
+        "${CMAKE_CURRENT_BINARY_DIR}/inc-generated"
+        "${SHARED_FW_INC}"
         )
 
 target_link_libraries(${PROJECT} PRIVATE
@@ -40,16 +45,17 @@ target_link_libraries(${PROJECT} PRIVATE
         hardware_watchdog
         pico_stdio
         pico_unique_id
+       	tinyusb_device
 )
 
 # enable usb output, disable uart output
-pico_enable_stdio_usb(${PROJECT} 1)
+# pico_enable_stdio_usb(${PROJECT} 1)
 pico_enable_stdio_uart(${PROJECT} 0)
 pico_add_extra_outputs(${PROJECT})
 
-#target_compile_definitions(${PROJECT} PUBLIC PICO_RP2040_USB_DEVICE_ENUMERATION_FIX=1)
-#target_compile_definitions(${PROJECT} PUBLIC PICO_XOSC_STARTUP_DELAY_MULTIPLIER=64)
-#target_compile_definitions(${PROJECT} PUBLIC RESET_INTERFACE_ENABLE_RESET_VIA_BAUD_RATE=0)
+target_compile_definitions(${PROJECT} PUBLIC PICO_RP2040_USB_DEVICE_ENUMERATION_FIX=1)
+target_compile_definitions(${PROJECT} PUBLIC PICO_XOSC_STARTUP_DELAY_MULTIPLIER=64)
+target_compile_definitions(${PROJECT} PUBLIC RESET_INTERFACE_ENABLE_RESET_VIA_BAUD_RATE=0)
 
 if (DEFINED ENV{MNTRE_FIRMWARE_VERSION} AND (NOT MNTRE_FIRMWARE_VERSION))
     set(MNTRE_FIRMWARE_VERSION $ENV{MNTRE_FIRMWARE_VERSION})

@@ -19,42 +19,37 @@ pico_sdk_init()
 
 add_executable(${PROJECT})
 
-# Example source
 target_sources(${PROJECT} PUBLIC
         src/main.c
         src/leds.c
         src/menu.c
         src/oled.c
         src/remote.c
-        src/usb_descriptors.c
-        "${CMAKE_CURRENT_BINARY_DIR}/inc-generated/ds20-descriptor.h"
-        "${SHARED_FW_SRC}/reset_interface.c"
         )
 
-# Example include
 target_include_directories(${PROJECT} PUBLIC
-        "${CMAKE_CURRENT_LIST_DIR}/inc"
         "${CMAKE_CURRENT_LIST_DIR}/src"
-        "${CMAKE_CURRENT_BINARY_DIR}/inc-generated"
-        "${SHARED_FW_INC}"
+#        "${SHARED_FW_INC}"
         )
 
 target_link_libraries(${PROJECT} PRIVATE
         pico_stdlib
-        pico_bootsel_via_double_reset
         hardware_i2c
         hardware_pwm
         hardware_pio
         hardware_watchdog
+        pico_stdio
         pico_unique_id
-        tinyusb_device
 )
 
+# enable usb output, disable uart output
+pico_enable_stdio_usb(${PROJECT} 1)
+pico_enable_stdio_uart(${PROJECT} 0)
 pico_add_extra_outputs(${PROJECT})
 
-target_compile_definitions(${PROJECT} PUBLIC PICO_RP2040_USB_DEVICE_ENUMERATION_FIX=1)
-target_compile_definitions(${PROJECT} PUBLIC PICO_XOSC_STARTUP_DELAY_MULTIPLIER=64)
-target_compile_definitions(${PROJECT} PUBLIC RESET_INTERFACE_ENABLE_RESET_VIA_BAUD_RATE=0)
+#target_compile_definitions(${PROJECT} PUBLIC PICO_RP2040_USB_DEVICE_ENUMERATION_FIX=1)
+#target_compile_definitions(${PROJECT} PUBLIC PICO_XOSC_STARTUP_DELAY_MULTIPLIER=64)
+#target_compile_definitions(${PROJECT} PUBLIC RESET_INTERFACE_ENABLE_RESET_VIA_BAUD_RATE=0)
 
 if (DEFINED ENV{MNTRE_FIRMWARE_VERSION} AND (NOT MNTRE_FIRMWARE_VERSION))
     set(MNTRE_FIRMWARE_VERSION $ENV{MNTRE_FIRMWARE_VERSION})

@@ -12,7 +12,7 @@
 #include <string.h>
 #include <math.h>
 
-#include "tusb.h"
+//#include "tusb.h"
 
 #include "pico/time.h"
 #include "pico/stdlib.h"
@@ -23,7 +23,7 @@
 #include "hardware/pio.h"
 #include "hardware/watchdog.h"
 
-#include "usb_descriptors.h"
+//#include "usb_descriptors.h"
 #include "oled.h"
 #include "leds.h"
 #include "menu.h"
@@ -84,9 +84,23 @@ static inline uint32_t board_millis(void) {
 
 int main(void)
 {
-  set_sys_clock_48mhz();
+  stdio_init_all();
+  printf("Hello, world!\n");
+  
+  //set_sys_clock_48mhz();
+  i2c_init(I2C_DEV, 400 * 1000);
+  gpio_set_function(PIN_SDA, GPIO_FUNC_I2C);
+  gpio_set_function(PIN_SCL, GPIO_FUNC_I2C);
+  bi_decl(bi_2pins_with_func(PIN_SDA, PIN_SCL, GPIO_FUNC_I2C));
+  gfx_init();
+  gfx_clear();
+  gfx_on();
+  gfx_poke_str(1, 1, "Starting...");
+  gfx_flush();
+  
+  printf("after oled test...\n");
 
-  tusb_init();
+  //tusb_init();
 
   uart_init(UART_ID, BAUD_RATE);
   uart_set_format(UART_ID, DATA_BITS, STOP_BITS, PARITY);
@@ -96,9 +110,17 @@ int main(void)
   gpio_set_function(PIN_UART_RX, GPIO_FUNC_UART);
   unsigned int UART_IRQ = UART_ID == uart0 ? UART0_IRQ : UART1_IRQ;
 
+  printf("after UART init...\n");
+
   gpio_init(PIN_LEDS);
   gpio_set_dir(PIN_LEDS, true); // output
 
+#ifdef VARIANT_RP2350A
+  gpio_init(PIN_LED_EN);
+  gpio_set_dir(PIN_LED_EN, true); // output
+  gpio_put(PIN_LED_EN, 1);
+#endif
+  
   /* Configure columns to output, bring low */
   gpio_init_mask(PIN_COL_MASK);
   gpio_set_dir_out_masked(PIN_COL_MASK);
@@ -113,23 +135,15 @@ int main(void)
   gpio_pull_down(PIN_ROW5);
   gpio_pull_down(PIN_ROW6);
 
-  i2c_init(i2c0, 400 * 1000);
-  gpio_set_function(PIN_SDA, GPIO_FUNC_I2C);
-  gpio_set_function(PIN_SCL, GPIO_FUNC_I2C);
-
-  bi_decl(bi_2pins_with_func(PIN_SDA, PIN_SCL, GPIO_FUNC_I2C));
-
   unsigned char buf[] = {0x7f, 0x00, 0x00, 0x00};
-  i2c_write_blocking(i2c0, ADDR_SENSOR, buf, 2, false);
+  i2c_write_blocking(I2C_DEV, ADDR_SENSOR, buf, 2, false);
 
   buf[0] = 0x05;
   buf[1] = 0x01;
-  i2c_write_blocking(i2c0, ADDR_SENSOR, buf, 2, false);
+  i2c_write_blocking(I2C_DEV, ADDR_SENSOR, buf, 2, false);
 
   led_init();
   led_turn_off();
-
-  gfx_init();
 
   // watchdog crash recovery
   if (watchdog_caused_reboot()) {
@@ -157,13 +171,16 @@ int main(void)
 
   // try to determine system controller power state
   for (int i=0; i<2; i++) {
-    remote_get_voltages(1);
+    //remote_get_voltages(1);
   }
-  if (remote_get_power_state()) {
+  // FIXME
+  //if (remote_get_power_state()) {
     // initial backlight color
     led_set_rgb(KBD_DEFAULT_BACKLIGHT_COLOR);
-  }
+  //}
 
+  printf("after led_set_rgb\n");
+    
   unsigned int cycles = 0;
   while (1) {
     // the sleep time directly influences
@@ -284,7 +301,8 @@ bool tud_hid_trackball_report(uint8_t report_id,
     .pan     = horizontal
   };
 
-  return tud_hid_report(report_id, &report, sizeof(report));
+  // FIXME
+  return true; //tud_hid_report(report_id, &report, sizeof(report));
 }
 
 static uint8_t matrix_debounce[KBD_COLS*KBD_ROWS];
@@ -492,13 +510,13 @@ static int poll_trackball()
 
   buf[0] = 0x02;
 
-  i2c_write_blocking_until(i2c0, ADDR_SENSOR, buf, 1, true, make_timeout_time_ms(2));
-  i2c_read_blocking_until(i2c0, ADDR_SENSOR, buf, 1, false, make_timeout_time_ms(2));
+  i2c_write_blocking_until(I2C_DEV, ADDR_SENSOR, buf, 1, true, make_timeout_time_ms(2));
+  i2c_read_blocking_until(I2C_DEV, ADDR_SENSOR, buf, 1, false, make_timeout_time_ms(2));
 
   if (buf[0] & 0xf0) {
     buf[0] = 0x03;
-    i2c_write_blocking_until(i2c0, ADDR_SENSOR, buf, 1, true, make_timeout_time_ms(2));
-    i2c_read_blocking_until(i2c0, ADDR_SENSOR, buf, 2, false, make_timeout_time_ms(2));
+    i2c_write_blocking_until(I2C_DEV, ADDR_SENSOR, buf, 1, true, make_timeout_time_ms(2));
+    i2c_read_blocking_until(I2C_DEV, ADDR_SENSOR, buf, 2, false, make_timeout_time_ms(2));
 
     tb_nx = (double)((int8_t)buf[0]);
     tb_ny = (double)((int8_t)buf[1]);
@@ -508,6 +526,8 @@ static int poll_trackball()
   return 0;
 }
 
+// FIXME
+/*
 static void send_hid_report(uint8_t report_id)
 {
   if (!tud_hid_ready()) {
@@ -548,28 +568,6 @@ static void send_hid_report(uint8_t report_id)
       }
     }
     break;
-
-    case REPORT_ID_CONSUMER_CONTROL:
-    {
-      // use to avoid send multiple consecutive zero report
-      /*static bool has_consumer_key = false;
-
-      if ( btn )
-      {
-        // volume down
-        uint16_t volume_down = HID_USAGE_CONSUMER_VOLUME_DECREMENT;
-        tud_hid_report(REPORT_ID_CONSUMER_CONTROL, &volume_down, 2);
-        has_consumer_key = true;
-      }else
-      {
-        // send empty key report (release key) if previously has key pressed
-        uint16_t empty_key = 0;
-        if (has_consumer_key) tud_hid_report(REPORT_ID_CONSUMER_CONTROL, &empty_key, 2);
-        has_consumer_key = false;
-        }*/
-    }
-    break;
-
     case REPORT_ID_GAMEPAD:
     {
       // TODO: later
@@ -578,16 +576,17 @@ static void send_hid_report(uint8_t report_id)
 
     default: break;
   }
-}
+}*/
 
 // Every 5ms, we will sent 1 report for each HID profile (keyboard, mouse etc ..)
 // tud_hid_report_complete_cb() is used to send the next report after previous one is complete
 static bool hid_task(__unused struct repeating_timer *t)
 {
-  tud_task();
+  // FIXME
+  //tud_task();
   pressed_keys = process_keyboard(pressed_scancodes);
 
-  send_hid_report(REPORT_ID_KEYBOARD);
+  //send_hid_report(REPORT_ID_KEYBOARD);
   hid_task_counter++;
 
   // timer should continue calling us
@@ -597,7 +596,8 @@ static bool hid_task(__unused struct repeating_timer *t)
 // Invoked when sent REPORT successfully to host
 // Application can use this to send the next report
 // Note: For composite reports, report[0] is report ID
-void tud_hid_report_complete_cb(uint8_t instance, uint8_t const* report, uint16_t len)
+// FIXME
+/*void tud_hid_report_complete_cb(uint8_t instance, uint8_t const* report, uint16_t len)
 {
   (void) instance;
   (void) len;
@@ -607,12 +607,12 @@ void tud_hid_report_complete_cb(uint8_t instance, uint8_t const* report, uint16_
   if (next_report_id < REPORT_ID_COUNT) {
     send_hid_report(next_report_id);
   }
-}
+  }*/
 
 // Invoked when received GET_REPORT control request
 // Application must fill buffer report's content and return its length.
 // Return zero will cause the stack to STALL request
-uint16_t tud_hid_get_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_t report_type, uint8_t* buffer, uint16_t reqlen)
+/*uint16_t tud_hid_get_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_t report_type, uint8_t* buffer, uint16_t reqlen)
 {
   // TODO not Implemented
   (void) instance;
@@ -622,7 +622,7 @@ uint16_t tud_hid_get_report_cb(uint8_t instance, uint8_t report_id, hid_report_t
   (void) reqlen;
 
   return 0;
-}
+  }*/
 
 #define CMD_TEXT_FRAME      "OLED"     // fill the screen with a single wall of text
 #define CMD_OLED_CLEAR      "WCLR"     // clear the oled display
@@ -637,7 +637,10 @@ uint16_t tud_hid_get_report_cb(uint8_t instance, uint8_t report_id, hid_report_t
 
 // Invoked when received SET_REPORT control request or
 // received data on OUT endpoint ( Report ID = 0, Type = 0 )
-void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_t report_type, uint8_t const* buffer, uint16_t bufsize)
+// FIXME hid_report_type_t
+// FIXME
+#define HID_REPORT_TYPE_OUTPUT 2
+void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, int report_type, uint8_t const* buffer, uint16_t bufsize)
 {
   (void) instance;
   (void) buffer;

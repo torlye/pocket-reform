@@ -14,13 +14,13 @@ static void print_src_fixed_pdo(int number, uint32_t pdo)
     unsigned int tmp;
 
     /* Voltage */
-    unsigned int voltage = (pdo & PD_PDO_SRC_FIXED_VOLTAGE) >> PD_PDO_SRC_FIXED_VOLTAGE_SHIFT;
+    unsigned int voltage = PD_PDO_SRC_FIXED_VOLTAGE_GET(pdo);
 
     /* Maximum Current */
-    unsigned int i_a = (pdo & PD_PDO_SRC_FIXED_CURRENT) >> PD_PDO_SRC_FIXED_CURRENT_SHIFT;
+    unsigned int current = PD_PDO_SRC_FIXED_CURRENT_GET(pdo);
 
     printf("pd_src_fixed_pdo#%d: V=%d.%02d Imax=%d.%02d",
-        number, PD_PDV_V(voltage), PD_PDV_CV(voltage), PD_PDI_A(i_a), PD_PDI_CA(i_a));
+        number, PD_PDV_V(voltage), PD_PDV_CV(voltage), PD_PDI_A(current), PD_PDI_CA(current));
 
     /* Peak Current */
     tmp = (pdo & PD_PDO_SRC_FIXED_PEAK_CURRENT) >> PD_PDO_SRC_FIXED_PEAK_CURRENT_SHIFT;
@@ -88,7 +88,7 @@ union pd_msg tx;
 int tx_id_count = 0;
 union pd_msg rx_msg;
 // in 10mA units
-int requested_current = 0;
+unsigned int requested_current = 0;
 
 int factory_turn_on_once = 1;
 
@@ -121,6 +121,48 @@ static void pd_set_fusb_switches() {
   fusb_write_byte(FUSB_SWITCHES1, buf);
 }
 
+struct picked_pdo {
+  unsigned int pdo_num;             // PDO number suitable for PD message. 0 = invalid.
+  unsigned int voltage;             // V
+  unsigned int max_current;         // 10mA
+};
+
+static struct picked_pdo pick_pdo(union pd_msg *msg) {
+  unsigned int numobj = PD_NUMOBJ_GET(msg);
+  struct picked_pdo picked = {0};
+
+  for (unsigned int i = 0; i < numobj; i++) {
+    uint32_t pdo = msg->obj[i];
+
+    if ((pdo & PD_PDO_TYPE) == PD_PDO_TYPE_FIXED) {
+      print_src_fixed_pdo(i + 1, pdo);
+
+      unsigned int voltage = PD_PDV_V(PD_PDO_SRC_FIXED_VOLTAGE_GET(pdo));
+      if (voltage > 20) {
+        // our charger IC is limited to 20V input.
+        continue;
+      }
+
+      // PD reports power in 10mA steps
+      unsigned int max_current = PD_PDO_SRC_FIXED_CURRENT_GET(pdo);
+      if (max_current < 10) {
+        // less than 100mA (@20V = 2W) is not good enough for charging or running, do not bother.
+        continue;
+      }
+
+      if (voltage > picked.voltage) {
+        picked.pdo_num = i + 1;
+        picked.voltage = voltage;
+        picked.max_current = max_current;
+      }
+    } else {
+      printf("# [pd] not a fixed PDO: 0x%08lx\n", pdo);
+    }
+  }
+
+  return picked;
+}
+
 // Returns if state was "changed" in some form and we expect to maybe be called again.
 static bool pd_comm_pd(battery_info_s* battery_info) {
   if (pd_datarole_changed) {
@@ -133,43 +175,26 @@ static bool pd_comm_pd(battery_info_s* battery_info) {
   }
 
   uint8_t msgtype = PD_MSGTYPE_GET(&rx_msg);
-  uint8_t numobj = PD_NUMOBJ_GET(&rx_msg);
   uint8_t msgrole = PD_POWERROLE_GET(&rx_msg);
-  printf("# [pd] remote responds msg type: 0x%x msgrole: %d numobj: %d\n", msgtype, msgrole, numobj);
+  printf("# [pd] remote responds msg type: 0x%x msgrole: %d\n", msgtype, msgrole);
   if (msgrole == PD_POWERROLE_SOURCE && msgtype == PD_MSGTYPE_SOURCE_CAPABILITIES) {
-    if (numobj == 0) {
+    struct picked_pdo picked = pick_pdo(&rx_msg);
+    if (picked.pdo_num == 0) {
       // FIXME: trigger a reset without sending a message first / or send reject?
       // TODO: figure out if this is actually caused by an overrun of the FUSB RX FIFO
       //usbpd_state = PD_STATE_SETUP;
+      unsigned int numobj = PD_NUMOBJ_GET(&rx_msg);
+      printf("# [pd] no suitable PDO found, numobj=%d\n", numobj);
     } else {
-      int max_voltage = 0;
-      int power_objects = 0;
-      int pdo_current = 0;
-      for (int i=0; i<numobj; i++) {
-        uint32_t pdo = rx_msg.obj[i];
-
-        if ((pdo & PD_PDO_TYPE) == PD_PDO_TYPE_FIXED) {
-          print_src_fixed_pdo(i + 1, pdo);
-          int voltage = PD_PDV_V(PD_PDO_SRC_FIXED_VOLTAGE_GET(pdo));
-          // PD reports power in 10mA steps
-          int current = PD_PDO_SRC_FIXED_CURRENT_GET(pdo);
-          if (voltage > max_voltage && voltage <= 20 && current >= 10) {
-            power_objects = i+1;
-            max_voltage = voltage;
-            pdo_current = current;
-          }
-        } else {
-          printf("# [pd] not a fixed PDO: 0x%08lx\n", pdo);
-        }
-      }
 
       // FIXME: what about headroom for passing power to other USB devices?
-      requested_current = pdo_current;
+      requested_current = picked.max_current;
       if (requested_current > 300) {
         requested_current = 300;
       }
 
-      printf("# [pd] requesting PO %d, %d V at %d mA\n", power_objects, max_voltage, requested_current * 10);
+      printf("# [pd] requesting PDO %u, %u V (max %u mA) at %u mA\n", picked.pdo_num, picked.voltage, picked.max_current * 10, requested_current * 10);
+
       tx.hdr = PD_MSGTYPE_REQUEST | PD_NUMOBJ(1) | pd_datarole | (pd_powerrole << PD_HDR_POWERROLE_SHIFT) | PD_SPECREV_2_0;
 
       tx.hdr &= ~PD_HDR_MESSAGEID;
@@ -179,7 +204,7 @@ static bool pd_comm_pd(battery_info_s* battery_info) {
         | PD_RDO_FV_CURRENT_SET(requested_current)
         | PD_RDO_USB_COMMS
         | PD_RDO_NO_USB_SUSPEND
-        | PD_RDO_OBJPOS_SET(power_objects);
+        | PD_RDO_OBJPOS_SET(picked.pdo_num);
 
       fusb_send_message(&tx);
 
@@ -222,9 +247,11 @@ static bool pd_comm_pd(battery_info_s* battery_info) {
     }
     return true;
   } else if (msgrole != PD_POWERROLE_SOURCE) {
+    unsigned int numobj = PD_NUMOBJ_GET(&rx_msg);
     printf("# [pd] discarding non-source msg type: 0x%x numobj: %d\n", msgtype, numobj);
     return true;
   } else {
+    unsigned int numobj = PD_NUMOBJ_GET(&rx_msg);
     printf("# [pd] msg type: 0x%x numobj: %d\n", msgtype, numobj);
     tx.hdr = PD_MSGTYPE_REJECT | pd_datarole | (pd_powerrole << PD_HDR_POWERROLE_SHIFT);
     fusb_send_message(&tx);

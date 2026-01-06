@@ -8,6 +8,7 @@
 #include "pd_com.h"
 // FIXME: do not include the kitchen sink here
 #include "sysctl.h"
+#include "mntre_usbids.h"
 
 static void print_src_fixed_pdo(int number, uint32_t pdo)
 {
@@ -181,6 +182,12 @@ static struct picked_pdo pick_pdo(union pd_msg *msg) {
   return picked;
 }
 
+static void pd_send_not_supported() {
+  printf("# [pd] tx PD_MSGTYPE_C_NOT_SUPPORTED\n");
+  tx.hdr = PD_MSGTYPE_C_NOT_SUPPORTED | pd_datarole | (pd_powerrole << PD_HDR_POWERROLE_SHIFT);
+  fusb_send_message(&tx);
+}
+
 // Returns if state was "changed" in some form and we expect to maybe be called again.
 static bool pd_comm_pd(battery_info_s* battery_info) {
   if (pd_datarole_changed) {
@@ -192,87 +199,165 @@ static bool pd_comm_pd(battery_info_s* battery_info) {
     return false;
   }
 
-  uint8_t msgtype = PD_MSGTYPE_GET(&rx_msg);
-  uint8_t msgrole = PD_POWERROLE_GET(&rx_msg);
-  printf("# [pd] remote responds msg type: 0x%x msgrole: %d\n", msgtype, msgrole);
-  if (msgrole == PD_POWERROLE_SOURCE && msgtype == PD_MSGTYPE_SOURCE_CAPABILITIES) {
-    struct picked_pdo picked = pick_pdo(&rx_msg);
-    if (picked.pdo_num == 0) {
-      // FIXME: trigger a reset without sending a message first / or send reject?
-      // TODO: figure out if this is actually caused by an overrun of the FUSB RX FIFO
-      //usbpd_state = PD_STATE_SETUP;
-      unsigned int numobj = PD_NUMOBJ_GET(&rx_msg);
-      printf("# [pd] no suitable PDO found, numobj=%d\n", numobj);
-    } else {
+  unsigned int msgtype = PD_MSGTYPE_GET(&rx_msg);
+  unsigned int msgrole = PD_POWERROLE_GET(&rx_msg);
+  unsigned int numobj = PD_NUMOBJ_GET(&rx_msg);
 
-      // FIXME: what about headroom for passing power to other USB devices?
-      requested_current = picked.max_current;
-      if (requested_current > 300) {
-        requested_current = 300;
+  if (msgrole == PD_POWERROLE_SOURCE) {
+
+    if (rx_msg.hdr & PD_HDR_EXT) {
+      // extended messages.
+      pd_send_not_supported();
+      return false;
+    }
+
+    if (numobj == 0) {
+      // control messages
+      switch (msgtype) {
+      case PD_MSGTYPE_C_GOODCRC:
+        // TODO: we should care about these in some situations.
+        return false;
+
+      case PD_MSGTYPE_C_ACCEPT:
+        printf("# [pd] charger accepted our requested PDO.\n");
+        return true;
+
+      case PD_MSGTYPE_C_PS_RDY:
+        // power supply is ready
+        printf("# [pd] power supply ready.\n");
+        charger_enable_charge(requested_current);
+        return true;
+
+      case PD_MSGTYPE_C_DR_SWAP:
+        // other side wants to swap data role.
+        if (pd_datarole == PD_DATAROLE_DFP) {
+          // we cannot switch away from DFP role. reject the message
+          printf("# [pd] rejecting data-role swap\n");
+          tx.hdr = PD_MSGTYPE_C_REJECT | pd_datarole | (pd_powerrole << PD_HDR_POWERROLE_SHIFT);
+          fusb_send_message(&tx);
+        } else {
+          // we started as UFP. Partner wants to become UFP.
+          if (!battery_info->som_is_powered) {
+            // SOM is not powered, so it will not act as a host. Tell partner to try later.
+            printf("# [pd] replying with wait to data-role swap request\n");
+            tx.hdr = PD_MSGTYPE_C_WAIT | pd_datarole | (pd_powerrole << PD_HDR_POWERROLE_SHIFT);
+            fusb_send_message(&tx);
+          } else {
+            // Accept. We become the DFP (host).
+            printf("# [pd] accepting data-role swap\n");
+            // TODO: switch pd_dr_role only after GOOD_CRC
+            tx.hdr = PD_MSGTYPE_C_ACCEPT | pd_datarole | (pd_powerrole << PD_HDR_POWERROLE_SHIFT);
+            fusb_send_message(&tx);
+            pd_datarole = PD_DATAROLE_DFP;
+            pd_datarole_changed = true;
+          }
+        }
+        return true;
+
+      case PD_MSGTYPE_C_PR_SWAP:
+        // power role swap. not implemented.
+        printf("# [pd] rejecting power-role swap\n");
+        tx.hdr = PD_MSGTYPE_C_REJECT | pd_datarole | (pd_powerrole << PD_HDR_POWERROLE_SHIFT);
+        fusb_send_message(&tx);
+        return false;
+
+      case PD_MSGTYPE_C_VCONN_SWAP:
+      default:
+        pd_send_not_supported();
+        return false;
       }
 
-      printf("# [pd] requesting PDO %u, %u V (max %u mA) at %u mA\n", picked.pdo_num, picked.voltage, picked.max_current * 10, requested_current * 10);
+    } else if (msgtype != PD_MSGTYPE_D_VENDOR_DEFINED) {
+      // "standard" data messages
+      // data messages
+      switch (msgtype) {
+      case PD_MSGTYPE_D_SOURCE_CAPABILITIES:
+      {
+        struct picked_pdo picked = pick_pdo(&rx_msg);
+        // FIXME: what about headroom for passing power to other USB devices?
+        requested_current = picked.max_current;
+        if (requested_current > 300) {
+          requested_current = 300;
+        }
 
-      tx.hdr = PD_MSGTYPE_REQUEST | PD_NUMOBJ(1) | pd_datarole | (pd_powerrole << PD_HDR_POWERROLE_SHIFT) | PD_SPECREV_2_0;
+        printf("# [pd] requesting PDO %u, %u V (max %u mA) at %u mA\n", picked.pdo_num, picked.voltage, picked.max_current * 10, requested_current * 10);
 
-      tx.hdr &= ~PD_HDR_MESSAGEID;
-      tx.hdr |= (tx_id_count % 8) << PD_HDR_MESSAGEID_SHIFT;
+        tx.hdr = PD_MSGTYPE_D_REQUEST | PD_NUMOBJ(1) | pd_datarole | (pd_powerrole << PD_HDR_POWERROLE_SHIFT) | PD_SPECREV_2_0;
 
-      tx.obj[0] = PD_RDO_FV_MAX_CURRENT_SET(requested_current)
-        | PD_RDO_FV_CURRENT_SET(requested_current)
-        | PD_RDO_USB_COMMS
-        | PD_RDO_NO_USB_SUSPEND
-        | PD_RDO_OBJPOS_SET(picked.pdo_num);
+        tx.hdr &= ~PD_HDR_MESSAGEID;
+        tx.hdr |= (tx_id_count % 8) << PD_HDR_MESSAGEID_SHIFT;
 
-      fusb_send_message(&tx);
+        tx.obj[0] = PD_RDO_FV_MAX_CURRENT_SET(requested_current)
+          | PD_RDO_FV_CURRENT_SET(requested_current)
+          | PD_RDO_USB_COMMS
+          | PD_RDO_NO_USB_SUSPEND
+          | PD_RDO_OBJPOS_SET(picked.pdo_num);
 
-      tx_id_count++;
-    }
-    return true;
-  } else if (msgrole == PD_POWERROLE_SOURCE && msgtype == PD_MSGTYPE_ACCEPT) {
-    printf("# [pd] charger accepted our requested PDO.\n");
-    return true;
-  } else if (msgrole == PD_POWERROLE_SOURCE && msgtype == PD_MSGTYPE_PS_RDY) {
-    // power supply is ready
-    printf("# [pd] power supply ready.\n");
+        fusb_send_message(&tx);
 
-    charger_enable_charge(requested_current);
+        tx_id_count++;
 
-    return true;
-  } else if (msgrole == PD_POWERROLE_SOURCE && msgtype == PD_MSGTYPE_DR_SWAP) {
-    // other side wants to swap data role.
-    if (pd_datarole == PD_DATAROLE_DFP) {
-      // we cannot switch away from DFP role. reject the message
-      printf("# [pd] rejecting data-role swap\n");
-      tx.hdr = PD_MSGTYPE_REJECT | pd_datarole | (pd_powerrole << PD_HDR_POWERROLE_SHIFT);
-      fusb_send_message(&tx);
+        return true;
+      }
+
+      case PD_MSGTYPE_D_REQUEST:  // only from sinks
+      default:
+        pd_send_not_supported();
+        return false;
+      }
     } else {
-      // we started as UFP. Partner wants to become UFP.
-      if (!battery_info->som_is_powered) {
-        // SOM is not powered, so it will not act as a host. Tell partner to try later.
-        printf("# [pd] replying with wait to data-role swap request\n");
-        tx.hdr = PD_MSGTYPE_WAIT | pd_datarole | (pd_powerrole << PD_HDR_POWERROLE_SHIFT);
-        fusb_send_message(&tx);
-      } else {
-        // Accept. We become the DFP (host).
-        printf("# [pd] accepting data-role swap\n");
-        // TODO: switch pd_dr_role only after GOOD_CRC
-        tx.hdr = PD_MSGTYPE_ACCEPT | pd_datarole | (pd_powerrole << PD_HDR_POWERROLE_SHIFT);
-        fusb_send_message(&tx);
-        pd_datarole = PD_DATAROLE_DFP;
-        pd_datarole_changed = true;
+      // "Vendor"-specific data message
+      uint32_t vdm_header = rx_msg.obj[0];
+      uint16_t vsid = (vdm_header >> PD_VSID__SHIFT) & 0xFFFF;
+      printf("# [pd] vdm_header = 0x%lx vsid: %x\n", vdm_header, vsid);
+
+      if ((vdm_header & PD_VDM_HEADER_STRUCTURED) == 0) {
+        // Unstructured message, which we cannot parse.
+        pd_send_not_supported();
+        return false;
+      }
+      if ((vdm_header & 0x00E0) != 0) {
+        // non-REQ message, which we cannot parse. ignore it.
+        return false;
+      }
+
+      switch (vsid) {
+      case PD_VSID_USBPD:  // USB-PD Standard "Vendor" ID
+      {
+        switch (vdm_header & 0x1F) {
+        case PD_VDM_USBPD_DISCOVER_IDENTITY:
+          printf("# [pd] replying to Discover Identity\n");
+          tx.hdr = PD_MSGTYPE_D_VENDOR_DEFINED | PD_NUMOBJ(4) | pd_datarole | (pd_powerrole << PD_HDR_POWERROLE_SHIFT) | PD_SPECREV_2_0;
+          tx.hdr &= ~PD_HDR_MESSAGEID;
+          tx.hdr |= (tx_id_count % 8) << PD_HDR_MESSAGEID_SHIFT;
+
+          // VDM Header
+          tx.obj[0] = (PD_VSID_USBPD << PD_VSID__SHIFT) | PD_VDM_HEADER_STRUCTURED | PD_VDM_HEADER_TYPE_ACK | PD_VDM_USBPD_DISCOVER_IDENTITY;
+          // ID VDO: USB Host capable; Product Type (DFP) = 010; Connector Type = 10; plus VID
+          tx.obj[1] = 0x81400000 | USB_VID_PIDCODES;
+          // Certification stat VDO
+          tx.obj[2] = 0;
+          // Product VDO: v1.0; plus PID
+          tx.obj[3] = 0x01000000 | USB_PID_MNT_POCKET_REFORM_SYSCTL_10;
+
+          fusb_send_message(&tx);
+          tx_id_count++;
+
+          return true;
+        default:
+          pd_send_not_supported();
+          return false;
+        }
+      }
+      default:
+        pd_send_not_supported();
+        return false;
       }
     }
-    return true;
-  } else if (msgrole != PD_POWERROLE_SOURCE) {
-    unsigned int numobj = PD_NUMOBJ_GET(&rx_msg);
-    printf("# [pd] discarding non-source msg type: 0x%x numobj: %d\n", msgtype, numobj);
-    return true;
+
   } else {
-    unsigned int numobj = PD_NUMOBJ_GET(&rx_msg);
-    printf("# [pd] msg type: 0x%x numobj: %d\n", msgtype, numobj);
-    tx.hdr = PD_MSGTYPE_REJECT | pd_datarole | (pd_powerrole << PD_HDR_POWERROLE_SHIFT);
-    fusb_send_message(&tx);
+    // msgrole == PD_POWERROLE_SINK
+    pd_send_not_supported();
     return false;
   }
 }
@@ -477,7 +562,7 @@ bool pd_tick(battery_info_s* battery_info) {
         // TODO: fix timer.
         pd_sent_soft_reset = true;
         printf("# [pd] PD_STATE_ATTACHED_SNK timeout while handshaking, sending soft reset\n");
-        tx.hdr = PD_MSGTYPE_SOFT_RESET | pd_datarole | (pd_powerrole << PD_HDR_POWERROLE_SHIFT);
+        tx.hdr = PD_MSGTYPE_C_SOFT_RESET | pd_datarole | (pd_powerrole << PD_HDR_POWERROLE_SHIFT);
         fusb_send_message(&tx);
       }
     }
@@ -502,8 +587,8 @@ bool pd_tick(battery_info_s* battery_info) {
 
     if (t == 1 || t % 10000 == 0) {
 #if 0
-      printf("# [pd] state PD_STATE_UNATTACHED_SRC - sending PD_MSGTYPE_SOURCE_CAPABILITIES\n");
-      tx.hdr = PD_MSGTYPE_SOURCE_CAPABILITIES | PD_NUMOBJ(1) | pd_datarole | (pd_powerrole << PD_HDR_POWERROLE_SHIFT);
+      printf("# [pd] state PD_STATE_UNATTACHED_SRC - sending PD_MSGTYPE_D_SOURCE_CAPABILITIES\n");
+      tx.hdr = PD_MSGTYPE_D_SOURCE_CAPABILITIES | PD_NUMOBJ(1) | pd_datarole | (pd_powerrole << PD_HDR_POWERROLE_SHIFT);
       tx.hdr |= (tx_id_count % 8) << PD_HDR_MESSAGEID_SHIFT;
       tx.obj[0] = 0x26019064;  // 5V/1A with DRP and DRD
       fusb_send_message(&tx);

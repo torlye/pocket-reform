@@ -125,6 +125,7 @@ struct picked_pdo {
   unsigned int pdo_num;             // PDO number suitable for PD message. 0 = invalid.
   unsigned int voltage;             // V
   unsigned int max_current;         // 10mA
+  unsigned int max_power;           // 10mW
 };
 
 static struct picked_pdo pick_pdo(union pd_msg *msg) {
@@ -150,10 +151,27 @@ static struct picked_pdo pick_pdo(union pd_msg *msg) {
         continue;
       }
 
-      if (voltage > picked.voltage) {
+      unsigned int max_power = voltage * max_current;
+
+      // PDO selection logic:
+      // 1) try to pick a PDO with >= 9V. Below that, charging is slow,
+      //    especially on machines with the diode on the input path, forcing the MP2650 into the
+      //    slow path.
+      // 2) try to pick the highest available power at the highest voltage.
+      //    give some leeway for slightly smaller power at the higher voltage. this can be
+      //    necessary with some chargers, f.e. loaded Apple 35W 2-port charger can report
+      //    slightly higher power at 9V than at 20V. but then we still want 20V.
+      if (voltage > picked.voltage
+          && (
+             picked.voltage < 9
+          || picked.max_power < 10
+          || max_power >= (picked.max_power - 10)
+        )
+      ) {
         picked.pdo_num = i + 1;
         picked.voltage = voltage;
         picked.max_current = max_current;
+        picked.max_power = max_power;
       }
     } else {
       printf("# [pd] not a fixed PDO: 0x%08lx\n", pdo);

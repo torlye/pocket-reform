@@ -12,6 +12,7 @@
 #include "tusb.h"
 #include "reform_stdio_usb.h"
 
+static uint8_t mps_fault_last = 0;
 battery_info_s battery_info = {0};
 int disp_bl_percent = 100;
 
@@ -119,6 +120,7 @@ static void derive_emergency_charge_necessary(void) {
 void charger_init()
 {
   // TODO: check all MP2650 registers, esp. 4, 7, b
+  mps_fault_last = 0;
 
   mps_read_buf(MPS_REGSTART_STATUS, sizeof(mps_reg_status.all_regs), mps_reg_status.all_regs);
   derive_emergency_charge_necessary();
@@ -187,6 +189,7 @@ void charger_enable_charge(int current) {
   mps_reg_config.config0.chg_en = 1;
   mps_reg_config.config0.susp_en = 0;
   mps_write_byte(MPS_REG_CONFIG0, mps_reg_config.config0.reg_byte);
+  mps_fault_last = 0;
 
   gpio_put(PIN_LED_R, 1);
 }
@@ -402,6 +405,9 @@ void charger_dump(battery_info_s *battery_info)
   }
 
   mps_read_buf(MPS_REGSTART_STATUS, sizeof(mps_reg_status.all_regs), mps_reg_status.all_regs);
+  if (mps_reg_status.fault.reg_byte != 0) {
+    mps_fault_last = mps_reg_status.fault.reg_byte;
+  }
 
   // Read ADC values and update stuff every 100ms
   if (battery_info->ticks % 1000 != 0) {
@@ -799,12 +805,13 @@ void loop()
   if (battery_info.ticks % 10000 == 0)
   {
     // TODO: print adc_charge_c adc_discharge_c
-    printf("# %s %s %s chg=%1x mps_flt=%02x input=%dmV@%dmA charge=%dmA discharge=%dmA p=%0.2fW ttempty=%umin\n",
+    printf("# %s %s %s chg=%1x mps_flt=%02x/%02x input=%dmV@%dmA charge=%dmA discharge=%dmA p=%0.2fW ttempty=%umin\n",
             battery_info.som_is_powered ? "ON" : "OFF",
             mps_reg_status.status.acok ? "AC" : "BAT",
             mps_reg_config.config0.chg_en ? "CHG" : "",
             mps_reg_status.status.chg_stat,
             mps_reg_status.fault.reg_byte,
+            mps_fault_last,
             mps_word_to_12800(mps_reg_adc.input_v),
             mps_word_to_3200(mps_reg_adc.input_i),
             mps_word_to_6400(mps_reg_adc.bat_charge_i),

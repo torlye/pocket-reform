@@ -3453,6 +3453,163 @@
 			)
 			(embedded_fonts no)
 		)
+		(symbol "reform2:AP22815"
+			(pin_names
+				(offset 1.016)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "U"
+				(at 0 -8.89 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "AP22815"
+				(at 0 8.89 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 -7.62 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 -7.62 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "AP22815_0_0"
+				(pin power_in line
+					(at -8.89 5.08 0)
+					(length 2.54)
+					(name "IN"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "5"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin bidirectional line
+					(at -8.89 0 0)
+					(length 2.54)
+					(name "FLG"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at -8.89 -5.08 0)
+					(length 2.54)
+					(name "EN"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin power_out line
+					(at 8.89 5.08 180)
+					(length 2.54)
+					(name "OUT"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin power_in line
+					(at 8.89 -5.08 180)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(symbol "AP22815_0_1"
+				(rectangle
+					(start -6.35 7.62)
+					(end 6.35 -7.62)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 	)
 	(text "SWD Debug"
 		(exclude_from_sim no)
@@ -3464,6 +3621,17 @@
 			(justify left bottom)
 		)
 		(uuid "02303bc9-e929-4e1e-9aa9-ec48c7dc1616")
+	)
+	(text "rated to 28V"
+		(exclude_from_sim no)
+		(at 279.4 142.24 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "0d323cc7-8ef0-4463-ad18-115873cbf9ba")
 	)
 	(text "Sensor Connector"
 		(exclude_from_sim no)
@@ -3518,6 +3686,17 @@
 		)
 		(uuid "40dd50e9-969a-4e70-88b8-ce0b380e0498")
 	)
+	(text "SOURCE"
+		(exclude_from_sim no)
+		(at 247.65 135.89 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "42e98083-2ee7-4701-8b0f-2b11bae1b5b4")
+	)
 	(text "changed to 1k!"
 		(exclude_from_sim no)
 		(at 24.384 188.722 0)
@@ -3549,6 +3728,17 @@
 			(justify left bottom)
 		)
 		(uuid "c8909b67-f122-420f-a0b0-95477e2c026b")
+	)
+	(text "WARNING: do not use B version by\naccident (active low)"
+		(exclude_from_sim no)
+		(at 250.19 125.73 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "e1895912-bf26-4402-afde-f1578c3871ad")
 	)
 	(junction
 		(at 34.29 115.57)
@@ -3653,6 +3843,12 @@
 		(uuid "56b6680c-c9c1-4b8f-96a1-14c90a994f5e")
 	)
 	(junction
+		(at 256.54 138.43)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "57fc3897-d314-42c5-abf7-60410d2a1b74")
+	)
+	(junction
 		(at 34.29 50.8)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -3719,6 +3915,12 @@
 		(uuid "9b24afff-c21e-44a0-805c-b0eafe49ec3c")
 	)
 	(junction
+		(at 280.67 157.48)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "9bd0eccb-94aa-45d8-8fce-f8f005163ed3")
+	)
+	(junction
 		(at 60.96 264.16)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -3747,6 +3949,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "c11ac607-93bd-4dfb-a6f4-41a8faea47ef")
+	)
+	(junction
+		(at 256.54 148.59)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "c3ae6edf-5b73-4459-948d-6342dd6f2829")
 	)
 	(junction
 		(at 46.99 26.67)
@@ -3829,10 +4037,6 @@
 	(no_connect
 		(at 118.11 82.55)
 		(uuid "d43b1ab0-ef23-486a-a69c-8c3375dc4cb7")
-	)
-	(no_connect
-		(at 118.11 138.43)
-		(uuid "d712fb38-7e70-45b2-90bb-57ee69e3a522")
 	)
 	(no_connect
 		(at 144.78 109.22)
@@ -3997,6 +4201,16 @@
 			(type default)
 		)
 		(uuid "13210988-dd03-4e66-87a3-79ce3cec0572")
+	)
+	(wire
+		(pts
+			(xy 153.67 39.37) (xy 153.67 43.18)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "15c207ae-7dc0-4a53-aa9b-2dffa67e10e1")
 	)
 	(wire
 		(pts
@@ -4230,6 +4444,16 @@
 	)
 	(wire
 		(pts
+			(xy 280.67 138.43) (xy 298.45 138.43)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "30825641-3f33-4287-b6b9-1dfc9ffb7c6e")
+	)
+	(wire
+		(pts
 			(xy 109.22 49.53) (xy 109.22 53.34)
 		)
 		(stroke
@@ -4357,6 +4581,16 @@
 			(type default)
 		)
 		(uuid "4234fee9-8467-4d56-b866-4ce52a7bbcf4")
+	)
+	(wire
+		(pts
+			(xy 256.54 148.59) (xy 262.89 148.59)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "42ab09c4-783f-4730-a271-420853e90777")
 	)
 	(wire
 		(pts
@@ -4720,6 +4954,16 @@
 	)
 	(wire
 		(pts
+			(xy 246.38 135.89) (xy 246.38 138.43)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "7deb6e17-ff3e-4922-b637-9be1cb3527f0")
+	)
+	(wire
+		(pts
 			(xy 17.78 115.57) (xy 17.78 124.46)
 		)
 		(stroke
@@ -4800,6 +5044,16 @@
 	)
 	(wire
 		(pts
+			(xy 246.38 138.43) (xy 256.54 138.43)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "86e04de4-717e-411d-a283-2e6baa854297")
+	)
+	(wire
+		(pts
 			(xy 157.48 167.64) (xy 157.48 165.1)
 		)
 		(stroke
@@ -4877,6 +5131,16 @@
 			(type default)
 		)
 		(uuid "95fba7fe-0e4e-4997-83e0-ea4609953133")
+	)
+	(wire
+		(pts
+			(xy 280.67 157.48) (xy 256.54 157.48)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "96fc1322-52cd-4e05-aed1-c3e9b564ba8b")
 	)
 	(wire
 		(pts
@@ -5130,6 +5394,16 @@
 	)
 	(wire
 		(pts
+			(xy 280.67 148.59) (xy 280.67 157.48)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b92e861d-39f3-47a0-913e-60b86e2c53c3")
+	)
+	(wire
+		(pts
 			(xy 87.63 33.02) (xy 87.63 35.56)
 		)
 		(stroke
@@ -5207,6 +5481,26 @@
 			(type default)
 		)
 		(uuid "c3efb095-8de2-4f5d-b00c-1dd97f8da361")
+	)
+	(wire
+		(pts
+			(xy 256.54 138.43) (xy 262.89 138.43)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c5f91494-c747-473f-85bc-7fa5eac84366")
+	)
+	(wire
+		(pts
+			(xy 118.11 138.43) (xy 121.92 138.43)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "caa9ee19-777d-44a1-b822-5e2437342565")
 	)
 	(wire
 		(pts
@@ -5390,6 +5684,16 @@
 	)
 	(wire
 		(pts
+			(xy 280.67 157.48) (xy 280.67 160.02)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "df646c63-81a9-4efc-b81f-8a283e73b72c")
+	)
+	(wire
+		(pts
 			(xy 26.67 110.49) (xy 21.59 110.49)
 		)
 		(stroke
@@ -5400,6 +5704,16 @@
 	)
 	(wire
 		(pts
+			(xy 262.89 143.51) (xy 256.54 143.51)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "dfd727fb-cf77-4145-b911-f4caabc5e87b")
+	)
+	(wire
+		(pts
 			(xy 163.83 222.25) (xy 170.18 222.25)
 		)
 		(stroke
@@ -5407,6 +5721,16 @@
 			(type default)
 		)
 		(uuid "e0206d7b-aed9-4c9b-8962-08416784c947")
+	)
+	(wire
+		(pts
+			(xy 247.65 148.59) (xy 256.54 148.59)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e353ed0c-34f5-4a9b-b73d-f2196a50aec4")
 	)
 	(wire
 		(pts
@@ -5467,6 +5791,16 @@
 			(type default)
 		)
 		(uuid "e971e23d-e347-4c82-85fc-2cb444b6e9d4")
+	)
+	(wire
+		(pts
+			(xy 153.67 31.75) (xy 153.67 34.29)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "eab0981f-1755-42ef-9040-9120f0ceb9c8")
 	)
 	(wire
 		(pts
@@ -5547,6 +5881,16 @@
 			(type default)
 		)
 		(uuid "fa64904e-b46c-4314-8de9-bd226c615d4c")
+	)
+	(wire
+		(pts
+			(xy 256.54 157.48) (xy 256.54 153.67)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "fb1bfe22-5716-40b7-b3db-7c64cefe20d4")
 	)
 	(wire
 		(pts
@@ -5645,6 +5989,28 @@
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+	)
+	(global_label "LED_PWR_EN"
+		(shape output)
+		(at 121.92 138.43 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "017f487d-2265-4609-9451-4739e2248019")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 136.1042 138.43 0)
+			(effects
+				(font
+					(size 1.524 1.524)
+				)
+				(justify left)
 				(hide yes)
 			)
 		)
@@ -5961,6 +6327,50 @@
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+	)
+	(global_label "LED_PWR_EN"
+		(shape input)
+		(at 247.65 148.59 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "5ba6e1b3-ad51-4741-a1d2-340b44d46d0d")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 233.4658 148.59 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+				(hide yes)
+			)
+		)
+	)
+	(global_label "LED_POWER"
+		(shape bidirectional)
+		(at 153.67 31.75 90)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "60880694-442f-4ad4-b0cc-b1d20e0b010d")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 153.67 17.5809 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
 				(hide yes)
 			)
 		)
@@ -6768,6 +7178,28 @@
 			)
 		)
 	)
+	(global_label "LED_POWER"
+		(shape bidirectional)
+		(at 298.45 138.43 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "f63b00e3-aab4-4e8d-8eca-22b1cbc8a422")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 312.6191 138.43 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
 	(global_label "SCL"
 		(shape input)
 		(at 170.18 160.02 180)
@@ -6997,7 +7429,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "00000000-0000-0000-0000-00005cfab6f9")
 		(property "Reference" "H1"
 			(at 26.67 260.3754 0)
@@ -7072,7 +7504,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "00000000-0000-0000-0000-00005cfabdd2")
 		(property "Reference" "H2"
 			(at 35.56 260.3754 0)
@@ -7147,7 +7579,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "00000000-0000-0000-0000-00005cfac2c0")
 		(property "Reference" "H3"
 			(at 44.45 260.3754 0)
@@ -7222,7 +7654,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "00000000-0000-0000-0000-00005cfac2ca")
 		(property "Reference" "H4"
 			(at 53.34 260.3754 0)
@@ -7362,7 +7794,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "00000000-0000-0000-0000-00005cfbb66e")
 		(property "Reference" "GFX1"
 			(at 113.03 228.7016 0)
@@ -7991,7 +8423,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "00000000-0000-0000-0000-000060baee79")
 		(property "Reference" "GFX2"
 			(at 113.03 235.0516 0)
@@ -8011,7 +8443,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "footprints:mpre-keyboard-badge-r1"
+		(property "Footprint" "footprints:pref-keyboard15-badge"
 			(at 110.49 236.22 0)
 			(effects
 				(font
@@ -8110,7 +8542,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" ""
+		(property "Manufacturer" "Samsung"
 			(at 26.67 54.61 0)
 			(effects
 				(font
@@ -8119,7 +8551,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" ""
+		(property "Manufacturer_No" "CL05A105KA5NQNC"
 			(at 26.67 54.61 0)
 			(effects
 				(font
@@ -8128,7 +8560,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" ""
+		(property "LCSC" "C52923"
 			(at 26.67 54.61 0)
 			(effects
 				(font
@@ -8153,13 +8585,79 @@
 		)
 	)
 	(symbol
+		(lib_id "power:GND")
+		(at 280.67 160.02 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "038d20c4-09d5-46a9-9edb-afd215970341")
+		(property "Reference" "#PWR0116"
+			(at 280.67 166.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 280.67 165.1 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 280.67 160.02 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 280.67 160.02 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 280.67 160.02 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "40871b38-39f8-47d3-a4dc-6d63e7e441d3")
+		)
+		(instances
+			(project "pocket-reform-keyboard-kailh-ortho"
+				(path "/4288acd2-00c5-4bcf-8d29-ce89e52624fd/00000000-0000-0000-0000-00006195bbbb"
+					(reference "#PWR0116")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Mechanical:MountingHole")
 		(at 44.45 273.05 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "05891c11-50c1-42a4-b82a-c6cc65341371")
 		(property "Reference" "H8"
 			(at 46.99 271.8054 0)
@@ -8343,7 +8841,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "Uni-Royal"
 			(at 30.48 193.04 0)
 			(effects
 				(font
@@ -8352,7 +8850,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" ""
+		(property "Manufacturer_No" "0402WGF1001TCE"
 			(at 30.48 193.04 0)
 			(effects
 				(font
@@ -8361,7 +8859,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" ""
+		(property "LCSC" "C11702"
 			(at 30.48 193.04 0)
 			(effects
 				(font
@@ -8439,7 +8937,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "Uni-Royal"
 			(at 35.56 185.42 0)
 			(effects
 				(font
@@ -8448,7 +8946,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0603JR-0710KL"
+		(property "Manufacturer_No" "0402WGF1002TCE"
 			(at 35.56 185.42 0)
 			(effects
 				(font
@@ -8457,7 +8955,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C99198"
+		(property "LCSC" "C25744"
 			(at 35.56 185.42 0)
 			(effects
 				(font
@@ -8576,6 +9074,100 @@
 		)
 	)
 	(symbol
+		(lib_id "Device:R_Small")
+		(at 256.54 140.97 180)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "1e247a57-6be7-46ef-80f7-ac562edbc172")
+		(property "Reference" "R68"
+			(at 261.5184 140.97 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10k"
+			(at 259.207 140.97 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+			(at 256.54 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 256.54 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 256.54 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Uni-Royal"
+			(at 256.54 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_No" "0402WGF1002TCE"
+			(at 256.54 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C25744"
+			(at 256.54 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "66d403a2-7396-47e8-aa02-9871c27d9d02")
+		)
+		(pin "2"
+			(uuid "e329b2f6-a950-43eb-9533-833a3678cfce")
+		)
+		(instances
+			(project "pocket-reform-keyboard-kailh-ortho"
+				(path "/4288acd2-00c5-4bcf-8d29-ce89e52624fd/00000000-0000-0000-0000-00006195bbbb"
+					(reference "R68")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:GND")
 		(at 49.53 59.69 0)
 		(unit 1)
@@ -8647,7 +9239,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "2f80d797-83e2-4f75-8a54-6533b82f334a")
 		(property "Reference" "H10"
 			(at 64.77 271.8054 0)
@@ -8767,7 +9359,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "Samsung"
 			(at 41.91 54.61 0)
 			(effects
 				(font
@@ -8776,7 +9368,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CC0603JPX7R9BB104"
+		(property "Manufacturer_No" "CL05B104KO5NNNC"
 			(at 41.91 54.61 0)
 			(effects
 				(font
@@ -8785,7 +9377,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C14663"
+		(property "LCSC" "C1525"
 			(at 41.91 54.61 0)
 			(effects
 				(font
@@ -8941,6 +9533,72 @@
 		)
 	)
 	(symbol
+		(lib_id "power:+5V")
+		(at 246.38 135.89 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "424b9d7e-2b05-42c8-84e6-2730a71ebf81")
+		(property "Reference" "#PWR0115"
+			(at 246.38 139.7 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "+5V"
+			(at 246.38 130.81 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 246.38 135.89 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 246.38 135.89 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 246.38 135.89 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "b8edb272-41b1-4a4e-bbea-476e8e1edc11")
+		)
+		(instances
+			(project "pocket-reform-keyboard-kailh-ortho"
+				(path "/4288acd2-00c5-4bcf-8d29-ce89e52624fd/00000000-0000-0000-0000-00006195bbbb"
+					(reference "#PWR0115")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:R_Small")
 		(at 45.72 115.57 90)
 		(unit 1)
@@ -8992,7 +9650,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "Uni-Royal"
 			(at 45.72 115.57 0)
 			(effects
 				(font
@@ -9001,7 +9659,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0603JR-071KL"
+		(property "Manufacturer_No" "0402WGF1001TCE"
 			(at 45.72 115.57 0)
 			(effects
 				(font
@@ -9010,7 +9668,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C14676"
+		(property "LCSC" "C11702"
 			(at 45.72 115.57 0)
 			(effects
 				(font
@@ -9635,7 +10293,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "Uni-Royal"
 			(at 43.18 236.22 0)
 			(effects
 				(font
@@ -9644,7 +10302,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0603JR-0710KL"
+		(property "Manufacturer_No" "0402WGF1002TCE"
 			(at 43.18 236.22 0)
 			(effects
 				(font
@@ -9653,7 +10311,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C99198"
+		(property "LCSC" "C25744"
 			(at 43.18 236.22 0)
 			(effects
 				(font
@@ -9829,7 +10487,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "Uni-Royal"
 			(at 166.37 67.31 0)
 			(effects
 				(font
@@ -9838,7 +10496,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0603FR-074K7L"
+		(property "Manufacturer_No" "0402WGF4701TCE"
 			(at 166.37 67.31 0)
 			(effects
 				(font
@@ -9847,7 +10505,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C105428"
+		(property "LCSC" "C25900"
 			(at 166.37 67.31 0)
 			(effects
 				(font
@@ -9866,6 +10524,103 @@
 			(project "pocket-reform-keyboard-kailh-ortho"
 				(path "/4288acd2-00c5-4bcf-8d29-ce89e52624fd/00000000-0000-0000-0000-00006195bbbb"
 					(reference "R9")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C_Small")
+		(at 153.67 36.83 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "5d7325be-0ae6-4ab5-aba8-3396fc6a1fbd")
+		(property "Reference" "C83"
+			(at 156.21 35.5662 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "10uF"
+			(at 156.21 38.1062 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+			(at 153.67 36.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 153.67 36.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Unpolarized capacitor, small symbol"
+			(at 153.67 36.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C19702"
+			(at 153.67 36.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Samsung"
+			(at 153.67 36.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_No" "CL10A106KP8NNNC"
+			(at 153.67 36.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "20cbbcbb-3b7b-434f-b4e9-6d4e4ab74f7d")
+		)
+		(pin "2"
+			(uuid "db66221e-044d-472d-834b-ed229e56c718")
+		)
+		(instances
+			(project "pocket-reform-keyboard-kailh-ortho"
+				(path "/4288acd2-00c5-4bcf-8d29-ce89e52624fd/00000000-0000-0000-0000-00006195bbbb"
+					(reference "C83")
 					(unit 1)
 				)
 			)
@@ -9926,7 +10681,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "Samsung"
 			(at 59.69 30.48 0)
 			(effects
 				(font
@@ -9935,7 +10690,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CC0603JPX7R9BB104"
+		(property "Manufacturer_No" "CL05B104KO5NNNC"
 			(at 59.69 30.48 0)
 			(effects
 				(font
@@ -9944,7 +10699,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C14663"
+		(property "LCSC" "C1525"
 			(at 59.69 30.48 0)
 			(effects
 				(font
@@ -10022,7 +10777,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" ""
+		(property "Manufacturer" "Murata"
 			(at 34.29 127 0)
 			(effects
 				(font
@@ -10031,7 +10786,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" ""
+		(property "Manufacturer_No" "GRM1555C1H150FA01D"
 			(at 34.29 127 0)
 			(effects
 				(font
@@ -10040,7 +10795,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" ""
+		(property "LCSC" "C161530"
 			(at 34.29 127 0)
 			(effects
 				(font
@@ -10059,6 +10814,109 @@
 			(project "pocket-reform-keyboard-kailh-ortho"
 				(path "/4288acd2-00c5-4bcf-8d29-ce89e52624fd/00000000-0000-0000-0000-00006195bbbb"
 					(reference "C13")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "reform2:AP22815")
+		(at 271.78 143.51 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "628a786d-b359-4396-a46b-64b95785fda7")
+		(property "Reference" "U12"
+			(at 271.78 131.699 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "AP22815A"
+			(at 271.78 134.0104 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Package_TO_SOT_SMD:SOT-23-5"
+			(at 271.78 151.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 271.78 151.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 271.78 143.51 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Diodes, Inc."
+			(at 271.78 143.51 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_No" "AP22815AWT-7"
+			(at 271.78 143.51 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C2150007"
+			(at 271.78 143.51 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "3687ef0c-f37e-4b2e-b1f0-2ec5d79ba503")
+		)
+		(pin "2"
+			(uuid "b1d7065c-32ab-49f0-9ea4-5c63077d4d5b")
+		)
+		(pin "3"
+			(uuid "b628f2b6-6523-4ec7-a5fb-eb048d9ec2cf")
+		)
+		(pin "4"
+			(uuid "65ea2eb3-2a97-4913-911a-7a89c0062c9e")
+		)
+		(pin "5"
+			(uuid "6efa8bf6-9193-4f17-8f34-3c30832109dd")
+		)
+		(instances
+			(project "pocket-reform-keyboard-kailh-ortho"
+				(path "/4288acd2-00c5-4bcf-8d29-ce89e52624fd/00000000-0000-0000-0000-00006195bbbb"
+					(reference "U12")
 					(unit 1)
 				)
 			)
@@ -10184,6 +11042,33 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C19702"
+			(at 142.24 36.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Samsung"
+			(at 142.24 36.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_No" "CL10A106KP8NNNC"
+			(at 142.24 36.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "28ec43b7-984a-44e7-a7b3-e38e9447d849")
 		)
@@ -10253,7 +11138,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "Samsung"
 			(at 34.29 54.61 0)
 			(effects
 				(font
@@ -10262,7 +11147,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CC0603JPX7R9BB104"
+		(property "Manufacturer_No" "CL05B104KO5NNNC"
 			(at 34.29 54.61 0)
 			(effects
 				(font
@@ -10271,7 +11156,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C14663"
+		(property "LCSC" "C1525"
 			(at 34.29 54.61 0)
 			(effects
 				(font
@@ -10350,7 +11235,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "Samsung"
 			(at 49.53 54.61 0)
 			(effects
 				(font
@@ -10359,7 +11244,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CC0603JPX7R9BB104"
+		(property "Manufacturer_No" "CL05B104KO5NNNC"
 			(at 49.53 54.61 0)
 			(effects
 				(font
@@ -10368,7 +11253,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C14663"
+		(property "LCSC" "C1525"
 			(at 49.53 54.61 0)
 			(effects
 				(font
@@ -10511,7 +11396,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "Uni-Royal"
 			(at 128.27 64.77 0)
 			(effects
 				(font
@@ -10520,7 +11405,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0603FR-0727R4L"
+		(property "Manufacturer_No" "0402WGF274JTCE"
 			(at 128.27 64.77 0)
 			(effects
 				(font
@@ -10529,7 +11414,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C185346"
+		(property "LCSC" "C31439"
 			(at 128.27 64.77 0)
 			(effects
 				(font
@@ -10607,7 +11492,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "Samsung"
 			(at 109.22 46.99 0)
 			(effects
 				(font
@@ -10616,7 +11501,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CC0603JPX7R9BB104"
+		(property "Manufacturer_No" "CL05B104KO5NNNC"
 			(at 109.22 46.99 0)
 			(effects
 				(font
@@ -10625,7 +11510,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C14663"
+		(property "LCSC" "C1525"
 			(at 109.22 46.99 0)
 			(effects
 				(font
@@ -10644,6 +11529,71 @@
 			(project "pocket-reform-keyboard-kailh-ortho"
 				(path "/4288acd2-00c5-4bcf-8d29-ce89e52624fd/00000000-0000-0000-0000-00006195bbbb"
 					(reference "C8")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 153.67 43.18 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "8fd7a5ae-df4a-499f-b111-4513bc35f87e")
+		(property "Reference" "#PWR067"
+			(at 153.67 49.53 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 153.67 46.99 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 153.67 43.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 153.67 43.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 153.67 43.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "946b9c5d-23e2-4b74-893b-004806e6ea3b")
+		)
+		(instances
+			(project "pocket-reform-keyboard-kailh-ortho"
+				(path "/4288acd2-00c5-4bcf-8d29-ce89e52624fd/00000000-0000-0000-0000-00006195bbbb"
+					(reference "#PWR067")
 					(unit 1)
 				)
 			)
@@ -10702,7 +11652,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "Uni-Royal"
 			(at 128.27 67.31 0)
 			(effects
 				(font
@@ -10711,7 +11661,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0603FR-0727R4L"
+		(property "Manufacturer_No" "0402WGF274JTCE"
 			(at 128.27 67.31 0)
 			(effects
 				(font
@@ -10720,7 +11670,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C185346"
+		(property "LCSC" "C31439"
 			(at 128.27 67.31 0)
 			(effects
 				(font
@@ -10798,7 +11748,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" ""
+		(property "Manufacturer" "Samsung"
 			(at 87.63 30.48 0)
 			(effects
 				(font
@@ -10807,7 +11757,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" ""
+		(property "Manufacturer_No" "CL05A105KA5NQNC"
 			(at 87.63 30.48 0)
 			(effects
 				(font
@@ -10816,7 +11766,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" ""
+		(property "LCSC" "C52923"
 			(at 87.63 30.48 0)
 			(effects
 				(font
@@ -10958,7 +11908,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "Uni-Royal"
 			(at 160.02 64.77 0)
 			(effects
 				(font
@@ -10967,7 +11917,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0603FR-074K7L"
+		(property "Manufacturer_No" "0402WGF4701TCE"
 			(at 160.02 64.77 0)
 			(effects
 				(font
@@ -10976,7 +11926,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C105428"
+		(property "LCSC" "C25900"
 			(at 160.02 64.77 0)
 			(effects
 				(font
@@ -10995,6 +11945,100 @@
 			(project "pocket-reform-keyboard-kailh-ortho"
 				(path "/4288acd2-00c5-4bcf-8d29-ce89e52624fd/00000000-0000-0000-0000-00006195bbbb"
 					(reference "R7")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R_Small")
+		(at 256.54 151.13 180)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "a8670785-fa14-458a-8def-35c9b2df62fc")
+		(property "Reference" "R61"
+			(at 261.5184 151.13 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10k"
+			(at 259.207 151.13 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+			(at 256.54 151.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 256.54 151.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 256.54 151.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Uni-Royal"
+			(at 256.54 151.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_No" "0402WGF1002TCE"
+			(at 256.54 151.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C25744"
+			(at 256.54 151.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "322a40f4-cb0e-4d76-8c62-35245f8f1991")
+		)
+		(pin "2"
+			(uuid "ef1514b3-b881-49af-ba90-16f00410ecad")
+		)
+		(instances
+			(project "pocket-reform-keyboard-kailh-ortho"
+				(path "/4288acd2-00c5-4bcf-8d29-ce89e52624fd/00000000-0000-0000-0000-00006195bbbb"
+					(reference "R61")
 					(unit 1)
 				)
 			)
@@ -11112,6 +12156,33 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor, small symbol"
+			(at 130.81 36.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C19702"
+			(at 130.81 36.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Samsung"
+			(at 130.81 36.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_No" "CL10A106KP8NNNC"
 			(at 130.81 36.83 0)
 			(effects
 				(font
@@ -11256,7 +12327,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "Samsung"
 			(at 66.04 30.48 0)
 			(effects
 				(font
@@ -11265,7 +12336,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CC0603JPX7R9BB104"
+		(property "Manufacturer_No" "CL05B104KO5NNNC"
 			(at 66.04 30.48 0)
 			(effects
 				(font
@@ -11274,7 +12345,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C14663"
+		(property "LCSC" "C1525"
 			(at 66.04 30.48 0)
 			(effects
 				(font
@@ -11353,7 +12424,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "Samsung"
 			(at 46.99 30.48 0)
 			(effects
 				(font
@@ -11362,7 +12433,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CC0603JPX7R9BB104"
+		(property "Manufacturer_No" "CL05B104KO5NNNC"
 			(at 46.99 30.48 0)
 			(effects
 				(font
@@ -11371,7 +12442,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C14663"
+		(property "LCSC" "C1525"
 			(at 46.99 30.48 0)
 			(effects
 				(font
@@ -11449,7 +12520,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" ""
+		(property "Manufacturer" "Murata"
 			(at 17.78 127 0)
 			(effects
 				(font
@@ -11458,7 +12529,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" ""
+		(property "Manufacturer_No" "GRM1555C1H150FA01D"
 			(at 17.78 127 0)
 			(effects
 				(font
@@ -11467,7 +12538,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" ""
+		(property "LCSC" "C161530"
 			(at 17.78 127 0)
 			(effects
 				(font
@@ -11498,7 +12569,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "c53a6469-b6c0-4072-aa35-7987d90f1365")
 		(property "Reference" "H9"
 			(at 55.88 271.8054 0)
@@ -11814,7 +12885,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "Samsung"
 			(at 72.39 30.48 0)
 			(effects
 				(font
@@ -11823,7 +12894,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CC0603JPX7R9BB104"
+		(property "Manufacturer_No" "CL05B104KO5NNNC"
 			(at 72.39 30.48 0)
 			(effects
 				(font
@@ -11832,7 +12903,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C14663"
+		(property "LCSC" "C1525"
 			(at 72.39 30.48 0)
 			(effects
 				(font
@@ -12072,7 +13143,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "Samsung"
 			(at 52.07 179.07 0)
 			(effects
 				(font
@@ -12081,7 +13152,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CC0603JPX7R9BB104"
+		(property "Manufacturer_No" "CL05B104KO5NNNC"
 			(at 52.07 179.07 0)
 			(effects
 				(font
@@ -12090,7 +13161,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C14663"
+		(property "LCSC" "C1525"
 			(at 52.07 179.07 0)
 			(effects
 				(font
@@ -12169,7 +13240,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "Samsung"
 			(at 53.34 30.48 0)
 			(effects
 				(font
@@ -12178,7 +13249,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CC0603JPX7R9BB104"
+		(property "Manufacturer_No" "CL05B104KO5NNNC"
 			(at 53.34 30.48 0)
 			(effects
 				(font
@@ -12187,7 +13258,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C14663"
+		(property "LCSC" "C1525"
 			(at 53.34 30.48 0)
 			(effects
 				(font
@@ -12284,7 +13355,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "d605ca59-3dde-4fa0-a95e-eafd8ef08bec")
 		(property "Reference" "H6"
 			(at 72.39 260.3754 0)
@@ -12683,7 +13754,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "dc52ad49-f6ce-493f-9914-e1207a34540a")
 		(property "Reference" "H5"
 			(at 63.5 260.3754 0)
@@ -13235,7 +14306,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "Samsung"
 			(at 40.64 30.48 0)
 			(effects
 				(font
@@ -13244,7 +14315,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CC0603JPX7R9BB104"
+		(property "Manufacturer_No" "CL05B104KO5NNNC"
 			(at 40.64 30.48 0)
 			(effects
 				(font
@@ -13253,7 +14324,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C14663"
+		(property "LCSC" "C1525"
 			(at 40.64 30.48 0)
 			(effects
 				(font
@@ -13349,7 +14420,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "fb0abee8-7a00-4634-89ab-67d9f9a0879f")
 		(property "Reference" "H7"
 			(at 36.83 271.8054 0)

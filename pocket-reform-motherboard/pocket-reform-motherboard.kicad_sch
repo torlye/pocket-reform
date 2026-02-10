@@ -30511,6 +30511,16 @@
 		)
 		(uuid "b36d8241-b409-4657-b6be-4cfcd9da1b6e")
 	)
+	(text "TODO: add power button"
+		(exclude_from_sim no)
+		(at 584.1253 101.514 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "b471fb27-8b32-435b-b1ef-af5c876c2779")
+	)
 	(text "TODO: bulk cap"
 		(exclude_from_sim no)
 		(at 170.18 368.3 0)
@@ -30861,6 +30871,16 @@
 			(justify left bottom)
 		)
 		(uuid "d5aa566f-2dd9-411c-96ed-8af4bef100bc")
+	)
+	(text "TODO: serial ports are inconvenient.\nadd USB-uart from classic? SBU+breakout?\njst behind port cover?"
+		(exclude_from_sim no)
+		(at 584.2 107.95 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "db87d443-51a3-47c5-9eb7-d59d5e8ad7c0")
 	)
 	(text "Alt: Foxconn AS0BC21-S40BB-7H"
 		(exclude_from_sim no)

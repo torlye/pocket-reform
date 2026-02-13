@@ -220,6 +220,40 @@ void handle_commands(char chr, battery_info_s* battery_info)
                 // toggle serial echo
                 uart_state.echo = uart_state.cmd_number == 1 ? 1 : 0;
             }
+            else if (uart_state.remote_cmd == 'G')
+            {
+                // set GPIO *high*
+                // cmd_number:
+                // 0: Display Panel Reset (active low)
+                switch (uart_state.cmd_number) {
+                case 0:
+                  gpio_put(PIN_DISP_RESET, 1);
+                  break;
+                case 1:
+                  gpio_put(PIN_3V3_ENABLE, 1);
+                  break;
+                case 2:
+                  gpio_put(PIN_1V1_ENABLE, 1);
+                  break;
+                }
+            }
+            else if (uart_state.remote_cmd == 'g')
+            {
+                // set GPIO *low*
+                // cmd_number:
+                // 0: Display Panel Reset (active low)
+                switch (uart_state.cmd_number) {
+                case 0:
+                  gpio_put(PIN_DISP_RESET, 0);
+                  break;
+                case 1:
+                  gpio_put(PIN_3V3_ENABLE, 0);
+                  break;
+                case 2:
+                  gpio_put(PIN_1V1_ENABLE, 0);
+                  break;
+                }
+            }
             else
             {
                 snprintf(uart_buffer, UART_BUFSZ, "error:command\r\n");

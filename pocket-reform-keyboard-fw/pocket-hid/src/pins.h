@@ -36,5 +36,6 @@
                       | (1<<PIN_COL10) | (1<<PIN_COL11) | (1<<PIN_COL12))
 
 #define PIN_LEDS 24
+#define PIN_LEDS_PWR_EN 25
 
 #endif

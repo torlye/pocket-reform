@@ -48,6 +48,13 @@ void led_task(uint32_t color) {
       pio_sm_put_blocking(pio0, 0, pixel_grb << 8u);
     }
   }
+
+  // since PCBA V1.5: toggle LED power switch
+  if (pixel_grb == 0) {
+    gpio_put(PIN_LEDS_PWR_EN, 0);
+  } else {
+    gpio_put(PIN_LEDS_PWR_EN, 1);
+  }
 }
 
 void led_bitmap(uint8_t row, const uint8_t* row_rgb) {

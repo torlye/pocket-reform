@@ -98,6 +98,9 @@ int main(void)
 
   gpio_init(PIN_LEDS);
   gpio_set_dir(PIN_LEDS, true); // output
+  gpio_init(PIN_LEDS_PWR_EN);
+  gpio_set_dir(PIN_LEDS_PWR_EN, true); // output
+  gpio_put(PIN_LEDS_PWR_EN, 0);
 
   /* Configure columns to output, bring low */
   gpio_init_mask(PIN_COL_MASK);

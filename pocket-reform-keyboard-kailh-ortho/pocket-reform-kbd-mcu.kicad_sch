@@ -3740,6 +3740,16 @@
 		)
 		(uuid "e1895912-bf26-4402-afde-f1578c3871ad")
 	)
+	(text "New in V1.5"
+		(exclude_from_sim no)
+		(at 142.24 138.43 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "f41012ec-ea7d-4e5d-bc06-0c14e7a79bd4")
+	)
 	(junction
 		(at 34.29 115.57)
 		(diameter 0)

@@ -730,11 +730,7 @@ void handle_usb_commands()
     printf("# [acm_command] '%c'\n", usb_c);
     if (usb_c == '1')
     {
-      if (battery_info.som_is_powered) {
-        turn_som_power_on(true);
-      } else {
-        turn_som_power_on(false);
-      }
+      turn_som_power_on();
     }
     else if (usb_c == '0')
     {

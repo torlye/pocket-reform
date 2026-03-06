@@ -31231,6 +31231,16 @@
 		)
 		(uuid "08afea2e-4c73-4aee-878d-990c486a629c")
 	)
+	(text "TODO: hub power switch"
+		(exclude_from_sim no)
+		(at 397.51 439.42 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "095bf4b3-4ad5-4e39-b30b-05e01e97676b")
+	)
 	(text "TODO: test points for I2C+STANDBY_3V3"
 		(exclude_from_sim no)
 		(at 582.8595 163.802 0)
@@ -32231,6 +32241,16 @@
 		)
 		(uuid "831458f1-b81c-4694-af9d-77f7ec3fcd72")
 	)
+	(text "TODO: wire up clock request"
+		(exclude_from_sim no)
+		(at 689.61 541.02 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "849cc39d-c850-4409-ac25-bb82b8f6a8ef")
+	)
 	(text "Heatsink/SOM Mount"
 		(exclude_from_sim no)
 		(at 137.16 765.81 0)
@@ -32409,6 +32429,16 @@
 			)
 		)
 		(uuid "97d7b247-0d77-42a0-965e-6b901a8c95e2")
+	)
+	(text "TODO: power switch for PCIe"
+		(exclude_from_sim no)
+		(at 706.12 505.46 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "980d2fc8-76f7-44ac-afd2-968a5ec8174b")
 	)
 	(text "DisplayPort"
 		(exclude_from_sim no)

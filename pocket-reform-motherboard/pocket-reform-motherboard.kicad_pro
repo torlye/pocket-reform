@@ -560,6 +560,14 @@
       {
         "netclass": "Power",
         "pattern": "*VBUS*"
+      },
+      {
+        "netclass": "90ohm diff inner layer",
+        "pattern": "PCIE1_*N"
+      },
+      {
+        "netclass": "90ohm diff inner layer",
+        "pattern": "PCIE1_*P"
       }
     ]
   },

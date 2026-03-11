@@ -12339,7 +12339,7 @@
 			)
 			(embedded_fonts no)
 		)
-		(symbol "Interface_Expansion:PCA9557BS"
+		(symbol "Interface_Expansion:PCA9557PW"
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
@@ -12352,7 +12352,7 @@
 					(justify left)
 				)
 			)
-			(property "Value" "PCA9557BS"
+			(property "Value" "PCA9557PW"
 				(at 2.54 11.43 0)
 				(effects
 					(font
@@ -12361,7 +12361,7 @@
 					(justify left)
 				)
 			)
-			(property "Footprint" "Package_DFN_QFN:HVQFN-16-1EP_3x3mm_P0.5mm_EP1.5x1.5mm"
+			(property "Footprint" "Package_SO:TSSOP-16_4.4x5mm_P0.65mm"
 				(at 24.13 -13.97 0)
 				(effects
 					(font
@@ -12379,7 +12379,7 @@
 					(hide yes)
 				)
 			)
-			(property "Description" "8-bit I2C-bus and SMBus I/O port with reset, HVQFN-16"
+			(property "Description" "8-bit I2C-bus and SMBus I/O port with reset, TSSOP-16"
 				(at 0 0 0)
 				(effects
 					(font
@@ -12397,7 +12397,7 @@
 					(hide yes)
 				)
 			)
-			(property "ki_fp_filters" "HVQFN*1EP*3x3mm*P0.5mm*"
+			(property "ki_fp_filters" "TSSOP*4.4x5mm*P0.65mm*"
 				(at 0 0 0)
 				(effects
 					(font
@@ -12406,7 +12406,7 @@
 					(hide yes)
 				)
 			)
-			(symbol "PCA9557BS_0_1"
+			(symbol "PCA9557PW_0_1"
 				(rectangle
 					(start -7.62 -12.7)
 					(end 7.62 10.16)
@@ -12419,7 +12419,7 @@
 					)
 				)
 			)
-			(symbol "PCA9557BS_1_1"
+			(symbol "PCA9557PW_1_1"
 				(pin input line
 					(at -10.16 7.62 0)
 					(length 2.54)
@@ -12430,7 +12430,7 @@
 							)
 						)
 					)
-					(number "15"
+					(number "1"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -12448,7 +12448,7 @@
 							)
 						)
 					)
-					(number "16"
+					(number "2"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -12466,7 +12466,7 @@
 							)
 						)
 					)
-					(number "13"
+					(number "15"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -12484,7 +12484,7 @@
 							)
 						)
 					)
-					(number "1"
+					(number "3"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -12502,7 +12502,7 @@
 							)
 						)
 					)
-					(number "2"
+					(number "4"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -12520,7 +12520,7 @@
 							)
 						)
 					)
-					(number "3"
+					(number "5"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -12538,7 +12538,7 @@
 							)
 						)
 					)
-					(number "14"
+					(number "16"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -12556,7 +12556,7 @@
 							)
 						)
 					)
-					(number "6"
+					(number "8"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -12574,7 +12574,7 @@
 							)
 						)
 					)
-					(number "4"
+					(number "6"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -12592,7 +12592,7 @@
 							)
 						)
 					)
-					(number "5"
+					(number "7"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -12610,7 +12610,7 @@
 							)
 						)
 					)
-					(number "7"
+					(number "9"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -12628,7 +12628,7 @@
 							)
 						)
 					)
-					(number "8"
+					(number "10"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -12646,7 +12646,7 @@
 							)
 						)
 					)
-					(number "9"
+					(number "11"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -12664,7 +12664,7 @@
 							)
 						)
 					)
-					(number "10"
+					(number "12"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -12682,7 +12682,7 @@
 							)
 						)
 					)
-					(number "11"
+					(number "13"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -12700,7 +12700,7 @@
 							)
 						)
 					)
-					(number "12"
+					(number "14"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -32085,6 +32085,16 @@
 			)
 		)
 		(uuid "742312ee-2767-4c1c-b905-5c3829885605")
+	)
+	(text "compat: TI PCA9536DGKR"
+		(exclude_from_sim no)
+		(at 915.67 -73.66 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "7537f394-1907-452c-b0da-801f597c4284")
 	)
 	(text "MicroSD Slot"
 		(exclude_from_sim no)
@@ -70457,7 +70467,7 @@
 				)
 			)
 		)
-		(property "Value" "LED_NVME"
+		(property "Value" "LED_RED"
 			(at 763.27 546.2524 0)
 			(effects
 				(font
@@ -70492,7 +70502,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Everlight"
+		(property "Manufacturer" "XINGLIGHT"
 			(at 763.27 549.91 0)
 			(effects
 				(font
@@ -70501,7 +70511,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "19-217/R6C-AL1M2VY/3T"
+		(property "Manufacturer_No" "XL-1608SURC-06"
 			(at 763.27 549.91 0)
 			(effects
 				(font
@@ -70510,7 +70520,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C72044"
+		(property "LCSC" "C965799"
 			(at 763.27 549.91 0)
 			(effects
 				(font
@@ -70586,7 +70596,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 770.89 549.91 0)
 			(effects
 				(font
@@ -70595,7 +70605,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-071KL"
+		(property "Manufacturer_No" "0402WGF1001TCE"
 			(at 770.89 549.91 0)
 			(effects
 				(font
@@ -70604,7 +70614,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C106235"
+		(property "LCSC" "C11702"
 			(at 770.89 549.91 0)
 			(effects
 				(font
@@ -70680,7 +70690,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 723.9 552.45 0)
 			(effects
 				(font
@@ -70689,7 +70699,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ2GE0R00X"
+		(property "Manufacturer_No" "0402WGF0000TCE"
 			(at 723.9 552.45 0)
 			(effects
 				(font
@@ -70698,7 +70708,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C242160"
+		(property "LCSC" "C17168"
 			(at 723.9 552.45 0)
 			(effects
 				(font
@@ -70774,7 +70784,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 717.55 554.99 0)
 			(effects
 				(font
@@ -70783,7 +70793,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ2GE0R00X"
+		(property "Manufacturer_No" "0402WGF0000TCE"
 			(at 717.55 554.99 0)
 			(effects
 				(font
@@ -70792,7 +70802,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C242160"
+		(property "LCSC" "C17168"
 			(at 717.55 554.99 0)
 			(effects
 				(font
@@ -70868,7 +70878,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 723.9 567.69 0)
 			(effects
 				(font
@@ -70877,7 +70887,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ2GE0R00X"
+		(property "Manufacturer_No" "0402WGF0000TCE"
 			(at 723.9 567.69 0)
 			(effects
 				(font
@@ -70886,7 +70896,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C242160"
+		(property "LCSC" "C17168"
 			(at 723.9 567.69 0)
 			(effects
 				(font
@@ -70962,7 +70972,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 717.55 570.23 0)
 			(effects
 				(font
@@ -70971,7 +70981,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ2GE0R00X"
+		(property "Manufacturer_No" "0402WGF0000TCE"
 			(at 717.55 570.23 0)
 			(effects
 				(font
@@ -70980,7 +70990,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C242160"
+		(property "LCSC" "C17168"
 			(at 717.55 570.23 0)
 			(effects
 				(font
@@ -71056,7 +71066,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 723.9 582.93 0)
 			(effects
 				(font
@@ -71065,7 +71075,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ2GE0R00X"
+		(property "Manufacturer_No" "0402WGF0000TCE"
 			(at 723.9 582.93 0)
 			(effects
 				(font
@@ -71074,7 +71084,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C242160"
+		(property "LCSC" "C17168"
 			(at 723.9 582.93 0)
 			(effects
 				(font
@@ -71150,7 +71160,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 717.55 585.47 0)
 			(effects
 				(font
@@ -71159,7 +71169,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ2GE0R00X"
+		(property "Manufacturer_No" "0402WGF0000TCE"
 			(at 717.55 585.47 0)
 			(effects
 				(font
@@ -71168,7 +71178,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C242160"
+		(property "LCSC" "C17168"
 			(at 717.55 585.47 0)
 			(effects
 				(font
@@ -71695,7 +71705,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 692.15 615.95 0)
 			(effects
 				(font
@@ -71704,7 +71714,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-0749R9L"
+		(property "Manufacturer_No" "0402WGF499JTCE"
 			(at 692.15 615.95 0)
 			(effects
 				(font
@@ -71713,7 +71723,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C87044"
+		(property "LCSC" "C25120"
 			(at 692.15 615.95 0)
 			(effects
 				(font
@@ -71791,7 +71801,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 699.77 615.95 0)
 			(effects
 				(font
@@ -71800,7 +71810,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-0749R9L"
+		(property "Manufacturer_No" "0402WGF499JTCE"
 			(at 699.77 615.95 0)
 			(effects
 				(font
@@ -71809,7 +71819,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C87044"
+		(property "LCSC" "C25120"
 			(at 699.77 615.95 0)
 			(effects
 				(font
@@ -71950,7 +71960,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" ""
+		(property "LCSC" "C590722"
 			(at 215.9 495.3 0)
 			(effects
 				(font
@@ -71968,7 +71978,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "1473149-1"
+		(property "Manufacturer_No" "1717254-1"
 			(at 215.9 495.3 0)
 			(effects
 				(font
@@ -73347,7 +73357,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "00000000-0000-0000-0000-000060b6e428")
 		(property "Reference" "H1"
 			(at 95.25 741.7054 0)
@@ -73422,7 +73432,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "00000000-0000-0000-0000-000060b6e5db")
 		(property "Reference" "H2"
 			(at 97.79 748.0554 0)
@@ -73497,7 +73507,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "00000000-0000-0000-0000-000060b6e9ea")
 		(property "Reference" "H3"
 			(at 101.6 754.4054 0)
@@ -73572,7 +73582,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "00000000-0000-0000-0000-000060b6eb43")
 		(property "Reference" "H4"
 			(at 105.41 760.7554 0)
@@ -73712,7 +73722,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "00000000-0000-0000-0000-000060b85544")
 		(property "Reference" "GFX1"
 			(at 135.89 748.1316 0)
@@ -74056,7 +74066,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 727.71 341.63 0)
 			(effects
 				(font
@@ -74065,7 +74075,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 727.71 341.63 0)
 			(effects
 				(font
@@ -74152,7 +74162,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 737.87 341.63 0)
 			(effects
 				(font
@@ -74161,7 +74171,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 737.87 341.63 0)
 			(effects
 				(font
@@ -74248,7 +74258,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 748.03 341.63 0)
 			(effects
 				(font
@@ -74257,7 +74267,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 748.03 341.63 0)
 			(effects
 				(font
@@ -74418,7 +74428,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "Global Sourcing"
+		(property "LCSC" "C4710843"
 			(at 746.76 588.01 0)
 			(effects
 				(font
@@ -74836,7 +74846,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 726.44 527.05 0)
 			(effects
 				(font
@@ -74845,7 +74855,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 726.44 527.05 0)
 			(effects
 				(font
@@ -74932,7 +74942,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 736.6 527.05 0)
 			(effects
 				(font
@@ -74941,7 +74951,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 736.6 527.05 0)
 			(effects
 				(font
@@ -75028,7 +75038,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 746.76 527.05 0)
 			(effects
 				(font
@@ -75037,7 +75047,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 746.76 527.05 0)
 			(effects
 				(font
@@ -75272,7 +75282,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 795.02 382.27 0)
 			(effects
 				(font
@@ -75281,7 +75291,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-071KL"
+		(property "Manufacturer_No" "0402WGF1001TCE"
 			(at 795.02 382.27 0)
 			(effects
 				(font
@@ -75290,7 +75300,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C106235"
+		(property "LCSC" "C11702"
 			(at 795.02 382.27 0)
 			(effects
 				(font
@@ -75433,7 +75443,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 786.13 266.7 0)
 			(effects
 				(font
@@ -75442,7 +75452,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "AC0402FR-0747KL"
+		(property "Manufacturer_No" "0402WGF4702TCE"
 			(at 786.13 266.7 0)
 			(effects
 				(font
@@ -75451,7 +75461,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C144757"
+		(property "LCSC" "C25792"
 			(at 786.13 266.7 0)
 			(effects
 				(font
@@ -75625,7 +75635,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C140782"
+		(property "LCSC" "C86295"
 			(at 297.18 200.66 0)
 			(effects
 				(font
@@ -75634,7 +75644,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Murata"
+		(property "Manufacturer" "Samsung"
 			(at 297.18 200.66 0)
 			(effects
 				(font
@@ -75643,7 +75653,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "GRM187R61A226ME15D"
+		(property "Manufacturer_No" "CL10A226MP8NUNE"
 			(at 297.18 200.66 0)
 			(effects
 				(font
@@ -75713,6 +75723,33 @@
 			)
 		)
 		(property "Description" "Resistor, small symbol"
+			(at 751.84 114.3 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C17772"
+			(at 751.84 114.3 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "UNI-ROYAL"
+			(at 751.84 114.3 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_No" "0805W8F6801T5E"
 			(at 751.84 114.3 0)
 			(effects
 				(font
@@ -75857,7 +75894,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C60491"
+		(property "LCSC" "C25741"
 			(at 1017.27 558.8 0)
 			(effects
 				(font
@@ -75866,7 +75903,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 1017.27 558.8 0)
 			(effects
 				(font
@@ -75875,7 +75912,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-07100KL"
+		(property "Manufacturer_No" "0402WGF1003TCE"
 			(at 1017.27 558.8 0)
 			(effects
 				(font
@@ -76063,7 +76100,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 904.24 626.11 0)
 			(effects
 				(font
@@ -76072,7 +76109,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 904.24 626.11 0)
 			(effects
 				(font
@@ -76150,6 +76187,24 @@
 			)
 		)
 		(property "LCSC" "C2680357"
+			(at 393.7 367.03 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Diodes"
+			(at 393.7 367.03 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_No" "AP22615AWU-7"
 			(at 393.7 367.03 0)
 			(effects
 				(font
@@ -76240,7 +76295,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 1101.09 245.11 0)
 			(effects
 				(font
@@ -76249,7 +76304,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" ""
+		(property "LCSC" "C17168"
 			(at 1101.09 245.11 0)
 			(effects
 				(font
@@ -76258,7 +76313,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402JR-070RL"
+		(property "Manufacturer_No" "0402WGF0000TCE"
 			(at 1101.09 245.11 0)
 			(effects
 				(font
@@ -76346,7 +76401,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 419.1 166.37 0)
 			(effects
 				(font
@@ -76355,7 +76410,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 419.1 166.37 0)
 			(effects
 				(font
@@ -76616,6 +76671,33 @@
 					(size 1.27 1.27)
 				)
 				(justify bottom)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C35471229"
+			(at 1122.68 177.8 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Texas Instruments "
+			(at 1122.68 177.8 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_No" "TMUXHS4446RETR"
+			(at 1122.68 177.8 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
 				(hide yes)
 			)
 		)
@@ -77164,7 +77246,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 433.07 101.6 0)
 			(effects
 				(font
@@ -77173,7 +77255,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 433.07 101.6 0)
 			(effects
 				(font
@@ -77250,7 +77332,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C242160"
+		(property "LCSC" "C25744"
 			(at 576.58 438.15 0)
 			(effects
 				(font
@@ -77259,7 +77341,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 576.58 438.15 0)
 			(effects
 				(font
@@ -77268,7 +77350,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402JR-0710KL"
+		(property "Manufacturer_No" "0402WGF1002TCE"
 			(at 576.58 438.15 0)
 			(effects
 				(font
@@ -77355,7 +77437,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 986.79 621.03 0)
 			(effects
 				(font
@@ -77364,7 +77446,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 986.79 621.03 0)
 			(effects
 				(font
@@ -77574,7 +77656,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1589"
+		(property "LCSC" "C52923"
 			(at 219.71 156.21 0)
 			(effects
 				(font
@@ -77592,7 +77674,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05A105KO5NNNC"
+		(property "Manufacturer_No" "CL05A105KA5NQNC"
 			(at 219.71 156.21 0)
 			(effects
 				(font
@@ -77677,7 +77759,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 1016 372.11 0)
 			(effects
 				(font
@@ -77686,7 +77768,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 1016 372.11 0)
 			(effects
 				(font
@@ -77774,7 +77856,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 448.31 368.3 0)
 			(effects
 				(font
@@ -77783,7 +77865,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 448.31 368.3 0)
 			(effects
 				(font
@@ -77870,7 +77952,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 988.06 506.73 0)
 			(effects
 				(font
@@ -77879,7 +77961,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 988.06 506.73 0)
 			(effects
 				(font
@@ -77955,7 +78037,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 927.1 703.58 0)
 			(effects
 				(font
@@ -77964,7 +78046,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-0733RL"
+		(property "Manufacturer_No" "0402WGF330JTCE"
 			(at 927.1 703.58 0)
 			(effects
 				(font
@@ -77973,7 +78055,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C138002"
+		(property "LCSC" "C25105"
 			(at 927.1 703.58 0)
 			(effects
 				(font
@@ -78051,7 +78133,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" ""
+		(property "Manufacturer" "Samsung"
 			(at 425.45 166.37 0)
 			(effects
 				(font
@@ -78060,7 +78142,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" ""
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 425.45 166.37 0)
 			(effects
 				(font
@@ -78069,7 +78151,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" ""
+		(property "LCSC" "C307331"
 			(at 425.45 166.37 0)
 			(effects
 				(font
@@ -78213,7 +78295,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 740.41 -60.96 0)
 			(effects
 				(font
@@ -78222,7 +78304,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-072K2L"
+		(property "Manufacturer_No" "0402WGF2201TCE"
 			(at 740.41 -60.96 0)
 			(effects
 				(font
@@ -78307,7 +78389,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 147.32 179.07 0)
 			(effects
 				(font
@@ -78316,7 +78398,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-0710KL"
+		(property "Manufacturer_No" "0402WGF1002TCE"
 			(at 147.32 179.07 0)
 			(effects
 				(font
@@ -78325,7 +78407,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C60490"
+		(property "LCSC" "C25744"
 			(at 147.32 179.07 0)
 			(effects
 				(font
@@ -78598,7 +78680,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" ""
+		(property "LCSC" "C22431115"
 			(at 148.59 778.51 0)
 			(effects
 				(font
@@ -78689,7 +78771,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C242160"
+		(property "LCSC" "C17168"
 			(at 1109.98 257.81 0)
 			(effects
 				(font
@@ -78698,7 +78780,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 1109.98 257.81 0)
 			(effects
 				(font
@@ -78707,7 +78789,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ2GE0R00X"
+		(property "Manufacturer_No" "0402WGF0000TCE"
 			(at 1109.98 257.81 0)
 			(effects
 				(font
@@ -78783,7 +78865,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C242160"
+		(property "LCSC" "C17168"
 			(at 835.66 359.41 0)
 			(effects
 				(font
@@ -78792,7 +78874,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 835.66 359.41 0)
 			(effects
 				(font
@@ -78801,7 +78883,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ2GE0R00X"
+		(property "Manufacturer_No" "0402WGF0000TCE"
 			(at 835.66 359.41 0)
 			(effects
 				(font
@@ -79056,7 +79138,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "DNP"
+		(property "LCSC" "C19193264"
 			(at 360.68 695.96 0)
 			(effects
 				(font
@@ -79312,6 +79394,15 @@
 			)
 		)
 		(property "Manufacturer_No" "TS3USB30EDGSR"
+			(at 617.22 57.15 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C131998"
 			(at 617.22 57.15 0)
 			(effects
 				(font
@@ -79583,7 +79674,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 433.07 408.94 0)
 			(effects
 				(font
@@ -79592,7 +79683,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 433.07 408.94 0)
 			(effects
 				(font
@@ -79679,7 +79770,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 595.63 368.3 0)
 			(effects
 				(font
@@ -79688,7 +79779,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 595.63 368.3 0)
 			(effects
 				(font
@@ -79767,7 +79858,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C106235"
+		(property "LCSC" "C11702"
 			(at 515.62 283.21 0)
 			(effects
 				(font
@@ -79776,7 +79867,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 515.62 283.21 0)
 			(effects
 				(font
@@ -79785,7 +79876,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-071KL"
+		(property "Manufacturer_No" "0402WGF1001TCE"
 			(at 515.62 283.21 0)
 			(effects
 				(font
@@ -79816,7 +79907,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "1258f18c-5d15-4bd2-acbc-a547b966b530")
 		(property "Reference" "TP13"
 			(at 603.25 259.08 90)
@@ -79856,6 +79947,24 @@
 		)
 		(property "Description" "test point"
 			(at 603.25 254 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "DNP"
+			(at 603.25 254 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_No" "DNP"
+			(at 603.25 254 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -79928,7 +80037,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C242160"
+		(property "LCSC" "C17168"
 			(at 608.33 25.4 0)
 			(effects
 				(font
@@ -79937,7 +80046,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 608.33 25.4 0)
 			(effects
 				(font
@@ -79946,7 +80055,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ2GE0R00X"
+		(property "Manufacturer_No" "0402WGF0000TCE"
 			(at 608.33 25.4 0)
 			(effects
 				(font
@@ -80091,7 +80200,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Vishay Dale"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 629.92 -105.41 0)
 			(effects
 				(font
@@ -80100,7 +80209,16 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CRCW06030000Z0EAC"
+		(property "Manufacturer_No" "0402WGF0000TCE"
+			(at 629.92 -105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C17168"
 			(at 629.92 -105.41 0)
 			(effects
 				(font
@@ -80505,7 +80623,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1589"
+		(property "LCSC" "C307331"
 			(at 214.63 69.85 0)
 			(effects
 				(font
@@ -80523,7 +80641,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 214.63 69.85 0)
 			(effects
 				(font
@@ -80610,7 +80728,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 643.89 367.03 0)
 			(effects
 				(font
@@ -80619,7 +80737,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 643.89 367.03 0)
 			(effects
 				(font
@@ -80698,7 +80816,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" ""
+		(property "LCSC" "C177225"
 			(at 1074.42 692.15 0)
 			(effects
 				(font
@@ -80716,7 +80834,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "53261-7002"
+		(property "Manufacturer_No" "532610271"
 			(at 1074.42 692.15 0)
 			(effects
 				(font
@@ -80858,7 +80976,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 143.51 511.81 0)
 			(effects
 				(font
@@ -80867,7 +80985,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-074K7L"
+		(property "Manufacturer_No" "0402WGF4701TCE"
 			(at 143.51 511.81 0)
 			(effects
 				(font
@@ -80876,7 +80994,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C105871"
+		(property "LCSC" "C25900"
 			(at 143.51 511.81 0)
 			(effects
 				(font
@@ -81083,7 +81201,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Jushuo"
+		(property "Manufacturer" "Yuandi"
 			(at 701.04 187.96 0)
 			(effects
 				(font
@@ -81092,7 +81210,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "AFC07-S33FCC-00"
+		(property "Manufacturer_No" "FPC-0.5FX-33PH20"
 			(at 701.04 187.96 0)
 			(effects
 				(font
@@ -81101,7 +81219,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C262220"
+		(property "LCSC" "C19077727"
 			(at 701.04 187.96 0)
 			(effects
 				(font
@@ -81272,7 +81390,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 819.15 439.42 0)
 			(effects
 				(font
@@ -81281,7 +81399,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-0710KL"
+		(property "Manufacturer_No" "0402WGF1002TCE"
 			(at 819.15 439.42 0)
 			(effects
 				(font
@@ -81290,7 +81408,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C60490"
+		(property "LCSC" "C25744"
 			(at 819.15 439.42 0)
 			(effects
 				(font
@@ -81530,7 +81648,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C60491"
+		(property "LCSC" "C11702"
 			(at 190.5 144.78 0)
 			(effects
 				(font
@@ -81539,7 +81657,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 190.5 144.78 0)
 			(effects
 				(font
@@ -81548,7 +81666,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-071KL"
+		(property "Manufacturer_No" "0402WGF1001TCE"
 			(at 190.5 144.78 0)
 			(effects
 				(font
@@ -81624,7 +81742,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 420.37 476.25 0)
 			(effects
 				(font
@@ -81633,7 +81751,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ2GE0R00X"
+		(property "Manufacturer_No" "0402WGF0000TCE"
 			(at 420.37 476.25 0)
 			(effects
 				(font
@@ -81642,7 +81760,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C242160"
+		(property "LCSC" "C17168"
 			(at 420.37 476.25 0)
 			(effects
 				(font
@@ -82075,7 +82193,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 833.12 101.6 0)
 			(effects
 				(font
@@ -82084,7 +82202,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-0710KL"
+		(property "Manufacturer_No" "0402WGF1002TCE"
 			(at 833.12 101.6 0)
 			(effects
 				(font
@@ -82093,7 +82211,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C60490"
+		(property "LCSC" "C25744"
 			(at 833.12 101.6 0)
 			(effects
 				(font
@@ -82301,7 +82419,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 510.54 100.33 0)
 			(effects
 				(font
@@ -82310,7 +82428,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-0710KL"
+		(property "Manufacturer_No" "0402WGF1002TCE"
 			(at 510.54 100.33 0)
 			(effects
 				(font
@@ -82319,7 +82437,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C60490"
+		(property "LCSC" "C25744"
 			(at 510.54 100.33 0)
 			(effects
 				(font
@@ -82577,7 +82695,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "1fe6b54c-de87-4499-b9b2-1ec5b85a4c68")
 		(property "Reference" "TP16"
 			(at 626.11 259.08 90)
@@ -82617,6 +82735,24 @@
 		)
 		(property "Description" "test point"
 			(at 626.11 254 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "DNP"
+			(at 626.11 254 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_No" "DNP"
+			(at 626.11 254 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -82689,7 +82825,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C242160"
+		(property "LCSC" "C25744"
 			(at 579.12 393.7 0)
 			(effects
 				(font
@@ -82698,7 +82834,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 579.12 393.7 0)
 			(effects
 				(font
@@ -82707,7 +82843,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402JR-0710KL"
+		(property "Manufacturer_No" "0402WGF1002TCE"
 			(at 579.12 393.7 0)
 			(effects
 				(font
@@ -82786,7 +82922,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1589"
+		(property "LCSC" "C1623"
 			(at 259.08 186.69 0)
 			(effects
 				(font
@@ -82804,7 +82940,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL10A474KB8NNNC"
+		(property "Manufacturer_No" "CL10B474KA8NNNC"
 			(at 259.08 186.69 0)
 			(effects
 				(font
@@ -82900,7 +83036,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "21702362-c4a0-4aa5-8452-ff5639259559")
 		(property "Reference" "TP17"
 			(at 633.73 259.08 90)
@@ -82940,6 +83076,24 @@
 		)
 		(property "Description" "test point"
 			(at 633.73 254 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "DNP"
+			(at 633.73 254 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_No" "DNP"
+			(at 633.73 254 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -83701,7 +83855,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C60490"
+		(property "LCSC" "C25768"
 			(at 292.1 81.28 0)
 			(effects
 				(font
@@ -83710,7 +83864,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 292.1 81.28 0)
 			(effects
 				(font
@@ -83719,7 +83873,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-0710KL"
+		(property "Manufacturer_No" "0402WGF2202TCE"
 			(at 292.1 81.28 0)
 			(effects
 				(font
@@ -83798,7 +83952,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "NXP"
+		(property "Manufacturer" "Texas Instruments"
 			(at 902.97 -58.42 0)
 			(effects
 				(font
@@ -83807,7 +83961,16 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "PCA9536DP,118"
+		(property "Manufacturer_No" "PCA9536DGKR"
+			(at 902.97 -58.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C14674"
 			(at 902.97 -58.42 0)
 			(effects
 				(font
@@ -84404,7 +84567,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 412.75 166.37 0)
 			(effects
 				(font
@@ -84413,7 +84576,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 412.75 166.37 0)
 			(effects
 				(font
@@ -84685,145 +84848,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Interface_Expansion:PCA9557BS")
-		(at 781.05 -54.61 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "29e77885-9e89-4475-b0be-eb4ef7ecd670")
-		(property "Reference" "U39"
-			(at 783.1933 -69.85 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "PCA9557RGVR"
-			(at 783.1933 -67.31 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Package_DFN_QFN:Texas_RSA_VQFN-16-1EP_4x4mm_P0.65mm_EP2.7x2.7mm"
-			(at 805.18 -40.64 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "https://www.ti.com/lit/ds/symlink/pca9557.pdf"
-			(at 783.59 -52.07 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "8-bit I2C-bus I/O port with reset, QFN-16"
-			(at 781.05 -54.61 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "LCSC" "C2669728"
-			(at 781.05 -54.61 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Manufacturer" "Texas Instruments"
-			(at 781.05 -54.61 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Manufacturer_No" "PCA9557RGVR"
-			(at 781.05 -54.61 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "11"
-			(uuid "a3782916-dc32-45ef-8f89-554072277fb0")
-		)
-		(pin "13"
-			(uuid "b7f69990-d355-49dd-b9c6-abc341fab273")
-		)
-		(pin "4"
-			(uuid "a701448c-915b-4ba6-a10c-1d1613aa3ccc")
-		)
-		(pin "8"
-			(uuid "f674fd0e-5070-4d53-a04d-256f86d8bb7c")
-		)
-		(pin "14"
-			(uuid "ae2205c1-e890-4bb5-b621-64b457e987cb")
-		)
-		(pin "5"
-			(uuid "0a33b762-b25a-4e4a-a635-469f08050626")
-		)
-		(pin "10"
-			(uuid "a94fd116-5089-48d3-b7ec-34ec615a9c93")
-		)
-		(pin "9"
-			(uuid "975d20cc-f116-4135-b4f1-81173118047d")
-		)
-		(pin "16"
-			(uuid "62e9cfc0-172c-4df4-9289-fae3149ba9bc")
-		)
-		(pin "12"
-			(uuid "db04cad5-7d48-46d5-b2c6-30d37deff29c")
-		)
-		(pin "7"
-			(uuid "bfd5bc12-0186-4c8d-a49c-0b6961208460")
-		)
-		(pin "3"
-			(uuid "13b1cae5-92b4-417f-b57a-3eecceaf71b6")
-		)
-		(pin "1"
-			(uuid "23ea8efc-4611-4682-8821-89e158f01d24")
-		)
-		(pin "6"
-			(uuid "3ee0e80f-0f2b-49e7-94e8-e7bcfec56261")
-		)
-		(pin "2"
-			(uuid "b8c889cc-8141-492e-afdc-91f50f5f3f12")
-		)
-		(pin "15"
-			(uuid "c413cc1f-b5c5-4697-8e92-f7cceddfd1c4")
-		)
-		(instances
-			(project "pocket-reform-motherboard"
-				(path "/63c56ea4-91a3-4172-b9de-a4388cc8f894"
-					(reference "U39")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "LM62460:LM62460")
 		(at 238.76 135.89 0)
 		(unit 1)
@@ -84886,6 +84910,15 @@
 			)
 		)
 		(property "Manufacturer_No" "LM62460QRPHRQ1"
+			(at 238.76 135.89 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C3198091"
 			(at 238.76 135.89 0)
 			(effects
 				(font
@@ -85003,7 +85036,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 1146.81 151.13 0)
 			(effects
 				(font
@@ -85012,7 +85045,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-0710KL"
+		(property "Manufacturer_No" "0402WGF1002TCE"
 			(at 1146.81 151.13 0)
 			(effects
 				(font
@@ -85021,7 +85054,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C60490"
+		(property "LCSC" "C25744"
 			(at 1146.81 151.13 0)
 			(effects
 				(font
@@ -85097,7 +85130,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 242.57 411.48 0)
 			(effects
 				(font
@@ -85106,7 +85139,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ2GE0R00X"
+		(property "Manufacturer_No" "0402WGF0000TCE"
 			(at 242.57 411.48 0)
 			(effects
 				(font
@@ -85115,7 +85148,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C242160"
+		(property "LCSC" "C17168"
 			(at 242.57 411.48 0)
 			(effects
 				(font
@@ -85202,7 +85235,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 988.06 648.97 0)
 			(effects
 				(font
@@ -85211,7 +85244,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 988.06 648.97 0)
 			(effects
 				(font
@@ -85287,7 +85320,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 1007.11 372.11 0)
 			(effects
 				(font
@@ -85296,7 +85329,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-0710KL"
+		(property "Manufacturer_No" "0402WGF1002TCE"
 			(at 1007.11 372.11 0)
 			(effects
 				(font
@@ -85305,7 +85338,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C60490"
+		(property "LCSC" "C25744"
 			(at 1007.11 372.11 0)
 			(effects
 				(font
@@ -85392,7 +85425,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 892.81 -80.01 0)
 			(effects
 				(font
@@ -85401,7 +85434,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 892.81 -80.01 0)
 			(effects
 				(font
@@ -85546,7 +85579,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1589"
+		(property "LCSC" "C32949"
 			(at 334.01 207.01 0)
 			(effects
 				(font
@@ -85564,7 +85597,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "GRM1555C1H100FA01D"
+		(property "Manufacturer_No" "CL05C100JB5NNNC"
 			(at 334.01 207.01 0)
 			(effects
 				(font
@@ -85715,6 +85748,24 @@
 				(hide yes)
 			)
 		)
+		(property "Manufacturer" "Diodes"
+			(at 163.83 179.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_No" "AP22615AWU-7"
+			(at 163.83 179.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "3"
 			(uuid "485f1664-89af-4006-b114-24ec180ca6e9")
 		)
@@ -85803,7 +85854,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 1000.76 382.27 0)
 			(effects
 				(font
@@ -85812,7 +85863,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 1000.76 382.27 0)
 			(effects
 				(font
@@ -86021,7 +86072,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C140782"
+		(property "LCSC" "C86295"
 			(at 307.34 200.66 0)
 			(effects
 				(font
@@ -86030,7 +86081,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Murata"
+		(property "Manufacturer" "Samsung"
 			(at 307.34 200.66 0)
 			(effects
 				(font
@@ -86039,7 +86090,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "GRM187R61A226ME15D"
+		(property "Manufacturer_No" "CL10A226MP8NUNE"
 			(at 307.34 200.66 0)
 			(effects
 				(font
@@ -86222,7 +86273,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 935.99 668.02 0)
 			(effects
 				(font
@@ -86231,7 +86282,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 935.99 668.02 0)
 			(effects
 				(font
@@ -86320,6 +86371,15 @@
 			)
 		)
 		(property "Manufacturer_No" "CY7C65215-32LTXI"
+			(at 632.46 -60.96 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C22451897"
 			(at 632.46 -60.96 0)
 			(effects
 				(font
@@ -86489,7 +86549,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C242160"
+		(property "LCSC" "C17168"
 			(at 816.61 -62.23 0)
 			(effects
 				(font
@@ -86498,7 +86558,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 816.61 -62.23 0)
 			(effects
 				(font
@@ -86507,7 +86567,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ2GE0R00X"
+		(property "Manufacturer_No" "0402WGF0000TCE"
 			(at 816.61 -62.23 0)
 			(effects
 				(font
@@ -86848,7 +86908,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 433.07 368.3 0)
 			(effects
 				(font
@@ -86857,7 +86917,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 433.07 368.3 0)
 			(effects
 				(font
@@ -86965,7 +87025,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "PMEG1020EA,115"
+		(property "Value" "MS2A40LWS"
 			(at 240.03 277.8759 90)
 			(effects
 				(font
@@ -87001,7 +87061,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C426863"
+		(property "LCSC" "C7380001"
 			(at 237.49 276.86 0)
 			(effects
 				(font
@@ -87010,7 +87070,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Nexperia"
+		(property "Manufacturer" "MSKSEMI"
 			(at 237.49 276.86 0)
 			(effects
 				(font
@@ -87019,7 +87079,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "PMEG1020EA,115"
+		(property "Manufacturer_No" "MS2A40LWS"
 			(at 237.49 276.86 0)
 			(effects
 				(font
@@ -87096,7 +87156,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C144787"
+		(property "LCSC" "C26083"
 			(at 342.9 463.55 0)
 			(effects
 				(font
@@ -87105,7 +87165,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 342.9 463.55 0)
 			(effects
 				(font
@@ -87114,7 +87174,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "AC0402FR-071ML"
+		(property "Manufacturer_No" "0402WGF1004TCE"
 			(at 342.9 463.55 0)
 			(effects
 				(font
@@ -87190,7 +87250,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 839.47 111.76 0)
 			(effects
 				(font
@@ -87199,7 +87259,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-0710KL"
+		(property "Manufacturer_No" "0402WGF1002TCE"
 			(at 839.47 111.76 0)
 			(effects
 				(font
@@ -87208,7 +87268,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C60490"
+		(property "LCSC" "C25744"
 			(at 839.47 111.76 0)
 			(effects
 				(font
@@ -87286,7 +87346,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C60490"
+		(property "LCSC" "C25744"
 			(at 764.54 72.39 0)
 			(effects
 				(font
@@ -87295,7 +87355,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 764.54 72.39 0)
 			(effects
 				(font
@@ -87304,7 +87364,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-0710KL"
+		(property "Manufacturer_No" "0402WGF1002TCE"
 			(at 764.54 72.39 0)
 			(effects
 				(font
@@ -87381,7 +87441,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 403.86 491.49 0)
 			(effects
 				(font
@@ -87399,7 +87459,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 403.86 491.49 0)
 			(effects
 				(font
@@ -87618,6 +87678,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C437419"
+			(at 228.6 320.04 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "95f915c1-acea-4579-86fc-1832051ce136")
 		)
@@ -87685,7 +87754,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 932.18 706.12 0)
 			(effects
 				(font
@@ -87694,7 +87763,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-0733RL"
+		(property "Manufacturer_No" "0402WGF330JTCE"
 			(at 932.18 706.12 0)
 			(effects
 				(font
@@ -87703,7 +87772,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C138002"
+		(property "LCSC" "C25105"
 			(at 932.18 706.12 0)
 			(effects
 				(font
@@ -87782,7 +87851,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C92487"
+		(property "LCSC" "C194427"
 			(at 698.5 106.68 0)
 			(effects
 				(font
@@ -87791,7 +87860,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Samsung"
+		(property "Manufacturer" "muRata"
 			(at 698.5 106.68 0)
 			(effects
 				(font
@@ -87800,7 +87869,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL10A106MO8NQNC"
+		(property "Manufacturer_No" "GRM188R6YA106MA73D"
 			(at 698.5 106.68 0)
 			(effects
 				(font
@@ -87992,7 +88061,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "3a7d9f32-5881-4600-a4c0-e3d7554fac15")
 		(property "Reference" "R55"
 			(at 259.08 609.6 90)
@@ -88037,7 +88106,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 259.08 612.14 0)
 			(effects
 				(font
@@ -88046,7 +88115,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-0733RL"
+		(property "Manufacturer_No" "0402WGF330JTCE"
 			(at 259.08 612.14 0)
 			(effects
 				(font
@@ -88055,7 +88124,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "DNP"
+		(property "LCSC" "C25105"
 			(at 259.08 612.14 0)
 			(effects
 				(font
@@ -88133,7 +88202,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C60491"
+		(property "LCSC" "C25744"
 			(at 209.55 138.43 0)
 			(effects
 				(font
@@ -88142,7 +88211,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 209.55 138.43 0)
 			(effects
 				(font
@@ -88151,7 +88220,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402JR-0710KL"
+		(property "Manufacturer_No" "0402WGF1002TCE"
 			(at 209.55 138.43 0)
 			(effects
 				(font
@@ -88227,7 +88296,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 383.54 377.19 0)
 			(effects
 				(font
@@ -88236,7 +88305,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-0710KL"
+		(property "Manufacturer_No" "0402WGF1002TCE"
 			(at 383.54 377.19 0)
 			(effects
 				(font
@@ -88245,7 +88314,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C60490"
+		(property "LCSC" "C25744"
 			(at 383.54 377.19 0)
 			(effects
 				(font
@@ -88389,7 +88458,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C92487"
+		(property "LCSC" "C194427"
 			(at 196.85 120.65 0)
 			(effects
 				(font
@@ -88398,7 +88467,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Samsung"
+		(property "Manufacturer" "muRata"
 			(at 196.85 120.65 0)
 			(effects
 				(font
@@ -88407,7 +88476,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "GRM188R61E106KA73J"
+		(property "Manufacturer_No" "GRM188R6YA106MA73D"
 			(at 196.85 120.65 0)
 			(effects
 				(font
@@ -88484,7 +88553,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C242160"
+		(property "LCSC" "C17168"
 			(at 920.75 -60.96 0)
 			(effects
 				(font
@@ -88493,7 +88562,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 920.75 -60.96 0)
 			(effects
 				(font
@@ -88502,7 +88571,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ2GE0R00X"
+		(property "Manufacturer_No" "0402WGF0000TCE"
 			(at 920.75 -60.96 0)
 			(effects
 				(font
@@ -88674,7 +88743,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C140782"
+		(property "LCSC" "C86295"
 			(at 307.34 134.62 0)
 			(effects
 				(font
@@ -88683,7 +88752,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Murata"
+		(property "Manufacturer" "Samsung"
 			(at 307.34 134.62 0)
 			(effects
 				(font
@@ -88692,7 +88761,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "GRM187R61A226ME15D"
+		(property "Manufacturer_No" "CL10A226MP8NUNE"
 			(at 307.34 134.62 0)
 			(effects
 				(font
@@ -88844,7 +88913,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 726.44 737.87 0)
 			(effects
 				(font
@@ -88853,7 +88922,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 726.44 737.87 0)
 			(effects
 				(font
@@ -88931,7 +89000,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Samsung"
+		(property "Manufacturer" "muRata"
 			(at 958.85 668.02 0)
 			(effects
 				(font
@@ -88940,7 +89009,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL10A106MO8NQNC"
+		(property "Manufacturer_No" "GRM188R6YA106MA73D"
 			(at 958.85 668.02 0)
 			(effects
 				(font
@@ -88949,7 +89018,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C92487"
+		(property "LCSC" "C194427"
 			(at 958.85 668.02 0)
 			(effects
 				(font
@@ -89025,7 +89094,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 723.9 115.57 0)
 			(effects
 				(font
@@ -89034,7 +89103,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-0710KL"
+		(property "Manufacturer_No" "0402WGF1002TCE"
 			(at 723.9 115.57 0)
 			(effects
 				(font
@@ -89043,7 +89112,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C60490"
+		(property "LCSC" "C25744"
 			(at 723.9 115.57 0)
 			(effects
 				(font
@@ -89226,7 +89295,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 571.5 185.42 0)
 			(effects
 				(font
@@ -89235,7 +89304,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 571.5 185.42 0)
 			(effects
 				(font
@@ -89313,6 +89382,24 @@
 			)
 		)
 		(property "LCSC" "C2680357"
+			(at 674.37 527.05 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Diodes"
+			(at 674.37 527.05 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_No" "AP22615AWU-7"
 			(at 674.37 527.05 0)
 			(effects
 				(font
@@ -89484,6 +89571,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C160404"
+			(at 44.45 161.29 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "59e6276a-4ef8-4938-8750-38b54fbcb950")
 		)
@@ -89560,7 +89656,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 1139.19 247.65 0)
 			(effects
 				(font
@@ -89569,7 +89665,16 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-07100KL"
+		(property "Manufacturer_No" "0402WGF1003TCE"
+			(at 1139.19 247.65 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C25741"
 			(at 1139.19 247.65 0)
 			(effects
 				(font
@@ -89849,7 +89954,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 756.92 734.06 0)
 			(effects
 				(font
@@ -89858,7 +89963,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ2GE0R00X"
+		(property "Manufacturer_No" "0402WGF0000TCE"
 			(at 756.92 734.06 0)
 			(effects
 				(font
@@ -89867,7 +89972,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C242160"
+		(property "LCSC" "C17168"
 			(at 756.92 734.06 0)
 			(effects
 				(font
@@ -90107,7 +90212,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C60490"
+		(property "LCSC" "C25744"
 			(at 157.48 481.33 0)
 			(effects
 				(font
@@ -90116,7 +90221,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 157.48 481.33 0)
 			(effects
 				(font
@@ -90125,7 +90230,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-0710KL"
+		(property "Manufacturer_No" "0402WGF1002TCE"
 			(at 157.48 481.33 0)
 			(effects
 				(font
@@ -90201,7 +90306,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 1155.7 151.13 0)
 			(effects
 				(font
@@ -90210,7 +90315,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-0710KL"
+		(property "Manufacturer_No" "0402WGF1002TCE"
 			(at 1155.7 151.13 0)
 			(effects
 				(font
@@ -90219,7 +90324,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C60490"
+		(property "LCSC" "C25744"
 			(at 1155.7 151.13 0)
 			(effects
 				(font
@@ -90459,7 +90564,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 922.02 508 0)
 			(effects
 				(font
@@ -90468,7 +90573,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-0710KL"
+		(property "Manufacturer_No" "0402WGF1002TCE"
 			(at 922.02 508 0)
 			(effects
 				(font
@@ -90477,7 +90582,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C60490"
+		(property "LCSC" "C25744"
 			(at 922.02 508 0)
 			(effects
 				(font
@@ -90556,7 +90661,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C106235"
+		(property "LCSC" "C11702"
 			(at 360.68 758.19 0)
 			(effects
 				(font
@@ -90565,7 +90670,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 360.68 758.19 0)
 			(effects
 				(font
@@ -90574,7 +90679,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-071KL"
+		(property "Manufacturer_No" "0402WGF1001TCE"
 			(at 360.68 758.19 0)
 			(effects
 				(font
@@ -90653,7 +90758,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Samsung"
+		(property "Manufacturer" "muRata"
 			(at 892.81 626.11 0)
 			(effects
 				(font
@@ -90662,7 +90767,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL10A106MO8NQNC"
+		(property "Manufacturer_No" "GRM188R6YA106MA73D"
 			(at 892.81 626.11 0)
 			(effects
 				(font
@@ -90671,7 +90776,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C92487"
+		(property "LCSC" "C194427"
 			(at 892.81 626.11 0)
 			(effects
 				(font
@@ -90856,7 +90961,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C92487"
+		(property "LCSC" "C194427"
 			(at 885.19 102.87 0)
 			(effects
 				(font
@@ -90865,7 +90970,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Samsung"
+		(property "Manufacturer" "muRata"
 			(at 885.19 102.87 0)
 			(effects
 				(font
@@ -90874,7 +90979,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL10A106MO8NQNC"
+		(property "Manufacturer_No" "GRM188R6YA106MA73D"
 			(at 885.19 102.87 0)
 			(effects
 				(font
@@ -91226,7 +91331,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 406.4 166.37 0)
 			(effects
 				(font
@@ -91235,7 +91340,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 406.4 166.37 0)
 			(effects
 				(font
@@ -91311,7 +91416,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 657.86 527.05 0)
 			(effects
 				(font
@@ -91320,7 +91425,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-0710KL"
+		(property "Manufacturer_No" "0402WGF1002TCE"
 			(at 657.86 527.05 0)
 			(effects
 				(font
@@ -91329,7 +91434,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C60490"
+		(property "LCSC" "C25744"
 			(at 657.86 527.05 0)
 			(effects
 				(font
@@ -91538,7 +91643,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 948.69 716.28 0)
 			(effects
 				(font
@@ -91547,7 +91652,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-0733RL"
+		(property "Manufacturer_No" "0402WGF330JTCE"
 			(at 948.69 716.28 0)
 			(effects
 				(font
@@ -91556,7 +91661,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C138002"
+		(property "LCSC" "C25105"
 			(at 948.69 716.28 0)
 			(effects
 				(font
@@ -91974,6 +92079,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C2877921"
+			(at 938.53 642.62 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "5289f1fb-4f3f-4edc-a921-49f5acd4d672")
 		)
@@ -92063,6 +92177,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C160402"
+			(at 44.45 201.93 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "cdcc552e-f1be-40b5-b5b8-a72996639e6a")
 		)
@@ -92132,7 +92255,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C140782"
+		(property "LCSC" "C86295"
 			(at 287.02 200.66 0)
 			(effects
 				(font
@@ -92141,7 +92264,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Murata"
+		(property "Manufacturer" "Samsung"
 			(at 287.02 200.66 0)
 			(effects
 				(font
@@ -92150,7 +92273,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "GRM187R61A226ME15D"
+		(property "Manufacturer_No" "CL10A226MP8NUNE"
 			(at 287.02 200.66 0)
 			(effects
 				(font
@@ -92246,7 +92369,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "4c109063-146e-4db1-b507-5ceadf9a1b52")
 		(property "Reference" "R86"
 			(at 265.43 609.6 90)
@@ -92291,7 +92414,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 265.43 614.68 0)
 			(effects
 				(font
@@ -92300,7 +92423,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-0733RL"
+		(property "Manufacturer_No" "0402WGF330JTCE"
 			(at 265.43 614.68 0)
 			(effects
 				(font
@@ -92309,7 +92432,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "DNP"
+		(property "LCSC" "C25105"
 			(at 265.43 614.68 0)
 			(effects
 				(font
@@ -92386,7 +92509,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C242160"
+		(property "LCSC" "C11702"
 			(at 481.33 274.32 0)
 			(effects
 				(font
@@ -92395,7 +92518,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 481.33 274.32 0)
 			(effects
 				(font
@@ -92404,7 +92527,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ2GE0R00X"
+		(property "Manufacturer_No" "0402WGF1001TCE"
 			(at 481.33 274.32 0)
 			(effects
 				(font
@@ -92631,7 +92754,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C242160"
+		(property "LCSC" "C25744"
 			(at 824.23 -68.58 0)
 			(effects
 				(font
@@ -92640,7 +92763,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 824.23 -68.58 0)
 			(effects
 				(font
@@ -92649,7 +92772,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ2GE0R00X"
+		(property "Manufacturer_No" "0402WGF1002TCE"
 			(at 824.23 -68.58 0)
 			(effects
 				(font
@@ -92725,7 +92848,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1589"
+		(property "LCSC" "C307331"
 			(at 265.43 137.16 0)
 			(effects
 				(font
@@ -92743,7 +92866,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 265.43 137.16 0)
 			(effects
 				(font
@@ -92887,7 +93010,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C60491"
+		(property "LCSC" "C25741"
 			(at 255.27 218.44 0)
 			(effects
 				(font
@@ -92896,7 +93019,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 255.27 218.44 0)
 			(effects
 				(font
@@ -92905,7 +93028,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-07100KL"
+		(property "Manufacturer_No" "0402WGF1003TCE"
 			(at 255.27 218.44 0)
 			(effects
 				(font
@@ -92936,7 +93059,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "4f7ad3eb-d94a-42d1-b168-4ccf430b9f07")
 		(property "Reference" "TP2"
 			(at 523.24 133.3499 90)
@@ -92976,6 +93099,24 @@
 		)
 		(property "Description" "test point"
 			(at 518.16 134.62 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "DNP"
+			(at 518.16 134.62 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_No" "DNP"
+			(at 518.16 134.62 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -93049,7 +93190,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 1040.13 408.94 0)
 			(effects
 				(font
@@ -93058,7 +93199,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-0710KL"
+		(property "Manufacturer_No" "0402WGF1002TCE"
 			(at 1040.13 408.94 0)
 			(effects
 				(font
@@ -93067,7 +93208,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C60490"
+		(property "LCSC" "C25744"
 			(at 1040.13 408.94 0)
 			(effects
 				(font
@@ -93552,6 +93693,33 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C25779"
+			(at 82.55 72.39 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "UNI-ROYAL"
+			(at 82.55 72.39 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_No" "0402WGF3302TCE"
+			(at 82.55 72.39 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "6693a908-397d-4f35-8a0b-90b8d39fa88a")
 		)
@@ -93630,7 +93798,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 485.14 739.14 0)
 			(effects
 				(font
@@ -93639,7 +93807,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 485.14 739.14 0)
 			(effects
 				(font
@@ -93716,6 +93884,33 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C1333678"
+			(at 283.21 66.04 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Murata"
+			(at 283.21 66.04 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_No" "DFE322512F-100M=P2"
+			(at 283.21 66.04 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "2ec8f436-1a79-4194-aa55-4a76a9b24213")
 		)
@@ -93785,7 +93980,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 1068.07 142.24 0)
 			(effects
 				(font
@@ -93803,7 +93998,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 1068.07 142.24 0)
 			(effects
 				(font
@@ -94109,7 +94304,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C92487"
+		(property "LCSC" "C194427"
 			(at 638.81 528.32 0)
 			(effects
 				(font
@@ -94118,7 +94313,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Samsung"
+		(property "Manufacturer" "muRata"
 			(at 638.81 528.32 0)
 			(effects
 				(font
@@ -94127,7 +94322,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL10A106MO8NQNC"
+		(property "Manufacturer_No" "GRM188R6YA106MA73D"
 			(at 638.81 528.32 0)
 			(effects
 				(font
@@ -94402,7 +94597,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 1018.54 408.94 0)
 			(effects
 				(font
@@ -94411,7 +94606,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ2RKF2702X"
+		(property "Manufacturer_No" "0402WGF2702TCE"
 			(at 1018.54 408.94 0)
 			(effects
 				(font
@@ -94420,7 +94615,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C413101"
+		(property "LCSC" "C25771"
 			(at 1018.54 408.94 0)
 			(effects
 				(font
@@ -94496,7 +94691,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C242160"
+		(property "LCSC" "C17168"
 			(at 1096.01 283.21 0)
 			(effects
 				(font
@@ -94505,7 +94700,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 1096.01 283.21 0)
 			(effects
 				(font
@@ -94514,7 +94709,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ2GE0R00X"
+		(property "Manufacturer_No" "0402WGF0000TCE"
 			(at 1096.01 283.21 0)
 			(effects
 				(font
@@ -94610,7 +94805,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "57074b61-c0f8-4c71-a858-230ea771a116")
 		(property "Reference" "TP15"
 			(at 618.49 259.08 90)
@@ -94650,6 +94845,24 @@
 		)
 		(property "Description" "test point"
 			(at 618.49 254 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "DNP"
+			(at 618.49 254 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_No" "DNP"
+			(at 618.49 254 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -94937,7 +95150,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C140782"
+		(property "LCSC" "C86295"
 			(at 302.26 134.62 0)
 			(effects
 				(font
@@ -94946,7 +95159,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Murata"
+		(property "Manufacturer" "Samsung"
 			(at 302.26 134.62 0)
 			(effects
 				(font
@@ -94955,7 +95168,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "GRM187R61A226ME15D"
+		(property "Manufacturer_No" "CL10A226MP8NUNE"
 			(at 302.26 134.62 0)
 			(effects
 				(font
@@ -95052,6 +95265,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C162274"
+			(at 621.03 -92.71 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "3203f7d9-56cb-4efd-abcc-22f6d3cdf2b7")
 		)
@@ -95122,7 +95344,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C92487"
+		(property "LCSC" "C194427"
 			(at 355.6 368.3 0)
 			(effects
 				(font
@@ -95131,7 +95353,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Samsung"
+		(property "Manufacturer" "muRata"
 			(at 355.6 368.3 0)
 			(effects
 				(font
@@ -95140,7 +95362,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "GRM188R61E106KA73J"
+		(property "Manufacturer_No" "GRM188R6YA106MA73D"
 			(at 355.6 368.3 0)
 			(effects
 				(font
@@ -95218,7 +95440,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 1090.93 142.24 0)
 			(effects
 				(font
@@ -95236,7 +95458,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 1090.93 142.24 0)
 			(effects
 				(font
@@ -95312,7 +95534,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 194.31 306.07 0)
 			(effects
 				(font
@@ -95321,7 +95543,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ2GE0R00X"
+		(property "Manufacturer_No" "0402WGF0000TCE"
 			(at 194.31 306.07 0)
 			(effects
 				(font
@@ -95330,7 +95552,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C242160"
+		(property "LCSC" "C17168"
 			(at 194.31 306.07 0)
 			(effects
 				(font
@@ -95417,7 +95639,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 961.39 508 0)
 			(effects
 				(font
@@ -95426,7 +95648,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 961.39 508 0)
 			(effects
 				(font
@@ -95726,7 +95948,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 520.7 179.07 0)
 			(effects
 				(font
@@ -95735,7 +95957,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-074K7L"
+		(property "Manufacturer_No" "0402WGF4701TCE"
 			(at 520.7 179.07 0)
 			(effects
 				(font
@@ -95744,7 +95966,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C105871"
+		(property "LCSC" "C25900"
 			(at 520.7 179.07 0)
 			(effects
 				(font
@@ -95889,7 +96111,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C60490"
+		(property "LCSC" "C25741"
 			(at 320.04 134.62 0)
 			(effects
 				(font
@@ -95898,7 +96120,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 320.04 134.62 0)
 			(effects
 				(font
@@ -95907,7 +96129,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-07100KL"
+		(property "Manufacturer_No" "0402WGF1003TCE"
 			(at 320.04 134.62 0)
 			(effects
 				(font
@@ -95984,7 +96206,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C321660"
+		(property "LCSC" "C96273"
 			(at 401.32 504.19 0)
 			(effects
 				(font
@@ -95993,7 +96215,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "FH"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 401.32 504.19 0)
 			(effects
 				(font
@@ -96002,7 +96224,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC-02W9531FT"
+		(property "Manufacturer_No" "0402WGF9531TCE"
 			(at 401.32 504.19 0)
 			(effects
 				(font
@@ -96078,7 +96300,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Dongguan Guangzhu"
+		(property "Manufacturer" "Nidec"
 			(at 444.5 68.58 0)
 			(effects
 				(font
@@ -96087,7 +96309,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "DSIC01LSGET"
+		(property "Manufacturer_No" "CHS-01A1"
 			(at 444.5 68.58 0)
 			(effects
 				(font
@@ -96096,7 +96318,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C402914"
+		(property "LCSC" "C3312106"
 			(at 444.5 68.58 0)
 			(effects
 				(font
@@ -96175,7 +96397,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1589"
+		(property "LCSC" "C1623"
 			(at 208.28 186.69 0)
 			(effects
 				(font
@@ -96193,7 +96415,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL10A474KB8NNNC"
+		(property "Manufacturer_No" "CL10B474KA8NNNC"
 			(at 208.28 186.69 0)
 			(effects
 				(font
@@ -96429,7 +96651,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" ""
+		(property "LCSC" "C18198647"
 			(at 789.94 427.99 0)
 			(effects
 				(font
@@ -96579,7 +96801,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 492.76 739.14 0)
 			(effects
 				(font
@@ -96588,7 +96810,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 492.76 739.14 0)
 			(effects
 				(font
@@ -96676,7 +96898,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 440.69 408.94 0)
 			(effects
 				(font
@@ -96685,7 +96907,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 440.69 408.94 0)
 			(effects
 				(font
@@ -96913,6 +97135,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C507270"
+			(at 215.9 317.5 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "33bb7480-f2b5-48a7-a1dc-fa299d63b087")
 		)
@@ -97058,7 +97289,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C60490"
+		(property "LCSC" "C25744"
 			(at 261.62 278.13 0)
 			(effects
 				(font
@@ -97067,7 +97298,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 261.62 278.13 0)
 			(effects
 				(font
@@ -97076,7 +97307,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-0710KL"
+		(property "Manufacturer_No" "0402WGF1002TCE"
 			(at 261.62 278.13 0)
 			(effects
 				(font
@@ -97164,7 +97395,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 397.51 190.5 0)
 			(effects
 				(font
@@ -97173,7 +97404,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 397.51 190.5 0)
 			(effects
 				(font
@@ -97414,7 +97645,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C242160"
+		(property "LCSC" "C25744"
 			(at 920.75 -48.26 0)
 			(effects
 				(font
@@ -97423,7 +97654,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 920.75 -48.26 0)
 			(effects
 				(font
@@ -97432,7 +97663,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402JR-0710KL"
+		(property "Manufacturer_No" "0402WGF1002TCE"
 			(at 920.75 -48.26 0)
 			(effects
 				(font
@@ -97727,7 +97958,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "68e68e78-2874-4222-aa24-1d377eb20136")
 		(property "Reference" "TP6"
 			(at 571.5 246.38 90)
@@ -97767,6 +97998,24 @@
 		)
 		(property "Description" "test point"
 			(at 566.42 246.38 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "DNP"
+			(at 566.42 246.38 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_No" "DNP"
+			(at 566.42 246.38 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -97847,7 +98096,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 1004.57 369.57 0)
 			(effects
 				(font
@@ -97856,7 +98105,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 1004.57 369.57 0)
 			(effects
 				(font
@@ -98118,7 +98367,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 1065.53 421.64 0)
 			(effects
 				(font
@@ -98127,7 +98376,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "AC0402FR-0747KL"
+		(property "Manufacturer_No" "0402WGF4702TCE"
 			(at 1065.53 421.64 0)
 			(effects
 				(font
@@ -98136,7 +98385,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C144757"
+		(property "LCSC" "C25792"
 			(at 1065.53 421.64 0)
 			(effects
 				(font
@@ -98280,7 +98529,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Samsung"
+		(property "Manufacturer" "muRata"
 			(at 991.87 621.03 0)
 			(effects
 				(font
@@ -98289,7 +98538,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL10A106MO8NQNC"
+		(property "Manufacturer_No" "GRM188R6YA106MA73D"
 			(at 991.87 621.03 0)
 			(effects
 				(font
@@ -98298,7 +98547,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C92487"
+		(property "LCSC" "C194427"
 			(at 991.87 621.03 0)
 			(effects
 				(font
@@ -98369,6 +98618,33 @@
 			)
 		)
 		(property "Description" "Resistor, small symbol"
+			(at 82.55 55.88 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C25790"
+			(at 82.55 55.88 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "UNI-ROYAL"
+			(at 82.55 55.88 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_No" "0402WGF4703TCE"
 			(at 82.55 55.88 0)
 			(effects
 				(font
@@ -98643,7 +98919,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C140782"
+		(property "LCSC" "C86295"
 			(at 287.02 134.62 0)
 			(effects
 				(font
@@ -98652,7 +98928,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Murata"
+		(property "Manufacturer" "Samsung"
 			(at 287.02 134.62 0)
 			(effects
 				(font
@@ -98661,7 +98937,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "GRM187R61A226ME15D"
+		(property "Manufacturer_No" "CL10A226MP8NUNE"
 			(at 287.02 134.62 0)
 			(effects
 				(font
@@ -98813,7 +99089,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 604.52 35.56 0)
 			(effects
 				(font
@@ -98822,7 +99098,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 604.52 35.56 0)
 			(effects
 				(font
@@ -98899,7 +99175,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C242160"
+		(property "LCSC" "C17168"
 			(at 939.8 -53.34 0)
 			(effects
 				(font
@@ -98908,7 +99184,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 939.8 -53.34 0)
 			(effects
 				(font
@@ -98917,7 +99193,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ2GE0R00X"
+		(property "Manufacturer_No" "0402WGF0000TCE"
 			(at 939.8 -53.34 0)
 			(effects
 				(font
@@ -98996,7 +99272,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C413061"
+		(property "LCSC" "C25133"
 			(at 435.61 737.87 0)
 			(effects
 				(font
@@ -99005,7 +99281,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 435.61 737.87 0)
 			(effects
 				(font
@@ -99014,7 +99290,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ2RKF75R0X"
+		(property "Manufacturer_No" "0402WGF750JTCE"
 			(at 435.61 737.87 0)
 			(effects
 				(font
@@ -99156,7 +99432,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C242160"
+		(property "LCSC" "C17168"
 			(at 1096.01 275.59 0)
 			(effects
 				(font
@@ -99165,7 +99441,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 1096.01 275.59 0)
 			(effects
 				(font
@@ -99174,7 +99450,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ2GE0R00X"
+		(property "Manufacturer_No" "0402WGF0000TCE"
 			(at 1096.01 275.59 0)
 			(effects
 				(font
@@ -99346,7 +99622,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Samsung"
+		(property "Manufacturer" "muRata"
 			(at 948.69 668.02 0)
 			(effects
 				(font
@@ -99355,7 +99631,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL10A106MO8NQNC"
+		(property "Manufacturer_No" "GRM188R6YA106MA73D"
 			(at 948.69 668.02 0)
 			(effects
 				(font
@@ -99364,7 +99640,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C92487"
+		(property "LCSC" "C194427"
 			(at 948.69 668.02 0)
 			(effects
 				(font
@@ -99440,7 +99716,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 182.88 546.1 0)
 			(effects
 				(font
@@ -99449,7 +99725,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ2GE0R00X"
+		(property "Manufacturer_No" "0402WGF0000TCE"
 			(at 182.88 546.1 0)
 			(effects
 				(font
@@ -99458,7 +99734,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C242160"
+		(property "LCSC" "C17168"
 			(at 182.88 546.1 0)
 			(effects
 				(font
@@ -99631,7 +99907,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C106235"
+		(property "LCSC" "C11702"
 			(at 520.7 278.13 0)
 			(effects
 				(font
@@ -99640,7 +99916,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 520.7 278.13 0)
 			(effects
 				(font
@@ -99649,7 +99925,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-071KL"
+		(property "Manufacturer_No" "0402WGF1001TCE"
 			(at 520.7 278.13 0)
 			(effects
 				(font
@@ -99725,7 +100001,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 374.65 513.08 0)
 			(effects
 				(font
@@ -99734,7 +100010,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-074K7L"
+		(property "Manufacturer_No" "0402WGF4701TCE"
 			(at 374.65 513.08 0)
 			(effects
 				(font
@@ -99743,7 +100019,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C105871"
+		(property "LCSC" "C25900"
 			(at 374.65 513.08 0)
 			(effects
 				(font
@@ -99819,7 +100095,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C242160"
+		(property "LCSC" "C17168"
 			(at 1102.36 278.13 0)
 			(effects
 				(font
@@ -99828,7 +100104,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 1102.36 278.13 0)
 			(effects
 				(font
@@ -99837,7 +100113,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ2GE0R00X"
+		(property "Manufacturer_No" "0402WGF0000TCE"
 			(at 1102.36 278.13 0)
 			(effects
 				(font
@@ -99915,7 +100191,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" ""
+		(property "Manufacturer" "Murata"
 			(at 751.84 228.6 0)
 			(effects
 				(font
@@ -99924,7 +100200,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" ""
+		(property "Manufacturer_No" "GRM188R6YA475KE15D"
 			(at 751.84 228.6 0)
 			(effects
 				(font
@@ -99933,7 +100209,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" ""
+		(property "LCSC" "C162274"
 			(at 751.84 228.6 0)
 			(effects
 				(font
@@ -100011,7 +100287,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C140782"
+		(property "LCSC" "C86295"
 			(at 292.1 200.66 0)
 			(effects
 				(font
@@ -100020,7 +100296,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Murata"
+		(property "Manufacturer" "Samsung"
 			(at 292.1 200.66 0)
 			(effects
 				(font
@@ -100029,7 +100305,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "GRM187R61A226ME15D"
+		(property "Manufacturer_No" "CL10A226MP8NUNE"
 			(at 292.1 200.66 0)
 			(effects
 				(font
@@ -100105,7 +100381,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 190.5 548.64 0)
 			(effects
 				(font
@@ -100114,7 +100390,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ2GE0R00X"
+		(property "Manufacturer_No" "0402WGF0000TCE"
 			(at 190.5 548.64 0)
 			(effects
 				(font
@@ -100123,7 +100399,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C242160"
+		(property "LCSC" "C17168"
 			(at 190.5 548.64 0)
 			(effects
 				(font
@@ -100316,7 +100592,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "710fe050-d753-433d-a6b3-68dd5e0f944e")
 		(property "Reference" "GFX2"
 			(at 135.89 739.2416 0)
@@ -100436,7 +100712,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C92487"
+		(property "LCSC" "C194427"
 			(at 193.04 69.85 0)
 			(effects
 				(font
@@ -100445,7 +100721,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Samsung"
+		(property "Manufacturer" "muRata"
 			(at 193.04 69.85 0)
 			(effects
 				(font
@@ -100454,7 +100730,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL10A106MO8NQNC"
+		(property "Manufacturer_No" "GRM188R6YA106MA73D"
 			(at 193.04 69.85 0)
 			(effects
 				(font
@@ -100541,7 +100817,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 972.82 570.23 0)
 			(effects
 				(font
@@ -100550,7 +100826,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 972.82 570.23 0)
 			(effects
 				(font
@@ -100637,7 +100913,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 924.56 668.02 0)
 			(effects
 				(font
@@ -100646,7 +100922,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 924.56 668.02 0)
 			(effects
 				(font
@@ -100724,7 +101000,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C114762"
+		(property "LCSC" "C25879"
 			(at 1008.38 716.28 0)
 			(effects
 				(font
@@ -100733,7 +101009,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 1008.38 716.28 0)
 			(effects
 				(font
@@ -100742,7 +101018,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-072K2L"
+		(property "Manufacturer_No" "0402WGF2201TCE"
 			(at 1008.38 716.28 0)
 			(effects
 				(font
@@ -101102,7 +101378,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Taiyo Yuden"
+		(property "Manufacturer" "Murata"
 			(at 1028.7 690.88 0)
 			(effects
 				(font
@@ -101111,7 +101387,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "NRH3012T150MN"
+		(property "Manufacturer_No" "LQH3NPN150MMEL"
 			(at 1028.7 690.88 0)
 			(effects
 				(font
@@ -101120,7 +101396,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C497563"
+		(property "LCSC" "C668450"
 			(at 1028.7 690.88 0)
 			(effects
 				(font
@@ -101208,7 +101484,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 425.45 408.94 0)
 			(effects
 				(font
@@ -101217,7 +101493,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 425.45 408.94 0)
 			(effects
 				(font
@@ -101293,7 +101569,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C242160"
+		(property "LCSC" "C17168"
 			(at 803.91 -44.45 0)
 			(effects
 				(font
@@ -101302,7 +101578,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 803.91 -44.45 0)
 			(effects
 				(font
@@ -101311,7 +101587,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ2GE0R00X"
+		(property "Manufacturer_No" "0402WGF0000TCE"
 			(at 803.91 -44.45 0)
 			(effects
 				(font
@@ -101390,7 +101666,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C140782"
+		(property "LCSC" "C94034"
 			(at 306.07 76.2 0)
 			(effects
 				(font
@@ -101408,7 +101684,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "GRM188R60J476ME15D"
+		(property "Manufacturer_No" "GRM31CR61A476ME15L"
 			(at 306.07 76.2 0)
 			(effects
 				(font
@@ -101549,7 +101825,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 153.67 189.23 0)
 			(effects
 				(font
@@ -101558,7 +101834,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-0710KL"
+		(property "Manufacturer_No" "0402WGF1002TCE"
 			(at 153.67 189.23 0)
 			(effects
 				(font
@@ -101567,7 +101843,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C60490"
+		(property "LCSC" "C25744"
 			(at 153.67 189.23 0)
 			(effects
 				(font
@@ -101644,7 +101920,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C242160"
+		(property "LCSC" "C17168"
 			(at 189.23 255.27 0)
 			(effects
 				(font
@@ -101653,7 +101929,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 189.23 255.27 0)
 			(effects
 				(font
@@ -101662,7 +101938,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ2GE0R00X"
+		(property "Manufacturer_No" "0402WGF0000TCE"
 			(at 189.23 255.27 0)
 			(effects
 				(font
@@ -101807,7 +102083,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C92487"
+		(property "LCSC" "C194427"
 			(at 196.85 186.69 0)
 			(effects
 				(font
@@ -101816,7 +102092,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Samsung"
+		(property "Manufacturer" "muRata"
 			(at 196.85 186.69 0)
 			(effects
 				(font
@@ -101825,7 +102101,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "GRM188R61E106KA73J"
+		(property "Manufacturer_No" "GRM188R6YA106MA73D"
 			(at 196.85 186.69 0)
 			(effects
 				(font
@@ -102067,7 +102343,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C60490"
+		(property "LCSC" "C25741"
 			(at 292.1 71.12 0)
 			(effects
 				(font
@@ -102076,7 +102352,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 292.1 71.12 0)
 			(effects
 				(font
@@ -102085,7 +102361,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-0710KL"
+		(property "Manufacturer_No" "0402WGF1003TCE"
 			(at 292.1 71.12 0)
 			(effects
 				(font
@@ -102164,7 +102440,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C92487"
+		(property "LCSC" "C194427"
 			(at 873.76 102.87 0)
 			(effects
 				(font
@@ -102173,7 +102449,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Samsung"
+		(property "Manufacturer" "muRata"
 			(at 873.76 102.87 0)
 			(effects
 				(font
@@ -102182,7 +102458,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL10A106MO8NQNC"
+		(property "Manufacturer_No" "GRM188R6YA106MA73D"
 			(at 873.76 102.87 0)
 			(effects
 				(font
@@ -102325,7 +102601,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 417.83 538.48 0)
 			(effects
 				(font
@@ -102334,7 +102610,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-074K7L"
+		(property "Manufacturer_No" "0402WGF4701TCE"
 			(at 417.83 538.48 0)
 			(effects
 				(font
@@ -102343,7 +102619,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C105871"
+		(property "LCSC" "C25900"
 			(at 417.83 538.48 0)
 			(effects
 				(font
@@ -102421,7 +102697,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 838.2 427.99 0)
 			(effects
 				(font
@@ -102430,7 +102706,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-0710KL"
+		(property "Manufacturer_No" "0402WGF1002TCE"
 			(at 838.2 427.99 0)
 			(effects
 				(font
@@ -102439,7 +102715,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C60490"
+		(property "LCSC" "C25744"
 			(at 838.2 427.99 0)
 			(effects
 				(font
@@ -102517,7 +102793,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 1075.69 142.24 0)
 			(effects
 				(font
@@ -102535,7 +102811,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 1075.69 142.24 0)
 			(effects
 				(font
@@ -102680,7 +102956,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C413061"
+		(property "LCSC" "C25133"
 			(at 415.29 737.87 0)
 			(effects
 				(font
@@ -102689,7 +102965,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 415.29 737.87 0)
 			(effects
 				(font
@@ -102698,7 +102974,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ2RKF75R0X"
+		(property "Manufacturer_No" "0402WGF750JTCE"
 			(at 415.29 737.87 0)
 			(effects
 				(font
@@ -102769,6 +103045,33 @@
 			)
 		)
 		(property "Description" "I2C Serial EEPROM, 2Kb (256x8) with Unique Serial Number, SOT-23-5"
+			(at 581.66 203.2 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C2060969"
+			(at 581.66 203.2 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Microchip"
+			(at 581.66 203.2 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_No" "AT24CS02-STUM-T"
 			(at 581.66 203.2 0)
 			(effects
 				(font
@@ -102868,6 +103171,145 @@
 		)
 	)
 	(symbol
+		(lib_id "Interface_Expansion:PCA9557PW")
+		(at 781.05 -54.61 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "7db998ab-667d-4b98-abb2-980ec97eae6b")
+		(property "Reference" "U39"
+			(at 783.1933 -68.58 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "PCA9557PW"
+			(at 783.1933 -66.04 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_SO:TSSOP-16_4.4x5mm_P0.65mm"
+			(at 805.18 -40.64 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://www.nxp.com/docs/en/data-sheet/PCA9557.pdf"
+			(at 783.59 -52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "8-bit I2C-bus and SMBus I/O port with reset, TSSOP-16"
+			(at 781.05 -54.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C141380"
+			(at 781.05 -54.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "NXP"
+			(at 781.05 -54.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_No" "PCA9557PW,118"
+			(at 781.05 -54.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "6"
+			(uuid "649d1b98-0f81-4130-a843-be9ecbc0b0e9")
+		)
+		(pin "5"
+			(uuid "2755e462-7a0a-4bcf-a80b-138520b18b81")
+		)
+		(pin "11"
+			(uuid "34772696-ed38-4171-81ef-3cd98dca7974")
+		)
+		(pin "9"
+			(uuid "ba9fdde1-244f-4543-9a23-47c2a6cda18a")
+		)
+		(pin "12"
+			(uuid "85c170fe-634c-4888-9db8-9e2b73cd38e2")
+		)
+		(pin "13"
+			(uuid "3ca869a5-2c2a-40a8-93ae-01f859d55ae3")
+		)
+		(pin "2"
+			(uuid "006bb6c8-de08-4eba-bc13-196879aef822")
+		)
+		(pin "14"
+			(uuid "ee3aba47-4a71-4870-9d71-624f8099ee9f")
+		)
+		(pin "8"
+			(uuid "f82763fa-dcb3-4a12-b30a-d1deb6a38dc0")
+		)
+		(pin "7"
+			(uuid "4d811066-5fb3-4a3f-8e8e-183796768345")
+		)
+		(pin "16"
+			(uuid "4b89b550-630c-4d8b-b231-ce149c09d2f1")
+		)
+		(pin "1"
+			(uuid "f078e76e-c4f2-4793-acd7-419b021165d2")
+		)
+		(pin "3"
+			(uuid "bc2cb624-876a-4e08-af0a-24360e94e19b")
+		)
+		(pin "4"
+			(uuid "65240de6-13af-4285-aa52-135d038dfcfd")
+		)
+		(pin "10"
+			(uuid "1c0f8f5d-6a60-4971-9af3-daf7caae11c8")
+		)
+		(pin "15"
+			(uuid "cacce07e-a6e4-48a1-a973-dfbce680f527")
+		)
+		(instances
+			(project ""
+				(path "/63c56ea4-91a3-4172-b9de-a4388cc8f894"
+					(reference "U39")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:C_Small")
 		(at 508 739.14 0)
 		(unit 1)
@@ -102930,7 +103372,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 508 739.14 0)
 			(effects
 				(font
@@ -102939,7 +103381,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 508 739.14 0)
 			(effects
 				(font
@@ -103015,7 +103457,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C242160"
+		(property "LCSC" "C17168"
 			(at 1102.36 285.75 0)
 			(effects
 				(font
@@ -103024,7 +103466,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 1102.36 285.75 0)
 			(effects
 				(font
@@ -103033,7 +103475,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ2GE0R00X"
+		(property "Manufacturer_No" "0402WGF0000TCE"
 			(at 1102.36 285.75 0)
 			(effects
 				(font
@@ -103109,7 +103551,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 242.57 408.94 0)
 			(effects
 				(font
@@ -103118,7 +103560,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ2GE0R00X"
+		(property "Manufacturer_No" "0402WGF0000TCE"
 			(at 242.57 408.94 0)
 			(effects
 				(font
@@ -103127,7 +103569,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C242160"
+		(property "LCSC" "C17168"
 			(at 242.57 408.94 0)
 			(effects
 				(font
@@ -103584,7 +104026,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C92487"
+		(property "LCSC" "C194427"
 			(at 125.73 180.34 0)
 			(effects
 				(font
@@ -103593,7 +104035,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Samsung"
+		(property "Manufacturer" "muRata"
 			(at 125.73 180.34 0)
 			(effects
 				(font
@@ -103602,7 +104044,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "GRM188R61E106KA73J"
+		(property "Manufacturer_No" "GRM188R6YA106MA73D"
 			(at 125.73 180.34 0)
 			(effects
 				(font
@@ -103747,7 +104189,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C590854"
+		(property "LCSC" "C4827729"
 			(at 746.76 417.83 0)
 			(effects
 				(font
@@ -104044,7 +104486,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C60490"
+		(property "LCSC" "C25744"
 			(at 585.47 -66.04 0)
 			(effects
 				(font
@@ -104053,7 +104495,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 585.47 -66.04 0)
 			(effects
 				(font
@@ -104062,7 +104504,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-0710KL"
+		(property "Manufacturer_No" "0402WGF1002TCE"
 			(at 585.47 -66.04 0)
 			(effects
 				(font
@@ -104287,7 +104729,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C7394031"
+		(property "LCSC" "C353880"
 			(at 767.08 261.62 0)
 			(effects
 				(font
@@ -104530,7 +104972,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "8caaf08a-9339-44e4-8c38-81e33485147a")
 		(property "Reference" "C96"
 			(at 1020.0132 731.4184 90)
@@ -104749,7 +105191,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 440.69 368.3 0)
 			(effects
 				(font
@@ -104758,7 +105200,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 440.69 368.3 0)
 			(effects
 				(font
@@ -104845,7 +105287,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 909.32 570.23 0)
 			(effects
 				(font
@@ -104854,7 +105296,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 909.32 570.23 0)
 			(effects
 				(font
@@ -104941,7 +105383,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 749.3 252.73 0)
 			(effects
 				(font
@@ -104950,7 +105392,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 749.3 252.73 0)
 			(effects
 				(font
@@ -105093,6 +105535,33 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C17772"
+			(at 692.15 535.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "UNI-ROYAL"
+			(at 692.15 535.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_No" "0805W8F6801T5E"
+			(at 692.15 535.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "73872dbd-13f3-4eef-a4b2-f8f87c9e780e")
 		)
@@ -105162,7 +105631,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C60491"
+		(property "LCSC" "C11702"
 			(at 142.24 204.47 0)
 			(effects
 				(font
@@ -105171,7 +105640,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 142.24 204.47 0)
 			(effects
 				(font
@@ -105180,7 +105649,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "AC0402DR-071KL"
+		(property "Manufacturer_No" "0402WGF1001TCE"
 			(at 142.24 204.47 0)
 			(effects
 				(font
@@ -105342,6 +105811,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C523793"
+			(at 866.14 59.69 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "4"
 			(uuid "71efed87-8f8e-4b53-bfac-0593cd605cf5")
 		)
@@ -105491,7 +105969,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C144778"
+		(property "LCSC" "C25768"
 			(at 982.98 198.12 0)
 			(effects
 				(font
@@ -105500,7 +105978,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 982.98 198.12 0)
 			(effects
 				(font
@@ -105509,7 +105987,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "AC0402FR-0722KL"
+		(property "Manufacturer_No" "0402WGF2202TCE"
 			(at 982.98 198.12 0)
 			(effects
 				(font
@@ -105683,6 +106161,33 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C25900"
+			(at 411.48 375.92 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "UNI-ROYAL"
+			(at 411.48 375.92 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_No" "0402WGF4701TCE"
+			(at 411.48 375.92 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "a9960ce5-c600-4ce5-9063-5a0fdb1332d9")
 		)
@@ -105752,7 +106257,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 861.06 403.86 0)
 			(effects
 				(font
@@ -105761,7 +106266,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ2GE0R00X"
+		(property "Manufacturer_No" "0402WGF0000TCE"
 			(at 861.06 403.86 0)
 			(effects
 				(font
@@ -105770,7 +106275,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C242160"
+		(property "LCSC" "C17168"
 			(at 861.06 403.86 0)
 			(effects
 				(font
@@ -105801,7 +106306,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "9210554e-e1d2-4dbc-b795-36c997488b1c")
 		(property "Reference" "TP1"
 			(at 523.24 130.8099 90)
@@ -105848,6 +106353,24 @@
 				(hide yes)
 			)
 		)
+		(property "Manufacturer" "DNP"
+			(at 518.16 132.08 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_No" "DNP"
+			(at 518.16 132.08 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "d50b9f96-767b-4d42-9596-943007342675")
 		)
@@ -105867,7 +106390,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "92272a64-28cd-4dac-a07a-7229f898c4c0")
 		(property "Reference" "TP19"
 			(at 651.51 251.46 90)
@@ -105907,6 +106430,24 @@
 		)
 		(property "Description" "test point"
 			(at 651.51 256.54 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "DNP"
+			(at 651.51 256.54 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_No" "DNP"
+			(at 651.51 256.54 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -105991,6 +106532,15 @@
 			)
 		)
 		(property "Manufacturer_No" "GCJ188C70J475KE02D"
+			(at 194.31 320.04 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C437419"
 			(at 194.31 320.04 0)
 			(effects
 				(font
@@ -106142,7 +106692,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 935.99 494.03 0)
 			(effects
 				(font
@@ -106151,7 +106701,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 935.99 494.03 0)
 			(effects
 				(font
@@ -106420,6 +106970,33 @@
 			)
 		)
 		(property "Description" "2A, 4.5 to 28V Input, EMI Friendly integrated switch synchronous step-down regulator, pulse-skipping, SOT-23-6"
+			(at 248.92 66.04 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C44811646"
+			(at 248.92 66.04 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Texas Instruments"
+			(at 248.92 66.04 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_No" "TPS542021DDC"
 			(at 248.92 66.04 0)
 			(effects
 				(font
@@ -106704,7 +107281,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 1153.16 165.1 0)
 			(effects
 				(font
@@ -106713,7 +107290,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-0710KL"
+		(property "Manufacturer_No" "0402WGF1002TCE"
 			(at 1153.16 165.1 0)
 			(effects
 				(font
@@ -106722,7 +107299,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C60490"
+		(property "LCSC" "C25744"
 			(at 1153.16 165.1 0)
 			(effects
 				(font
@@ -106810,7 +107387,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 392.43 166.37 0)
 			(effects
 				(font
@@ -106819,7 +107396,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 392.43 166.37 0)
 			(effects
 				(font
@@ -106897,7 +107474,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 866.14 403.86 0)
 			(effects
 				(font
@@ -106906,7 +107483,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ2GE0R00X"
+		(property "Manufacturer_No" "0402WGF0000TCE"
 			(at 866.14 403.86 0)
 			(effects
 				(font
@@ -106915,7 +107492,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C242160"
+		(property "LCSC" "C17168"
 			(at 866.14 403.86 0)
 			(effects
 				(font
@@ -107059,7 +107636,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 979.17 483.87 0)
 			(effects
 				(font
@@ -107068,7 +107645,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ2GE0R00X"
+		(property "Manufacturer_No" "0402WGF0000TCE"
 			(at 979.17 483.87 0)
 			(effects
 				(font
@@ -107077,7 +107654,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C242160"
+		(property "LCSC" "C17168"
 			(at 979.17 483.87 0)
 			(effects
 				(font
@@ -107317,7 +107894,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 396.24 488.95 0)
 			(effects
 				(font
@@ -107335,7 +107912,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 396.24 488.95 0)
 			(effects
 				(font
@@ -107553,6 +108130,33 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C3210761"
+			(at 105.41 60.96 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Texas Instruments"
+			(at 105.41 60.96 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_No" "LM73100RPWR"
+			(at 105.41 60.96 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "6"
 			(uuid "5c4b8834-8faf-477f-9b95-f3122b292143")
 		)
@@ -107713,7 +108317,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C60490"
+		(property "LCSC" "C25903"
 			(at 334.01 200.66 0)
 			(effects
 				(font
@@ -107722,7 +108326,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 334.01 200.66 0)
 			(effects
 				(font
@@ -107731,7 +108335,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-074K99L"
+		(property "Manufacturer_No" "0402WGF4991TCE"
 			(at 334.01 200.66 0)
 			(effects
 				(font
@@ -107782,7 +108386,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 445.77 748.03 0)
 			(effects
 				(font
@@ -107809,7 +108413,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "FH"
 			(at 445.77 748.03 0)
 			(effects
 				(font
@@ -107818,7 +108422,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CC0603KRX7R9BB102"
+		(property "Manufacturer_No" "0402B102K500NT"
 			(at 445.77 748.03 0)
 			(effects
 				(font
@@ -107827,7 +108431,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C100040"
+		(property "LCSC" "C1523"
 			(at 445.77 748.03 0)
 			(effects
 				(font
@@ -108006,6 +108610,33 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C11702"
+			(at 123.19 64.77 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "UNI-ROYAL"
+			(at 123.19 64.77 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_No" "0402WGF1001TCE"
+			(at 123.19 64.77 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "dfb4f66d-1930-4938-9768-917890f94a00")
 		)
@@ -108085,7 +108716,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 384.81 166.37 0)
 			(effects
 				(font
@@ -108094,7 +108725,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 384.81 166.37 0)
 			(effects
 				(font
@@ -108181,7 +108812,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL10A105KB8NNNC"
+		(property "Manufacturer_No" "CL05A105KA5NQNC"
 			(at 440.69 166.37 0)
 			(effects
 				(font
@@ -108190,7 +108821,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C15849"
+		(property "LCSC" "C52923"
 			(at 440.69 166.37 0)
 			(effects
 				(font
@@ -108269,7 +108900,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 1141.73 64.77 0)
 			(effects
 				(font
@@ -108287,7 +108918,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 1141.73 64.77 0)
 			(effects
 				(font
@@ -108365,7 +108996,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C60491"
+		(property "LCSC" "C25744"
 			(at 209.55 204.47 0)
 			(effects
 				(font
@@ -108374,7 +109005,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 209.55 204.47 0)
 			(effects
 				(font
@@ -108383,7 +109014,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402JR-0710KL"
+		(property "Manufacturer_No" "0402WGF1002TCE"
 			(at 209.55 204.47 0)
 			(effects
 				(font
@@ -108536,7 +109167,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 582.93 422.91 0)
 			(effects
 				(font
@@ -108545,7 +109176,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 582.93 422.91 0)
 			(effects
 				(font
@@ -108688,7 +109319,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "FH"
 			(at 334.01 476.25 0)
 			(effects
 				(font
@@ -108697,7 +109328,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" ""
+		(property "Manufacturer_No" "0402CG180J500NT"
 			(at 334.01 476.25 0)
 			(effects
 				(font
@@ -108706,7 +109337,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" ""
+		(property "LCSC" "C1549"
 			(at 334.01 476.25 0)
 			(effects
 				(font
@@ -108785,7 +109416,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C60490"
+		(property "LCSC" "C25744"
 			(at 382.27 468.63 0)
 			(effects
 				(font
@@ -108794,7 +109425,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 382.27 468.63 0)
 			(effects
 				(font
@@ -108803,7 +109434,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-0710KL"
+		(property "Manufacturer_No" "0402WGF1002TCE"
 			(at 382.27 468.63 0)
 			(effects
 				(font
@@ -108882,7 +109513,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C242160"
+		(property "LCSC" "C25744"
 			(at 812.8 -39.37 0)
 			(effects
 				(font
@@ -108891,7 +109522,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 812.8 -39.37 0)
 			(effects
 				(font
@@ -108900,7 +109531,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402JR-0710KL"
+		(property "Manufacturer_No" "0402WGF1002TCE"
 			(at 812.8 -39.37 0)
 			(effects
 				(font
@@ -108987,7 +109618,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 765.81 -77.47 0)
 			(effects
 				(font
@@ -108996,7 +109627,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 765.81 -77.47 0)
 			(effects
 				(font
@@ -109149,7 +109780,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 472.44 408.94 0)
 			(effects
 				(font
@@ -109158,7 +109789,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 472.44 408.94 0)
 			(effects
 				(font
@@ -109236,7 +109867,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C60490"
+		(property "LCSC" "C25744"
 			(at 595.63 -66.04 0)
 			(effects
 				(font
@@ -109245,7 +109876,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 595.63 -66.04 0)
 			(effects
 				(font
@@ -109254,7 +109885,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-0710KL"
+		(property "Manufacturer_No" "0402WGF1002TCE"
 			(at 595.63 -66.04 0)
 			(effects
 				(font
@@ -109462,7 +110093,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 408.94 543.56 0)
 			(effects
 				(font
@@ -109471,7 +110102,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-074K7L"
+		(property "Manufacturer_No" "0402WGF4701TCE"
 			(at 408.94 543.56 0)
 			(effects
 				(font
@@ -109480,7 +110111,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C105871"
+		(property "LCSC" "C25900"
 			(at 408.94 543.56 0)
 			(effects
 				(font
@@ -109766,7 +110397,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 398.78 166.37 0)
 			(effects
 				(font
@@ -109775,7 +110406,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 398.78 166.37 0)
 			(effects
 				(font
@@ -109851,7 +110482,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 1065.53 401.32 0)
 			(effects
 				(font
@@ -109860,7 +110491,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "AC0402FR-0747KL"
+		(property "Manufacturer_No" "0402WGF4702TCE"
 			(at 1065.53 401.32 0)
 			(effects
 				(font
@@ -109869,7 +110500,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C144757"
+		(property "LCSC" "C25792"
 			(at 1065.53 401.32 0)
 			(effects
 				(font
@@ -109900,7 +110531,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "a2fc86c3-2c76-47cd-99ae-8af23310739d")
 		(property "Reference" "TP14"
 			(at 610.87 259.08 90)
@@ -109940,6 +110571,24 @@
 		)
 		(property "Description" "test point"
 			(at 610.87 254 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "DNP"
+			(at 610.87 254 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_No" "DNP"
+			(at 610.87 254 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -110015,7 +110664,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ESDS314"
+		(property "Manufacturer_No" "ESDS314DBVR"
 			(at 91.44 104.14 0)
 			(effects
 				(font
@@ -110025,6 +110674,15 @@
 			)
 		)
 		(property "Manufacturer" "Texas Instruments"
+			(at 91.44 104.14 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C1847859"
 			(at 91.44 104.14 0)
 			(effects
 				(font
@@ -110119,6 +110777,24 @@
 				(hide yes)
 			)
 		)
+		(property "Manufacturer" "Diodes"
+			(at 734.06 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_No" "AP22615AWU-7"
+			(at 734.06 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "3"
 			(uuid "de379b82-f50e-4d4d-8d70-e662df3b1215")
 		)
@@ -110200,7 +110876,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Samsung"
+		(property "Manufacturer" "muRata"
 			(at 481.33 615.95 0)
 			(effects
 				(font
@@ -110209,7 +110885,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL10A106MO8NQNC"
+		(property "Manufacturer_No" "GRM188R6YA106MA73D"
 			(at 481.33 615.95 0)
 			(effects
 				(font
@@ -110218,7 +110894,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C92487"
+		(property "LCSC" "C194427"
 			(at 481.33 615.95 0)
 			(effects
 				(font
@@ -110455,7 +111131,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Samsung"
+		(property "Manufacturer" "muRata"
 			(at 979.17 506.73 0)
 			(effects
 				(font
@@ -110464,7 +111140,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL10A106MO8NQNC"
+		(property "Manufacturer_No" "GRM188R6YA106MA73D"
 			(at 979.17 506.73 0)
 			(effects
 				(font
@@ -110473,7 +111149,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C92487"
+		(property "LCSC" "C194427"
 			(at 979.17 506.73 0)
 			(effects
 				(font
@@ -110550,7 +111226,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C242160"
+		(property "LCSC" "C11702"
 			(at 497.84 271.78 0)
 			(effects
 				(font
@@ -110559,7 +111235,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 497.84 271.78 0)
 			(effects
 				(font
@@ -110568,7 +111244,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ2GE0R00X"
+		(property "Manufacturer_No" "0402WGF1001TCE"
 			(at 497.84 271.78 0)
 			(effects
 				(font
@@ -110647,7 +111323,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1589"
+		(property "LCSC" "C32949"
 			(at 334.01 140.97 0)
 			(effects
 				(font
@@ -110665,7 +111341,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "GRM1555C1H100FA01D"
+		(property "Manufacturer_No" "CL05C100JB5NNNC"
 			(at 334.01 140.97 0)
 			(effects
 				(font
@@ -110741,7 +111417,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C60490"
+		(property "LCSC" "C25744"
 			(at 208.28 257.81 0)
 			(effects
 				(font
@@ -110750,7 +111426,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 208.28 257.81 0)
 			(effects
 				(font
@@ -110759,7 +111435,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-0710KL"
+		(property "Manufacturer_No" "0402WGF1002TCE"
 			(at 208.28 257.81 0)
 			(effects
 				(font
@@ -111062,7 +111738,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "LED_Small"
+		(property "Value" "LED_RED"
 			(at 381 767.0164 90)
 			(effects
 				(font
@@ -111098,7 +111774,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C72044"
+		(property "LCSC" "C965799"
 			(at 378.46 765.81 0)
 			(effects
 				(font
@@ -111107,7 +111783,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Everlight"
+		(property "Manufacturer" "XINGLIGHT"
 			(at 378.46 765.81 0)
 			(effects
 				(font
@@ -111116,7 +111792,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "19-217/R6C-AL1M2VY/3T"
+		(property "Manufacturer_No" "XL-1608SURC-06"
 			(at 378.46 765.81 0)
 			(effects
 				(font
@@ -111203,7 +111879,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 988.06 668.02 0)
 			(effects
 				(font
@@ -111212,7 +111888,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 988.06 668.02 0)
 			(effects
 				(font
@@ -111418,7 +112094,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 474.98 612.14 0)
 			(effects
 				(font
@@ -111427,7 +112103,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ2GE0R00X"
+		(property "Manufacturer_No" "0402WGF0000TCE"
 			(at 474.98 612.14 0)
 			(effects
 				(font
@@ -111436,7 +112112,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C242160"
+		(property "LCSC" "C17168"
 			(at 474.98 612.14 0)
 			(effects
 				(font
@@ -111646,7 +112322,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C242160"
+		(property "LCSC" "C25744"
 			(at 516.89 378.46 0)
 			(effects
 				(font
@@ -111655,7 +112331,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 516.89 378.46 0)
 			(effects
 				(font
@@ -111664,7 +112340,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402JR-0710KL"
+		(property "Manufacturer_No" "0402WGF1002TCE"
 			(at 516.89 378.46 0)
 			(effects
 				(font
@@ -111742,7 +112418,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 1026.16 386.08 0)
 			(effects
 				(font
@@ -111751,7 +112427,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-074K7L"
+		(property "Manufacturer_No" "0402WGF2201TCE"
 			(at 1026.16 386.08 0)
 			(effects
 				(font
@@ -111760,7 +112436,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C105871"
+		(property "LCSC" "C25879"
 			(at 1026.16 386.08 0)
 			(effects
 				(font
@@ -111847,7 +112523,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 1033.78 693.42 0)
 			(effects
 				(font
@@ -111856,7 +112532,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 1033.78 693.42 0)
 			(effects
 				(font
@@ -111934,7 +112610,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 510.54 76.2 0)
 			(effects
 				(font
@@ -111943,7 +112619,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-0710KL"
+		(property "Manufacturer_No" "0402WGF1002TCE"
 			(at 510.54 76.2 0)
 			(effects
 				(font
@@ -111952,7 +112628,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C60490"
+		(property "LCSC" "C25744"
 			(at 510.54 76.2 0)
 			(effects
 				(font
@@ -112028,7 +112704,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C242160"
+		(property "LCSC" "C17168"
 			(at 835.66 349.25 0)
 			(effects
 				(font
@@ -112037,7 +112713,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 835.66 349.25 0)
 			(effects
 				(font
@@ -112046,7 +112722,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ2GE0R00X"
+		(property "Manufacturer_No" "0402WGF0000TCE"
 			(at 835.66 349.25 0)
 			(effects
 				(font
@@ -112309,7 +112985,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C242160"
+		(property "LCSC" "C17168"
 			(at 1103.63 255.27 0)
 			(effects
 				(font
@@ -112318,7 +112994,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 1103.63 255.27 0)
 			(effects
 				(font
@@ -112327,7 +113003,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ2GE0R00X"
+		(property "Manufacturer_No" "0402WGF0000TCE"
 			(at 1103.63 255.27 0)
 			(effects
 				(font
@@ -112502,7 +113178,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C92487"
+		(property "LCSC" "C194427"
 			(at 741.68 152.4 0)
 			(effects
 				(font
@@ -112511,7 +113187,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Samsung"
+		(property "Manufacturer" "muRata"
 			(at 741.68 152.4 0)
 			(effects
 				(font
@@ -112520,7 +113196,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL10A106MO8NQNC"
+		(property "Manufacturer_No" "GRM188R6YA106MA73D"
 			(at 741.68 152.4 0)
 			(effects
 				(font
@@ -112692,7 +113368,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C242160"
+		(property "LCSC" "C17168"
 			(at 487.68 284.48 0)
 			(effects
 				(font
@@ -112701,7 +113377,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 487.68 284.48 0)
 			(effects
 				(font
@@ -112710,7 +113386,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ2GE0R00X"
+		(property "Manufacturer_No" "0402WGF0000TCE"
 			(at 487.68 284.48 0)
 			(effects
 				(font
@@ -112851,7 +113527,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 388.62 251.46 0)
 			(effects
 				(font
@@ -112860,7 +113536,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-071KL"
+		(property "Manufacturer_No" "0402WGF1001TCE"
 			(at 388.62 251.46 0)
 			(effects
 				(font
@@ -112869,7 +113545,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C106235"
+		(property "LCSC" "C11702"
 			(at 388.62 251.46 0)
 			(effects
 				(font
@@ -113023,7 +113699,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 417.83 408.94 0)
 			(effects
 				(font
@@ -113032,7 +113708,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 417.83 408.94 0)
 			(effects
 				(font
@@ -113108,7 +113784,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 1065.53 411.48 0)
 			(effects
 				(font
@@ -113117,7 +113793,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "AC0402FR-0747KL"
+		(property "Manufacturer_No" "0402WGF4702TCE"
 			(at 1065.53 411.48 0)
 			(effects
 				(font
@@ -113126,7 +113802,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C144757"
+		(property "LCSC" "C25792"
 			(at 1065.53 411.48 0)
 			(effects
 				(font
@@ -113157,7 +113833,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "b664af15-7369-4bde-bbab-f971361ed083")
 		(property "Reference" "TP4"
 			(at 523.24 138.4299 90)
@@ -113197,6 +113873,24 @@
 		)
 		(property "Description" "test point"
 			(at 518.16 139.7 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "DNP"
+			(at 518.16 139.7 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_No" "DNP"
+			(at 518.16 139.7 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -113432,6 +114126,33 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C688950"
+			(at 165.1 58.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Lelon"
+			(at 165.1 58.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_No" "VZT470M1HTR-0606"
+			(at 165.1 58.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "999152b3-bc4b-4e62-8294-23fd62acd20e")
 		)
@@ -113502,7 +114223,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C413061"
+		(property "LCSC" "C25133"
 			(at 425.45 737.87 0)
 			(effects
 				(font
@@ -113511,7 +114232,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 425.45 737.87 0)
 			(effects
 				(font
@@ -113520,7 +114241,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ2RKF75R0X"
+		(property "Manufacturer_No" "0402WGF750JTCE"
 			(at 425.45 737.87 0)
 			(effects
 				(font
@@ -113598,7 +114319,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C60491"
+		(property "LCSC" "C25741"
 			(at 255.27 152.4 0)
 			(effects
 				(font
@@ -113607,7 +114328,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 255.27 152.4 0)
 			(effects
 				(font
@@ -113616,7 +114337,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-07100KL"
+		(property "Manufacturer_No" "0402WGF1003TCE"
 			(at 255.27 152.4 0)
 			(effects
 				(font
@@ -113760,7 +114481,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C60490"
+		(property "LCSC" "C25744"
 			(at 764.54 62.23 0)
 			(effects
 				(font
@@ -113769,7 +114490,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 764.54 62.23 0)
 			(effects
 				(font
@@ -113778,7 +114499,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-0710KL"
+		(property "Manufacturer_No" "0402WGF1002TCE"
 			(at 764.54 62.23 0)
 			(effects
 				(font
@@ -113985,7 +114706,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 514.35 176.53 0)
 			(effects
 				(font
@@ -113994,7 +114715,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-074K7L"
+		(property "Manufacturer_No" "0402WGF4701TCE"
 			(at 514.35 176.53 0)
 			(effects
 				(font
@@ -114003,7 +114724,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C105871"
+		(property "LCSC" "C25900"
 			(at 514.35 176.53 0)
 			(effects
 				(font
@@ -114146,6 +114867,33 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C17772"
+			(at 867.41 110.49 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "UNI-ROYAL"
+			(at 867.41 110.49 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_No" "0805W8F6801T5E"
+			(at 867.41 110.49 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "67128dd9-b874-43c6-b346-1acb07c0fa41")
 		)
@@ -114224,7 +114972,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 1005.84 721.36 0)
 			(effects
 				(font
@@ -114233,7 +114981,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 1005.84 721.36 0)
 			(effects
 				(font
@@ -114311,7 +115059,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C60491"
+		(property "LCSC" "C25741"
 			(at 949.96 690.88 0)
 			(effects
 				(font
@@ -114320,7 +115068,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 949.96 690.88 0)
 			(effects
 				(font
@@ -114329,7 +115077,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-07100KL"
+		(property "Manufacturer_No" "0402WGF1003TCE"
 			(at 949.96 690.88 0)
 			(effects
 				(font
@@ -114408,7 +115156,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "UMK107BJ105KA-T"
+		(property "Manufacturer_No" "CL05A105KA5NQNC"
 			(at 683.26 -91.44 0)
 			(effects
 				(font
@@ -114417,7 +115165,16 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Taiyo Yuden"
+		(property "Manufacturer" "Samsung"
+			(at 683.26 -91.44 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C52923"
 			(at 683.26 -91.44 0)
 			(effects
 				(font
@@ -114720,7 +115477,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" ""
+		(property "LCSC" "C18198647"
 			(at 795.02 558.8 0)
 			(effects
 				(font
@@ -114927,7 +115684,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C60490"
+		(property "LCSC" "C25741"
 			(at 227.33 67.31 0)
 			(effects
 				(font
@@ -114936,7 +115693,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 227.33 67.31 0)
 			(effects
 				(font
@@ -114945,7 +115702,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-0710KL"
+		(property "Manufacturer_No" "0402WGF1003TCE"
 			(at 227.33 67.31 0)
 			(effects
 				(font
@@ -115032,6 +115789,15 @@
 			)
 		)
 		(property "Manufacturer_No" "LM62460QRPHRQ1"
+			(at 238.76 201.93 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C3198091"
 			(at 238.76 201.93 0)
 			(effects
 				(font
@@ -115160,7 +115926,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 463.55 182.88 0)
 			(effects
 				(font
@@ -115169,7 +115935,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 463.55 182.88 0)
 			(effects
 				(font
@@ -115359,7 +116125,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C60491"
+		(property "LCSC" "C25741"
 			(at 360.68 510.54 0)
 			(effects
 				(font
@@ -115368,7 +116134,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 360.68 510.54 0)
 			(effects
 				(font
@@ -115377,7 +116143,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-07100KL"
+		(property "Manufacturer_No" "0402WGF1003TCE"
 			(at 360.68 510.54 0)
 			(effects
 				(font
@@ -115595,7 +116361,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 852.17 414.02 0)
 			(effects
 				(font
@@ -115604,7 +116370,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 852.17 414.02 0)
 			(effects
 				(font
@@ -115693,6 +116459,15 @@
 			)
 		)
 		(property "Manufacturer_No" "TS3USB30EDGSR"
+			(at 615.95 433.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C131998"
 			(at 615.95 433.07 0)
 			(effects
 				(font
@@ -115888,7 +116663,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C242160"
+		(property "LCSC" "C17168"
 			(at 715.01 334.01 0)
 			(effects
 				(font
@@ -115897,7 +116672,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 715.01 334.01 0)
 			(effects
 				(font
@@ -115906,7 +116681,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ2GE0R00X"
+		(property "Manufacturer_No" "0402WGF0000TCE"
 			(at 715.01 334.01 0)
 			(effects
 				(font
@@ -115984,7 +116759,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 944.88 483.87 0)
 			(effects
 				(font
@@ -115993,7 +116768,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ2GE0R00X"
+		(property "Manufacturer_No" "0402WGF0000TCE"
 			(at 944.88 483.87 0)
 			(effects
 				(font
@@ -116002,7 +116777,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C242160"
+		(property "LCSC" "C17168"
 			(at 944.88 483.87 0)
 			(effects
 				(font
@@ -116145,6 +116920,33 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C25900"
+			(at 181.61 187.96 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "UNI-ROYAL"
+			(at 181.61 187.96 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_No" "0402WGF4701TCE"
+			(at 181.61 187.96 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "431576d9-ba02-4e5a-9c52-79297163c0cc")
 		)
@@ -116167,7 +116969,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "c848b22d-35d7-4a53-bec6-0b0b9a0a40a7")
 		(property "Reference" "TP11"
 			(at 571.5 251.46 90)
@@ -116207,6 +117009,24 @@
 		)
 		(property "Description" "test point"
 			(at 566.42 251.46 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "DNP"
+			(at 566.42 251.46 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_No" "DNP"
+			(at 566.42 251.46 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -116289,7 +117109,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL10A105KB8NNNC"
+		(property "Manufacturer_No" "CL05A105KA5NQNC"
 			(at 389.89 190.5 0)
 			(effects
 				(font
@@ -116298,7 +117118,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C15849"
+		(property "LCSC" "C52923"
 			(at 389.89 190.5 0)
 			(effects
 				(font
@@ -116374,7 +117194,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 1065.53 430.53 0)
 			(effects
 				(font
@@ -116383,7 +117203,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "AC0402FR-0747KL"
+		(property "Manufacturer_No" "0402WGF4702TCE"
 			(at 1065.53 430.53 0)
 			(effects
 				(font
@@ -116392,7 +117212,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C144757"
+		(property "LCSC" "C25792"
 			(at 1065.53 430.53 0)
 			(effects
 				(font
@@ -116676,7 +117496,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 457.2 408.94 0)
 			(effects
 				(font
@@ -116685,7 +117505,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 457.2 408.94 0)
 			(effects
 				(font
@@ -117052,7 +117872,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 245.11 520.7 0)
 			(effects
 				(font
@@ -117061,7 +117881,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ2GE0R00X"
+		(property "Manufacturer_No" "0402WGF0000TCE"
 			(at 245.11 520.7 0)
 			(effects
 				(font
@@ -117070,7 +117890,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C242160"
+		(property "LCSC" "C17168"
 			(at 245.11 520.7 0)
 			(effects
 				(font
@@ -117113,7 +117933,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "LED_Small"
+		(property "Value" "LED_RED"
 			(at 363.22 767.0164 90)
 			(effects
 				(font
@@ -117149,7 +117969,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C72044"
+		(property "LCSC" "C965799"
 			(at 360.68 765.81 0)
 			(effects
 				(font
@@ -117158,7 +117978,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Everlight"
+		(property "Manufacturer" "XINGLIGHT"
 			(at 360.68 765.81 0)
 			(effects
 				(font
@@ -117167,7 +117987,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "19-217/R6C-AL1M2VY/3T"
+		(property "Manufacturer_No" "XL-1608SURC-06"
 			(at 360.68 765.81 0)
 			(effects
 				(font
@@ -117407,7 +118227,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C60490"
+		(property "LCSC" "C25903"
 			(at 334.01 134.62 0)
 			(effects
 				(font
@@ -117416,7 +118236,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 334.01 134.62 0)
 			(effects
 				(font
@@ -117425,7 +118245,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-074K99L"
+		(property "Manufacturer_No" "0402WGF4991TCE"
 			(at 334.01 134.62 0)
 			(effects
 				(font
@@ -117503,7 +118323,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 1018.54 386.08 0)
 			(effects
 				(font
@@ -117512,7 +118332,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-074K7L"
+		(property "Manufacturer_No" "0402WGF2201TCE"
 			(at 1018.54 386.08 0)
 			(effects
 				(font
@@ -117521,7 +118341,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C105871"
+		(property "LCSC" "C25879"
 			(at 1018.54 386.08 0)
 			(effects
 				(font
@@ -117684,6 +118504,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C131998"
+			(at 615.95 388.62 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "4"
 			(uuid "c2d49b5f-5342-48e7-a7a2-aac4f68b6158")
 		)
@@ -117775,7 +118604,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 922.02 708.66 0)
 			(effects
 				(font
@@ -117784,7 +118613,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-0733RL"
+		(property "Manufacturer_No" "0402WGF330JTCE"
 			(at 922.02 708.66 0)
 			(effects
 				(font
@@ -117793,7 +118622,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C138002"
+		(property "LCSC" "C25105"
 			(at 922.02 708.66 0)
 			(effects
 				(font
@@ -117872,7 +118701,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1589"
+		(property "LCSC" "C1623"
 			(at 208.28 120.65 0)
 			(effects
 				(font
@@ -117890,7 +118719,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL10A474KB8NNNC"
+		(property "Manufacturer_No" "CL10B474KA8NNNC"
 			(at 208.28 120.65 0)
 			(effects
 				(font
@@ -117977,7 +118806,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 877.57 427.99 0)
 			(effects
 				(font
@@ -117986,7 +118815,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 877.57 427.99 0)
 			(effects
 				(font
@@ -118130,7 +118959,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C413061"
+		(property "LCSC" "C25133"
 			(at 445.77 737.87 0)
 			(effects
 				(font
@@ -118139,7 +118968,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 445.77 737.87 0)
 			(effects
 				(font
@@ -118148,7 +118977,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ2RKF75R0X"
+		(property "Manufacturer_No" "0402WGF750JTCE"
 			(at 445.77 737.87 0)
 			(effects
 				(font
@@ -118225,7 +119054,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C242160"
+		(property "LCSC" "C17168"
 			(at 825.5 -27.94 0)
 			(effects
 				(font
@@ -118234,7 +119063,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 825.5 -27.94 0)
 			(effects
 				(font
@@ -118243,7 +119072,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ2GE0R00X"
+		(property "Manufacturer_No" "0402WGF0000TCE"
 			(at 825.5 -27.94 0)
 			(effects
 				(font
@@ -119035,6 +119864,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C6290784"
+			(at 718.82 64.77 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "978952ef-bdf2-49fb-8fdc-2fbbed34cad3")
 		)
@@ -119117,6 +119955,33 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C36777"
+			(at 82.55 60.96 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "UNI-ROYAL"
+			(at 82.55 60.96 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_No" "0402WGF1243TCE"
+			(at 82.55 60.96 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "2e7926d1-6169-4190-9526-e533af678e80")
 		)
@@ -119187,7 +120052,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1589"
+		(property "LCSC" "C52923"
 			(at 219.71 222.25 0)
 			(effects
 				(font
@@ -119205,7 +120070,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05A105KO5NNNC"
+		(property "Manufacturer_No" "CL05A105KA5NQNC"
 			(at 219.71 222.25 0)
 			(effects
 				(font
@@ -119281,7 +120146,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Taiyo Yuden"
+		(property "Manufacturer" "Murata"
 			(at 1028.7 697.23 0)
 			(effects
 				(font
@@ -119290,7 +120155,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "NRH3012T150MN"
+		(property "Manufacturer_No" "LQH3NPN150MMEL"
 			(at 1028.7 697.23 0)
 			(effects
 				(font
@@ -119299,7 +120164,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C497563"
+		(property "LCSC" "C668450"
 			(at 1028.7 697.23 0)
 			(effects
 				(font
@@ -119376,7 +120241,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C144778"
+		(property "LCSC" "C25768"
 			(at 974.09 195.58 0)
 			(effects
 				(font
@@ -119385,7 +120250,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 974.09 195.58 0)
 			(effects
 				(font
@@ -119394,7 +120259,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "AC0402FR-0722KL"
+		(property "Manufacturer_No" "0402WGF2202TCE"
 			(at 974.09 195.58 0)
 			(effects
 				(font
@@ -119470,7 +120335,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1589"
+		(property "LCSC" "C307331"
 			(at 265.43 203.2 0)
 			(effects
 				(font
@@ -119488,7 +120353,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 265.43 203.2 0)
 			(effects
 				(font
@@ -119566,7 +120431,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 732.79 -60.96 0)
 			(effects
 				(font
@@ -119575,7 +120440,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-072K2L"
+		(property "Manufacturer_No" "0402WGF2201TCE"
 			(at 732.79 -60.96 0)
 			(effects
 				(font
@@ -119728,7 +120593,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C242160"
+		(property "LCSC" "C25744"
 			(at 574.04 54.61 0)
 			(effects
 				(font
@@ -119737,7 +120602,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 574.04 54.61 0)
 			(effects
 				(font
@@ -119746,7 +120611,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402JR-0710KL"
+		(property "Manufacturer_No" "0402WGF1002TCE"
 			(at 574.04 54.61 0)
 			(effects
 				(font
@@ -119824,7 +120689,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C140782"
+		(property "LCSC" "C86295"
 			(at 302.26 200.66 0)
 			(effects
 				(font
@@ -119833,7 +120698,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Murata"
+		(property "Manufacturer" "Samsung"
 			(at 302.26 200.66 0)
 			(effects
 				(font
@@ -119842,7 +120707,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "GRM187R61A226ME15D"
+		(property "Manufacturer_No" "CL10A226MP8NUNE"
 			(at 302.26 200.66 0)
 			(effects
 				(font
@@ -119918,7 +120783,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 1162.05 162.56 0)
 			(effects
 				(font
@@ -119927,7 +120792,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-0710KL"
+		(property "Manufacturer_No" "0402WGF1002TCE"
 			(at 1162.05 162.56 0)
 			(effects
 				(font
@@ -119936,7 +120801,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C60490"
+		(property "LCSC" "C25744"
 			(at 1162.05 162.56 0)
 			(effects
 				(font
@@ -120089,7 +120954,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 923.29 648.97 0)
 			(effects
 				(font
@@ -120098,7 +120963,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 923.29 648.97 0)
 			(effects
 				(font
@@ -120243,7 +121108,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C106235"
+		(property "LCSC" "C11702"
 			(at 525.78 283.21 0)
 			(effects
 				(font
@@ -120252,7 +121117,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 525.78 283.21 0)
 			(effects
 				(font
@@ -120261,7 +121126,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-071KL"
+		(property "Manufacturer_No" "0402WGF1001TCE"
 			(at 525.78 283.21 0)
 			(effects
 				(font
@@ -120471,7 +121336,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C163466"
+		(property "LCSC" "C25894"
 			(at 320.04 217.17 0)
 			(effects
 				(font
@@ -120480,7 +121345,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 320.04 217.17 0)
 			(effects
 				(font
@@ -120489,7 +121354,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-0743K2L"
+		(property "Manufacturer_No" "0402WGF4322TCE"
 			(at 320.04 217.17 0)
 			(effects
 				(font
@@ -120520,7 +121385,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "deac0073-e607-4c2b-bbd7-df4c2f197552")
 		(property "Reference" "TP12"
 			(at 595.63 259.08 90)
@@ -120560,6 +121425,24 @@
 		)
 		(property "Description" "test point"
 			(at 595.63 254 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "DNP"
+			(at 595.63 254 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_No" "DNP"
+			(at 595.63 254 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -120634,7 +121517,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C163466"
+		(property "LCSC" "C25874"
 			(at 320.04 151.13 0)
 			(effects
 				(font
@@ -120643,7 +121526,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 320.04 151.13 0)
 			(effects
 				(font
@@ -120652,7 +121535,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-0724K9L"
+		(property "Manufacturer_No" "0402WGF2492TCE"
 			(at 320.04 151.13 0)
 			(effects
 				(font
@@ -120741,7 +121624,16 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "TUSB8041"
+		(property "Manufacturer_No" "TUSB8041IRGCR"
+			(at 457.2 506.73 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C544686"
 			(at 457.2 506.73 0)
 			(effects
 				(font
@@ -121094,7 +121986,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C92487"
+		(property "LCSC" "C194427"
 			(at 822.96 102.87 0)
 			(effects
 				(font
@@ -121103,7 +121995,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Samsung"
+		(property "Manufacturer" "muRata"
 			(at 822.96 102.87 0)
 			(effects
 				(font
@@ -121112,7 +122004,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL10A106MO8NQNC"
+		(property "Manufacturer_No" "GRM188R6YA106MA73D"
 			(at 822.96 102.87 0)
 			(effects
 				(font
@@ -121256,7 +122148,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C106235"
+		(property "LCSC" "C11702"
 			(at 378.46 758.19 0)
 			(effects
 				(font
@@ -121265,7 +122157,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 378.46 758.19 0)
 			(effects
 				(font
@@ -121274,7 +122166,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-071KL"
+		(property "Manufacturer_No" "0402WGF1001TCE"
 			(at 378.46 758.19 0)
 			(effects
 				(font
@@ -121362,6 +122254,15 @@
 			)
 		)
 		(property "Manufacturer_No" "SM05B-SRSS-TB(LF)(SN)"
+			(at 1073.15 660.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C136657"
 			(at 1073.15 660.4 0)
 			(effects
 				(font
@@ -121458,7 +122359,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 425.45 368.3 0)
 			(effects
 				(font
@@ -121467,7 +122368,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 425.45 368.3 0)
 			(effects
 				(font
@@ -121611,7 +122512,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "FH"
 			(at 349.25 476.25 0)
 			(effects
 				(font
@@ -121620,7 +122521,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" ""
+		(property "Manufacturer_No" "0402CG180J500NT"
 			(at 349.25 476.25 0)
 			(effects
 				(font
@@ -121629,7 +122530,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" ""
+		(property "LCSC" "C1549"
 			(at 349.25 476.25 0)
 			(effects
 				(font
@@ -122040,7 +122941,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C92487"
+		(property "LCSC" "C194427"
 			(at 269.24 120.65 0)
 			(effects
 				(font
@@ -122049,7 +122950,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Samsung"
+		(property "Manufacturer" "muRata"
 			(at 269.24 120.65 0)
 			(effects
 				(font
@@ -122058,7 +122959,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "GRM188R61E106KA73J"
+		(property "Manufacturer_No" "GRM188R6YA106MA73D"
 			(at 269.24 120.65 0)
 			(effects
 				(font
@@ -122146,7 +123047,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 449.58 408.94 0)
 			(effects
 				(font
@@ -122155,7 +123056,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 449.58 408.94 0)
 			(effects
 				(font
@@ -122394,7 +123295,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 377.19 367.03 0)
 			(effects
 				(font
@@ -122403,7 +123304,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-0710KL"
+		(property "Manufacturer_No" "0402WGF1002TCE"
 			(at 377.19 367.03 0)
 			(effects
 				(font
@@ -122412,7 +123313,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C60490"
+		(property "LCSC" "C25744"
 			(at 377.19 367.03 0)
 			(effects
 				(font
@@ -122555,7 +123456,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C140782"
+		(property "LCSC" "C86295"
 			(at 292.1 134.62 0)
 			(effects
 				(font
@@ -122564,7 +123465,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Murata"
+		(property "Manufacturer" "Samsung"
 			(at 292.1 134.62 0)
 			(effects
 				(font
@@ -122573,7 +123474,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "GRM187R61A226ME15D"
+		(property "Manufacturer_No" "CL10A226MP8NUNE"
 			(at 292.1 134.62 0)
 			(effects
 				(font
@@ -122714,7 +123615,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 717.55 105.41 0)
 			(effects
 				(font
@@ -122723,7 +123624,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-0710KL"
+		(property "Manufacturer_No" "0402WGF1002TCE"
 			(at 717.55 105.41 0)
 			(effects
 				(font
@@ -122732,7 +123633,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C60490"
+		(property "LCSC" "C25744"
 			(at 717.55 105.41 0)
 			(effects
 				(font
@@ -122763,7 +123664,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "eabcd47e-8ff0-43fe-9553-93aa97a7bab9")
 		(property "Reference" "TP3"
 			(at 523.24 135.8899 90)
@@ -122803,6 +123704,24 @@
 		)
 		(property "Description" "test point"
 			(at 518.16 137.16 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "DNP"
+			(at 518.16 137.16 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_No" "DNP"
+			(at 518.16 137.16 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -122874,7 +123793,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 937.26 711.2 0)
 			(effects
 				(font
@@ -122883,7 +123802,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-0733RL"
+		(property "Manufacturer_No" "0402WGF330JTCE"
 			(at 937.26 711.2 0)
 			(effects
 				(font
@@ -122892,7 +123811,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C138002"
+		(property "LCSC" "C25105"
 			(at 937.26 711.2 0)
 			(effects
 				(font
@@ -122969,7 +123888,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C242160"
+		(property "LCSC" "C17168"
 			(at 927.1 -58.42 0)
 			(effects
 				(font
@@ -122978,7 +123897,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 927.1 -58.42 0)
 			(effects
 				(font
@@ -122987,7 +123906,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ2GE0R00X"
+		(property "Manufacturer_No" "0402WGF0000TCE"
 			(at 927.1 -58.42 0)
 			(effects
 				(font
@@ -123018,7 +123937,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "ec779d81-eb67-4622-8d0e-620fd9feb790")
 		(property "Reference" "TP5"
 			(at 571.5 243.84 90)
@@ -123058,6 +123977,24 @@
 		)
 		(property "Description" "test point"
 			(at 566.42 243.84 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "DNP"
+			(at 566.42 243.84 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_No" "DNP"
+			(at 566.42 243.84 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -123451,6 +124388,24 @@
 				(hide yes)
 			)
 		)
+		(property "Manufacturer" "Diodes"
+			(at 849.63 101.6 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_No" "AP22615AWU-7"
+			(at 849.63 101.6 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "3"
 			(uuid "25d3a424-b790-452e-9d62-48e2785d40b8")
 		)
@@ -123525,6 +124480,33 @@
 			)
 		)
 		(property "Description" "Resistor, small symbol"
+			(at 866.14 44.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C21189"
+			(at 866.14 44.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "UNI-ROYAL"
+			(at 866.14 44.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_No" "0603WAF0000T5E"
 			(at 866.14 44.45 0)
 			(effects
 				(font
@@ -123668,7 +124650,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 421.64 110.49 0)
 			(effects
 				(font
@@ -123677,7 +124659,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-0710KL"
+		(property "Manufacturer_No" "0402WGF1002TCE"
 			(at 421.64 110.49 0)
 			(effects
 				(font
@@ -123686,7 +124668,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C60490"
+		(property "LCSC" "C25744"
 			(at 421.64 110.49 0)
 			(effects
 				(font
@@ -123764,7 +124746,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 1083.31 142.24 0)
 			(effects
 				(font
@@ -123782,7 +124764,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 1083.31 142.24 0)
 			(effects
 				(font
@@ -123825,7 +124807,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "FH35C-31S-0.3HW(50)"
+		(property "Value" "3-2328724-1"
 			(at 791.21 185.4201 0)
 			(effects
 				(font
@@ -123861,7 +124843,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "Global Sourcing"
+		(property "LCSC" "C52722586"
 			(at 788.67 186.69 0)
 			(effects
 				(font
@@ -123870,7 +124852,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "TE"
+		(property "Manufacturer" "Guoconn"
 			(at 788.67 186.69 0)
 			(effects
 				(font
@@ -123879,7 +124861,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "3-2328724-1"
+		(property "Manufacturer_No" "0310-31RL-GF-RB"
 			(at 788.67 186.69 0)
 			(effects
 				(font
@@ -124060,7 +125042,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 405.13 190.5 0)
 			(effects
 				(font
@@ -124069,7 +125051,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 405.13 190.5 0)
 			(effects
 				(font
@@ -124148,7 +125130,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C60490"
+		(property "LCSC" "C25741"
 			(at 320.04 200.66 0)
 			(effects
 				(font
@@ -124157,7 +125139,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 320.04 200.66 0)
 			(effects
 				(font
@@ -124166,7 +125148,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-07100KL"
+		(property "Manufacturer_No" "0402WGF1003TCE"
 			(at 320.04 200.66 0)
 			(effects
 				(font
@@ -124209,7 +125191,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "PMEG4050EP,115"
+		(property "Value" "PMEG4050EP-FS"
 			(at 134.62 63.2459 90)
 			(effects
 				(font
@@ -124245,7 +125227,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Nexperia"
+		(property "Manufacturer" "FUXINSEMI"
 			(at 132.08 62.23 0)
 			(effects
 				(font
@@ -124254,7 +125236,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "PMEG4050EP,115"
+		(property "Manufacturer_No" "PMEG4050EP-FS"
 			(at 132.08 62.23 0)
 			(effects
 				(font
@@ -124263,7 +125245,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C96235"
+		(property "LCSC" "C42387310"
 			(at 132.08 62.23 0)
 			(effects
 				(font
@@ -124350,7 +125332,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 1036.32 303.53 0)
 			(effects
 				(font
@@ -124359,7 +125341,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 1036.32 303.53 0)
 			(effects
 				(font
@@ -124437,7 +125419,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 749.3 266.7 0)
 			(effects
 				(font
@@ -124446,7 +125428,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-0710KL"
+		(property "Manufacturer_No" "0402WGF1002TCE"
 			(at 749.3 266.7 0)
 			(effects
 				(font
@@ -124455,7 +125437,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C60490"
+		(property "LCSC" "C25744"
 			(at 749.3 266.7 0)
 			(effects
 				(font
@@ -124542,7 +125524,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 1038.86 699.77 0)
 			(effects
 				(font
@@ -124551,7 +125533,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 1038.86 699.77 0)
 			(effects
 				(font
@@ -124630,7 +125612,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C92487"
+		(property "LCSC" "C194427"
 			(at 269.24 186.69 0)
 			(effects
 				(font
@@ -124639,7 +125621,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Samsung"
+		(property "Manufacturer" "muRata"
 			(at 269.24 186.69 0)
 			(effects
 				(font
@@ -124648,7 +125630,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "GRM188R61E106KA73J"
+		(property "Manufacturer_No" "GRM188R6YA106MA73D"
 			(at 269.24 186.69 0)
 			(effects
 				(font
@@ -124724,7 +125706,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1589"
+		(property "LCSC" "C307331"
 			(at 271.78 60.96 0)
 			(effects
 				(font
@@ -124742,7 +125724,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 271.78 60.96 0)
 			(effects
 				(font
@@ -124773,7 +125755,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "f40182df-b5b7-4854-9104-51f5e4c3708e")
 		(property "Reference" "TP10"
 			(at 571.5 248.92 90)
@@ -124813,6 +125795,24 @@
 		)
 		(property "Description" "test point"
 			(at 566.42 248.92 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "DNP"
+			(at 566.42 248.92 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_No" "DNP"
+			(at 566.42 248.92 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -125113,7 +126113,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C242160"
+		(property "LCSC" "C17168"
 			(at 405.13 405.13 0)
 			(effects
 				(font
@@ -125122,7 +126122,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 405.13 405.13 0)
 			(effects
 				(font
@@ -125131,7 +126131,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ2GE0R00X"
+		(property "Manufacturer_No" "0402WGF0000TCE"
 			(at 405.13 405.13 0)
 			(effects
 				(font
@@ -125210,7 +126210,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 1135.38 264.16 0)
 			(effects
 				(font
@@ -125219,7 +126219,16 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-07100KL"
+		(property "Manufacturer_No" "0402WGF1003TCE"
+			(at 1135.38 264.16 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C25741"
 			(at 1135.38 264.16 0)
 			(effects
 				(font
@@ -125298,7 +126307,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C92487"
+		(property "LCSC" "C194427"
 			(at 203.2 69.85 0)
 			(effects
 				(font
@@ -125307,7 +126316,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Samsung"
+		(property "Manufacturer" "muRata"
 			(at 203.2 69.85 0)
 			(effects
 				(font
@@ -125316,7 +126325,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL10A106MO8NQNC"
+		(property "Manufacturer_No" "GRM188R6YA106MA73D"
 			(at 203.2 69.85 0)
 			(effects
 				(font
@@ -125461,7 +126470,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1589"
+		(property "LCSC" "C1623"
 			(at 259.08 120.65 0)
 			(effects
 				(font
@@ -125479,7 +126488,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL10A474KB8NNNC"
+		(property "Manufacturer_No" "CL10B474KA8NNNC"
 			(at 259.08 120.65 0)
 			(effects
 				(font
@@ -125567,7 +126576,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 411.48 190.5 0)
 			(effects
 				(font
@@ -125576,7 +126585,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 411.48 190.5 0)
 			(effects
 				(font
@@ -125652,7 +126661,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 773.43 748.03 0)
 			(effects
 				(font
@@ -125661,7 +126670,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ2GE0R00X"
+		(property "Manufacturer_No" "0402WGF0000TCE"
 			(at 773.43 748.03 0)
 			(effects
 				(font
@@ -125670,7 +126679,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C242160"
+		(property "LCSC" "C17168"
 			(at 773.43 748.03 0)
 			(effects
 				(font
@@ -125748,7 +126757,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C140782"
+		(property "LCSC" "C86295"
 			(at 297.18 134.62 0)
 			(effects
 				(font
@@ -125757,7 +126766,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Murata"
+		(property "Manufacturer" "Samsung"
 			(at 297.18 134.62 0)
 			(effects
 				(font
@@ -125766,7 +126775,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "GRM187R61A226ME15D"
+		(property "Manufacturer_No" "CL10A226MP8NUNE"
 			(at 297.18 134.62 0)
 			(effects
 				(font
@@ -125855,6 +126864,15 @@
 			)
 		)
 		(property "Manufacturer_No" "TS3USB30EDGSR"
+			(at 557.53 381 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C131998"
 			(at 557.53 381 0)
 			(effects
 				(font
@@ -125966,7 +126984,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 464.82 408.94 0)
 			(effects
 				(font
@@ -125975,7 +126993,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 464.82 408.94 0)
 			(effects
 				(font
@@ -126053,7 +127071,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" ""
+		(property "LCSC" "C22431115"
 			(at 144.78 772.16 0)
 			(effects
 				(font
@@ -126220,7 +127238,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL05B104KO5NNNC"
+		(property "Manufacturer_No" "CL05B104KB54PNC"
 			(at 500.38 739.14 0)
 			(effects
 				(font
@@ -126229,7 +127247,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C1525"
+		(property "LCSC" "C307331"
 			(at 500.38 739.14 0)
 			(effects
 				(font
@@ -126307,7 +127325,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 412.75 115.57 0)
 			(effects
 				(font
@@ -126316,7 +127334,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-071KL"
+		(property "Manufacturer_No" "0402WGF1001TCE"
 			(at 412.75 115.57 0)
 			(effects
 				(font
@@ -126325,7 +127343,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C106235"
+		(property "LCSC" "C11702"
 			(at 412.75 115.57 0)
 			(effects
 				(font
@@ -126630,7 +127648,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C242160"
+		(property "LCSC" "C17168"
 			(at 933.45 -55.88 0)
 			(effects
 				(font
@@ -126639,7 +127657,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Panasonic"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 933.45 -55.88 0)
 			(effects
 				(font
@@ -126648,7 +127666,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "ERJ2GE0R00X"
+		(property "Manufacturer_No" "0402WGF0000TCE"
 			(at 933.45 -55.88 0)
 			(effects
 				(font
@@ -126724,7 +127742,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 664.21 537.21 0)
 			(effects
 				(font
@@ -126733,7 +127751,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-0710KL"
+		(property "Manufacturer_No" "0402WGF1002TCE"
 			(at 664.21 537.21 0)
 			(effects
 				(font
@@ -126742,7 +127760,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C60490"
+		(property "LCSC" "C25744"
 			(at 664.21 537.21 0)
 			(effects
 				(font
@@ -126819,7 +127837,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Hirose"
+		(property "Manufacturer" "HCTL"
 			(at 1080.77 270.51 0)
 			(effects
 				(font
@@ -126828,7 +127846,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" ""
+		(property "LCSC" "C2906119"
 			(at 1080.77 270.51 0)
 			(effects
 				(font
@@ -126837,7 +127855,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "FH12-20S-0.5SH(55)"
+		(property "Manufacturer_No" "XW05202-200R-00"
 			(at 1080.77 270.51 0)
 			(effects
 				(font
@@ -127019,7 +128037,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "ffa0e86e-25a6-4c4b-8a28-ef91a31beecd")
 		(property "Reference" "TP18"
 			(at 641.35 259.08 90)
@@ -127059,6 +128077,24 @@
 		)
 		(property "Description" "test point"
 			(at 641.35 254 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "DNP"
+			(at 641.35 254 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_No" "DNP"
+			(at 641.35 254 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -127130,7 +128166,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Yageo"
+		(property "Manufacturer" "UNI-ROYAL"
 			(at 149.86 514.35 0)
 			(effects
 				(font
@@ -127139,7 +128175,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "RC0402FR-074K7L"
+		(property "Manufacturer_No" "0402WGF4701TCE"
 			(at 149.86 514.35 0)
 			(effects
 				(font
@@ -127148,7 +128184,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C105871"
+		(property "LCSC" "C25900"
 			(at 149.86 514.35 0)
 			(effects
 				(font

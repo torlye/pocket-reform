@@ -75153,7 +75153,7 @@
 				)
 			)
 		)
-		(property "Value" "LED_MODEM"
+		(property "Value" "LED_RED"
 			(at 787.4 378.6124 0)
 			(effects
 				(font
@@ -75188,7 +75188,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Everlight"
+		(property "Manufacturer" "XINGLIGHT"
 			(at 787.4 382.27 0)
 			(effects
 				(font
@@ -75197,7 +75197,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "19-217/R6C-AL1M2VY/3T"
+		(property "Manufacturer_No" "XL-1608SURC-06"
 			(at 787.4 382.27 0)
 			(effects
 				(font
@@ -75206,7 +75206,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C72044"
+		(property "LCSC" "C965799"
 			(at 787.4 382.27 0)
 			(effects
 				(font
@@ -75731,7 +75731,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C17772"
+		(property "LCSC" "C25917"
 			(at 751.84 114.3 0)
 			(effects
 				(font
@@ -75749,7 +75749,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "0805W8F6801T5E"
+		(property "Manufacturer_No" "0402WGF6801TCE"
 			(at 751.84 114.3 0)
 			(effects
 				(font
@@ -95247,7 +95247,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "GRM188R6YA475KE15D"
+		(property "Manufacturer_No" "CL05A475MP5NRNC"
 			(at 621.03 -92.71 0)
 			(effects
 				(font
@@ -95256,7 +95256,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Murata"
+		(property "Manufacturer" "Samsung"
 			(at 621.03 -92.71 0)
 			(effects
 				(font
@@ -95265,7 +95265,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C162274"
+		(property "LCSC" "C23733"
 			(at 621.03 -92.71 0)
 			(effects
 				(font
@@ -97491,7 +97491,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL10A226MP8NUNE"
+		(property "Manufacturer_No" "CL21A226MAQNNNE"
 			(at 1007.11 668.02 0)
 			(effects
 				(font
@@ -97500,7 +97500,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C86295"
+		(property "LCSC" "C45783"
 			(at 1007.11 668.02 0)
 			(effects
 				(font
@@ -100191,7 +100191,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Murata"
+		(property "Manufacturer" "Samsung"
 			(at 751.84 228.6 0)
 			(effects
 				(font
@@ -100200,7 +100200,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "GRM188R6YA475KE15D"
+		(property "Manufacturer_No" "CL05A475MP5NRNC"
 			(at 751.84 228.6 0)
 			(effects
 				(font
@@ -100209,7 +100209,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C162274"
+		(property "LCSC" "C23733"
 			(at 751.84 228.6 0)
 			(effects
 				(font
@@ -105535,7 +105535,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C17772"
+		(property "LCSC" "C25917"
 			(at 692.15 535.94 0)
 			(effects
 				(font
@@ -105553,7 +105553,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "0805W8F6801T5E"
+		(property "Manufacturer_No" "0402WGF6801TCE"
 			(at 692.15 535.94 0)
 			(effects
 				(font
@@ -114867,7 +114867,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C17772"
+		(property "LCSC" "C25917"
 			(at 867.41 110.49 0)
 			(effects
 				(font
@@ -114885,7 +114885,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "0805W8F6801T5E"
+		(property "Manufacturer_No" "0402WGF6801TCE"
 			(at 867.41 110.49 0)
 			(effects
 				(font
@@ -122617,7 +122617,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer_No" "CL10A226MP8NUNE"
+		(property "Manufacturer_No" "CL21A226MAQNNNE"
 			(at 1007.11 648.97 0)
 			(effects
 				(font
@@ -122626,7 +122626,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C86295"
+		(property "LCSC" "C45783"
 			(at 1007.11 648.97 0)
 			(effects
 				(font

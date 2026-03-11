@@ -12,7 +12,6 @@ build:
       - pocket-reform-keyboard-fw/pocket-hid/build/pocket-hid.cab
   script:
     - echo "CI_COMMIT_TAG $CI_COMMIT_TAG"
-    - echo "CI_BUILD_TAG $CI_BUILD_TAG"
     - ./install-fw-dependencies.sh
     - |
       # use the timestamp of the latest git commit to set reproducible S_D_E
@@ -44,7 +43,7 @@ lvfs-upload:
   needs:
     - build
   rules:
-    - if: ($CI_COMMIT_REF_PROTECTED == "true" || $CI_COMMIT_TAG || $CI_BUILD_TAG) && $LVFS_UPLOAD_NETRC
+    - if: $CI_COMMIT_TAG
   before_script:
     - apt-get --update --no-install-recommends -y install curl ca-certificates jq
   script:

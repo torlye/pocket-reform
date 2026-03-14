@@ -618,17 +618,8 @@ void som_wake()
 // mostly adapted from pico-extras/src/rp2_common/pico_sleep/sleep.c
 void enter_powersave(void) {
   printf("# [enter_powersave]\n");
-  bool high = 0;
-  bool edge = 0;
-  bool low = !high;
-  bool level = !edge;
-
-  uint32_t event = 0;
-
-  if (level && low) event = IO_BANK0_DORMANT_WAKE_INTE0_GPIO0_LEVEL_LOW_BITS;
-  if (level && high) event = IO_BANK0_DORMANT_WAKE_INTE0_GPIO0_LEVEL_HIGH_BITS;
-  if (edge && high) event = IO_BANK0_DORMANT_WAKE_INTE0_GPIO0_EDGE_HIGH_BITS;
-  if (edge && low) event = IO_BANK0_DORMANT_WAKE_INTE0_GPIO0_EDGE_LOW_BITS;
+	// wake on gpio interrupt, mode level (vs edge) and active low
+  uint32_t event = IO_BANK0_DORMANT_WAKE_INTE0_GPIO0_LEVEL_LOW_BITS;
 
   cancel_repeating_timer(&spi_timer);
   uart_deinit(UART_ID);

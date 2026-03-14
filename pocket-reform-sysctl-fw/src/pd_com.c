@@ -385,7 +385,7 @@ bool pd_tick(battery_info_s* battery_info) {
       if (!fusb_write_byte(FUSB_RESET, FUSB_RESET_SW_RES))
         goto out;
 
-      sleep_us(100);
+      busy_wait_us(100);
 
       // enable toggle and DRP mode
       int mode;
@@ -397,6 +397,10 @@ bool pd_tick(battery_info_s* battery_info) {
       mps_reg_config.config0.susp_en = 1;
       mps_reg_config.config0.chg_en = 0;
       mps_write_byte(MPS_REG_CONFIG0, mps_reg_config.config0.reg_byte);
+
+      // unmask all interrupts to be able to wake from
+      // dormant mode via USB-C events
+      fusb_write_byte(FUSB_CONTROL0, 0b10 << FUSB_CONTROL0_HOST_CUR_SHIFT);
 
       if (!fusb_write_byte(FUSB_CONTROL2, FUSB_CONTROL2_TOGGLE | mode))
         goto out;

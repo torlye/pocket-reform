@@ -78,6 +78,12 @@ float max_word_to_ma(uint16_t w)
   return result;
 }
 
+float max_word_to_ma_signed(uint16_t w)
+{
+  float result = ((float)((int16_t)w))*0.3125;
+  return result;
+}
+
 float max_word_to_time(uint16_t w)
 {
   float result = ((float)w)*5.625;

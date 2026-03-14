@@ -1,7 +1,7 @@
 /*
   SPDX-License-Identifier: GPL-3.0-or-later
   MNT Pocket Reform System Controller Firmware for RP2040
-  Copyright 2023-2024 MNT Research GmbH
+  Copyright 2023-2026 MNT Research GmbH
 
   fusb_read/write functions based on:
   https://git.clarahobbs.com/pd-buddy/pd-buddy-firmware/src/branch/master/lib/src/fusb302b.c
@@ -9,12 +9,18 @@
 #include <math.h>
 #include "sysctl.h"
 #include "pico/divider.h"
+#include "pico/stdlib.h"
+#include "pico/sleep.h"
+#include "hardware/clocks.h"
+#include "hardware/pll.h"
+#include "hardware/xosc.h"
 #include "tusb.h"
 #include "reform_stdio_usb.h"
 
 static uint8_t mps_fault_last = 0;
 battery_info_s battery_info = {0};
 int disp_bl_percent = 100;
+static struct repeating_timer spi_timer;
 
 // The Pico boot rom uses watchdog scratch registers 0, 1, 4, 5, 6, and 7.
 // That leaves 2 and 3 for our "system is on" magic.
@@ -128,7 +134,7 @@ void charger_init()
   // reset all registers
   mps_reg_config.config0.reg_rst = 1;
   mps_write_byte(MPS_REG_CONFIG0, mps_reg_config.config0.reg_byte);
-  sleep_us(50);
+  busy_wait_us(50);
 
   // It should be possible to read this after writing to MPS_REG_CONFIG0 below, but apparently then we read the resetted registers (again?).
   mps_read_buf(MPS_REGSTART_CONFIG, sizeof(mps_reg_config.all_regs), mps_reg_config.all_regs);
@@ -234,6 +240,8 @@ void gauge_tick(battery_info_s *battery_info)
     battery_info->cell1_volts = 0;
     battery_info->cell2_volts = 0;
     battery_info->time_to_empty = 0;
+    battery_info->battery_amps = 0;
+    battery_info->battery_volts = 0;
     return;
   }
 
@@ -258,8 +266,10 @@ void gauge_tick(battery_info_s *battery_info)
   uint16_t prot_alert = max_read_word(0xaf);
   uint16_t prot_cfg2 = max_read_word_100(0xf1);
   uint16_t therm_cfg = max_read_word_100(0xca);
-  float vcell = max_word_to_mv(max_read_word(0x1a));
   float avg_vcell = max_word_to_mv(max_read_word(0x19));
+  float vcell = max_word_to_mv(max_read_word(0x1a));
+  float current = max_word_to_ma_signed(max_read_word(0x1c));
+  float avg_current = max_word_to_ma_signed(max_read_word(0x1d));
   float cell1 = max_word_to_mv(max_read_word(0xd8));
   float cell2 = max_word_to_mv(max_read_word(0xd7));
   float cell3 = max_word_to_mv(max_read_word(0xd6));
@@ -280,6 +290,10 @@ void gauge_tick(battery_info_s *battery_info)
   float rep_full_capacity = max_word_to_cap(max_read_word(0x10));
   float rep_time_to_empty = max_word_to_time(max_read_word(0x11));
   float rep_time_to_full = max_word_to_time(max_read_word(0x20));
+
+	battery_info->battery_amps = -current/1000.0;
+  battery_info->battery_volts = vpack/1000.0;
+	battery_info->gauge_avg_milliamps = avg_current;
 
   battery_info->charge_percentage = (int)rep_percentage;
   // charger mostly doesn't charge to >98%
@@ -425,19 +439,19 @@ void charger_dump(battery_info_s *battery_info)
 
   mps_read_buf(MPS_REGSTART_ADC, sizeof(mps_reg_adc.all_regs), mps_reg_adc.all_regs);
 
-  uint16_t adc_sys_v = mps_word_to_6400(mps_reg_adc.sys_v);
-  uint16_t adc_input_i = mps_word_to_3200(mps_reg_adc.input_i);
-  uint16_t adc_discharge_c = mps_word_to_6400(mps_reg_adc.bat_discharge_i);
-  uint16_t adc_input_v = mps_word_to_12800(mps_reg_adc.input_v);
+  float adc_sys_v = mps_word_to_6400(mps_reg_adc.sys_v);
+  float adc_input_i = mps_word_to_3200(mps_reg_adc.input_i);
+  float adc_discharge_c = mps_word_to_6400(mps_reg_adc.bat_discharge_i);
+  float adc_input_v = mps_word_to_12800(mps_reg_adc.input_v);
 
   // carry over to globals for SPI reporting
-  battery_info->battery_amps = -(float)(adc_input_i - adc_discharge_c)/(float)1000.0;
-  battery_info->battery_volts = (float)adc_sys_v/(float)1000.0;
+  //battery_info->battery_amps = -(float)(adc_input_i - adc_discharge_c)/(float)1000.0;
+  //battery_info->battery_volts = (float)adc_sys_v/(float)1000.0;
   battery_info->input_volts = adc_input_v;
 
   if (battery_info->print_pack_info) {
-    uint16_t adc_bat_v = mps_word_to_6400(mps_reg_adc.bat_v);
-    uint16_t adc_charge_c = mps_word_to_6400(mps_reg_adc.bat_charge_i);
+    float adc_bat_v = mps_word_to_6400(mps_reg_adc.bat_v);
+    float adc_charge_c = mps_word_to_6400(mps_reg_adc.bat_charge_i);
     float adc_temp = mps_word_to_temp(mps_reg_adc.junction_t);
     float adc_sys_pwr = mps_word_to_watt(mps_reg_adc.sys_p);
     float adc_ntc_v = mps_word_to_ntc(mps_read_word(0x40));
@@ -446,16 +460,16 @@ void charger_dump(battery_info_s *battery_info)
     printf("status = 0x%x ", mps_reg_status.status.reg_byte);
     printf("fault = 0x%x\n", mps_reg_status.fault.reg_byte);
 
-    printf("adc_bat_v = %d ", adc_bat_v);
-    printf("adc_sys_v = %d ", adc_sys_v);
+    printf("adc_bat_v = %f ", adc_bat_v);
+    printf("adc_sys_v = %f ", adc_sys_v);
     printf("bat_full_v = 0x%d\n", mps_reg_limits.reg04.v_batt_reg);
 
-    printf("adc_charge_c = %d\n", adc_charge_c);
-    printf("adc_input_v = %d ", adc_input_v);
-    printf("adc_input_c = %d\n", adc_input_i);
+    printf("adc_charge_c = %f\n", adc_charge_c);
+    printf("adc_input_v = %f ", adc_input_v);
+    printf("adc_input_i = %f\n", adc_input_i);
     printf("adc_temp = %f\n", adc_temp);
     printf("adc_sys_pwr = %f ", adc_sys_pwr);
-    printf("adc_discharge_c = %d\n", adc_discharge_c);
+    printf("adc_discharge_c = %f\n", adc_discharge_c);
     printf("adc_ntc_v = %f\n", adc_ntc_v);
 
     printf("input_i_limit1 = 0x%x ", mps_reg_limits.input_i_limit1);
@@ -542,7 +556,7 @@ void turn_som_power_on()
     // unless this is a warm reboot of sysctl
     gpio_put(PIN_DISP_RESET, 0);
     gpio_put(PIN_MODEM_RESET, 0);
-    sleep_ms(20);
+    busy_wait_us(20*1000);
     gpio_put(PIN_DISP_RESET, 1);
     gpio_put(PIN_MODEM_RESET, 1);
   }
@@ -593,24 +607,86 @@ void turn_som_power_off()
 void som_wake()
 {
   gpio_put(PIN_SOM_WAKE, 1);
-  sleep_ms(5);
+  busy_wait_us(5*1000);
   gpio_put(PIN_SOM_WAKE, 0);
   uart_puts(uart0, "wake\r\n");
 }
 
-void setup()
+// reset register
+#define AIRCR (*((volatile uint32_t*)(PPB_BASE + 0x0ED0C)))
+
+// mostly adapted from pico-extras/src/rp2_common/pico_sleep/sleep.c
+void enter_powersave(void) {
+  printf("# [enter_powersave]\n");
+  bool high = 0;
+  bool edge = 0;
+  bool low = !high;
+  bool level = !edge;
+
+  uint32_t event = 0;
+
+  if (level && low) event = IO_BANK0_DORMANT_WAKE_INTE0_GPIO0_LEVEL_LOW_BITS;
+  if (level && high) event = IO_BANK0_DORMANT_WAKE_INTE0_GPIO0_LEVEL_HIGH_BITS;
+  if (edge && high) event = IO_BANK0_DORMANT_WAKE_INTE0_GPIO0_EDGE_HIGH_BITS;
+  if (edge && low) event = IO_BANK0_DORMANT_WAKE_INTE0_GPIO0_EDGE_LOW_BITS;
+
+  cancel_repeating_timer(&spi_timer);
+  uart_deinit(UART_ID);
+  gpio_init(PIN_KBD_UART_RX);
+  gpio_init(PIN_KBD_UART_TX);
+  gpio_set_input_enabled(PIN_KBD_UART_RX, true);
+  gpio_set_input_enabled(PIN_KBD_UART_TX, true);
+  gpio_set_dormant_irq_enabled(PIN_KBD_UART_RX, event, true);
+
+  gpio_init(PIN_FUSB_INT);
+  gpio_set_input_enabled(PIN_FUSB_INT, true);
+  gpio_set_pulls(PIN_FUSB_INT, true, false); // pullup
+  gpio_set_dormant_irq_enabled(PIN_FUSB_INT, event, true);
+
+  uint src_hz = 6500 * KHZ;
+  clock_configure(clk_ref, CLOCKS_CLK_REF_CTRL_SRC_VALUE_ROSC_CLKSRC_PH, 0, src_hz, src_hz);
+
+  // CLK_SYS = CLK_REF
+  clock_configure(clk_sys, CLOCKS_CLK_SYS_CTRL_SRC_VALUE_CLK_REF, 0, src_hz, src_hz);
+  
+  clock_configure(clk_rtc,
+                  0, // No GLMUX
+                  CLOCKS_CLK_RTC_CTRL_AUXSRC_VALUE_ROSC_CLKSRC_PH,
+                  src_hz,
+                  46875);
+  
+  // CLK PERI = clk_sys. Used as reference clock for Peripherals. No dividers so just select and enable
+  clock_configure(clk_peri,
+                  0,
+                  CLOCKS_CLK_PERI_CTRL_AUXSRC_VALUE_CLK_SYS,
+                  src_hz,
+                  src_hz);
+
+  // Disable USB and ADC clocks.
+  clock_stop(clk_usb);
+  clock_stop(clk_adc);
+
+  // Disable PLLs.
+  pll_deinit(pll_sys);
+  pll_deinit(pll_usb);
+
+  xosc_disable();
+
+  clocks_hw->sleep_en0 = CLOCKS_SLEEP_EN0_CLK_RTC_RTC_BITS;
+  clocks_hw->sleep_en1 = 0x0;
+
+  scb_hw->scr |= ARM_CPU_PREFIXED(SCR_SLEEPDEEP_BITS);
+  rosc_set_dormant();
+
+  // reset
+  AIRCR = 0x5fa0004;
+  while (true) {
+    __wfi();
+  }
+}
+
+void setup_gpios()
 {
-  tusb_init();
-  reform_stdio_usb_init();
-
-  // reset if main loop is stuck for 10000ms
-  watchdog_enable(10000, 1);
-
-  init_spi_client();
-
-  printf("# [reset] cause: %#.8x\n", (uint16_t)vreg_and_chip_reset_hw->chip_reset);
-  printf("# [reset] magic: %#.8x%.8x\n", (uint16_t)watchdog_hw->scratch[2], (uint16_t)watchdog_hw->scratch[3]);
-
   // UART to keyboard
   uart_init(UART_ID, BAUD_RATE);
   uart_set_format(UART_ID, DATA_BITS, STOP_BITS, PARITY);
@@ -699,8 +775,20 @@ void setup()
   gpio_put(PIN_USB_SRC_ENABLE, 0);
 
   gpio_init(PIN_FUSB_INT);
-  gpio_set_dir(PIN_FUSB_INT, 0);
+  gpio_set_pulls(PIN_FUSB_INT, true, false); // pullup
+  gpio_set_dir(PIN_FUSB_INT, GPIO_IN);
+}
 
+void setup() {
+  // reset if main loop is stuck for 10000ms
+  watchdog_enable(10000, 1);
+  init_spi_client();
+  
+  tusb_init();
+  reform_stdio_usb_init();
+
+  printf("# [reset] cause: %#.8x\n", (uint16_t)vreg_and_chip_reset_hw->chip_reset);
+  printf("# [reset] magic: %#.8x%.8x\n", (uint16_t)watchdog_hw->scratch[2], (uint16_t)watchdog_hw->scratch[3]);
   // if this is a warm boot, then we need to avoid latching the PWR and display
   // pins.
   if (syscon_warm_boot())
@@ -715,10 +803,8 @@ void setup()
     // off by default
     turn_som_power_off();
   }
-
   gauge_init();
   charger_init();
-
   pd_init();
 }
 
@@ -756,6 +842,49 @@ void handle_usb_commands()
         disp_bl_percent = 100;
       set_display_backlight(disp_bl_percent);
     }
+    else if (usb_c == 'g')
+    {
+      printf("# [acm_command] PIN_3V3_ENABLE=0\n");
+      gpio_put(PIN_3V3_ENABLE, 0);
+    }
+    else if (usb_c == 'G')
+    {
+      printf("# [acm_command] PIN_3V3_ENABLE=1\n");
+      gpio_put(PIN_3V3_ENABLE, 1);
+    }
+    else if (usb_c == 'h')
+    {
+      printf("# [acm_command] PIN_1V1_ENABLE=0\n");
+      gpio_put(PIN_1V1_ENABLE, 0);
+    }
+    else if (usb_c == 'H')
+    {
+      printf("# [acm_command] PIN_1V1_ENABLE=1\n");
+      gpio_put(PIN_1V1_ENABLE, 1);
+    }
+    else if (usb_c == 'd')
+    {
+      printf("# [acm_command] PIN_DISP_RESET=0\n");
+      gpio_put(PIN_DISP_RESET, 0);
+    }
+    else if (usb_c == 'D')
+    {
+      printf("# [acm_command] PIN_DISP_RESET=1\n");
+      gpio_put(PIN_DISP_RESET, 1);
+    }
+    else if (usb_c == 'w')
+    {
+      printf("# [acm_command] SOM wake\n");
+      // wake SoC
+      gpio_put(PIN_DISP_RESET, 1);
+      gpio_put(PIN_3V3_ENABLE, 1);
+      gpio_put(PIN_1V1_ENABLE, 1);
+      som_wake();
+    }
+    else if (usb_c == 's') {
+      printf("# [acm_command] powersave\n");
+      enter_powersave();
+    }
   }
 }
 
@@ -777,6 +906,8 @@ void usb_host_5v_disable() {
 #endif
 }
 
+#define TICK_MS 1
+
 void loop()
 {
   bool can_sleep = true;
@@ -795,11 +926,10 @@ void loop()
     can_sleep = false;
   }
   charger_tick();
-
   battery_info.ticks++;
 
   // every 100ms: query gauge, update battery status
-  if (battery_info.ticks % 1000 == 0)
+  if (battery_info.ticks % (100*TICK_MS) == 0)
   {
     gauge_tick(&battery_info);
   }
@@ -807,27 +937,42 @@ void loop()
   charger_led_indication(&battery_info);
 
   // every 1000ms: report to serial
-  if (battery_info.ticks % 10000 == 0)
+  if (battery_info.ticks % (1000*TICK_MS) == 0)
   {
     // TODO: print adc_charge_c adc_discharge_c
-    printf("# %s %s %s chg=%1x mps_flt=%02x/%02x input=%dmV@%dmA charge=%dmA discharge=%dmA p=%0.2fW ttempty=%umin\n",
-            battery_info.som_is_powered ? "ON" : "OFF",
-            mps_reg_status.status.acok ? "AC" : "BAT",
-            mps_reg_config.config0.chg_en ? "CHG" : "",
-            mps_reg_status.status.chg_stat,
-            mps_reg_status.fault.reg_byte,
-            mps_fault_last,
-            mps_word_to_12800(mps_reg_adc.input_v),
-            mps_word_to_3200(mps_reg_adc.input_i),
-            mps_word_to_6400(mps_reg_adc.bat_charge_i),
-            mps_word_to_6400(mps_reg_adc.bat_discharge_i),
-            mps_word_to_watt(mps_reg_adc.sys_p),
-            (unsigned int)battery_info.time_to_empty/60
-            );
+    printf("# %s %s %s chg=%1x mps_flt=%02x/%02x input=%0.2fmV@%0.2fmA charge=%0.2fmA discharge=%0.2fmA p=%0.2fW ttempty=%umin battery=%0.4fV@%0.4fmA battery_avg=%0.4fmA battery_pwr=%0.4fmW\n",
+           battery_info.som_is_powered ? "ON" : "OFF",
+           mps_reg_status.status.acok ? "AC" : "BAT",
+           mps_reg_config.config0.chg_en ? "CHG" : "",
+           mps_reg_status.status.chg_stat,
+           mps_reg_status.fault.reg_byte,
+           mps_fault_last,
+           mps_word_to_12800(mps_reg_adc.input_v),
+           mps_word_to_3200(mps_reg_adc.input_i),
+           mps_word_to_6400(mps_reg_adc.bat_charge_i),
+           mps_word_to_6400(mps_reg_adc.bat_discharge_i),
+           mps_word_to_watt(mps_reg_adc.sys_p),
+           (unsigned int)battery_info.time_to_empty/60,
+           battery_info.battery_volts,
+           battery_info.battery_amps*1000,
+           battery_info.gauge_avg_milliamps,
+           battery_info.gauge_avg_milliamps*battery_info.battery_volts
+           );
   }
 
+  // TODO somehow sleep_us can prevent UART handling for up to 10 seconds after startup/reset?!
   if (can_sleep) {
-    sleep_us(100); // one tick is 0.1ms
+    busy_wait_us(100);
+
+    if ((battery_info.ticks % (5000 * TICK_MS) == 0)
+        && !battery_info.som_is_powered
+        && battery_info.gauge_avg_milliamps < 0) {
+      // If 5 seconds have passed while the device is off and
+      // on battery, conserve power and halt.
+      // It will exit powersave when detecting a USB-C PD plug event
+      // or keyboard interaction.
+      enter_powersave();
+    }
   }
 }
 
@@ -849,10 +994,12 @@ bool spi_commands_task(__unused struct repeating_timer *t) {
 
 int main()
 {
+  // TODO: saves a bit of power, but causes ROSC dormant trouble
+  //set_sys_clock_48mhz();
+  setup_gpios();
   setup();
 
-  // call SPI task every 5ms to ensure response time
-  struct repeating_timer spi_timer;
+  // call SPI task every 5 ms to ensure response time
   add_repeating_timer_ms(-5, spi_commands_task, NULL, &spi_timer);
 
   printf("# [pocket_sysctl] entering main loop\n");

@@ -18,7 +18,7 @@
 
 // #define OTG_AS_5V // WARNING: defining this requires the hardware mod described in https://source.mnt.re/reform/pocket-reform/-/issues/3
 // #define FACTORY_MODE // turn device on immediately after starting sysctl
-// #define ACM_ENABLED // usb serial control for debugging
+//#define ACM_ENABLED // usb serial control for debugging
 // #define PREF_DISPLAY_V2 // backlight control for second type of display, TOP070F01A (not LT070ME05000)
 
 #define FW_STRING1 "PREF1SYS"
@@ -97,6 +97,8 @@ typedef struct battery_info_s
     float cell2_volts;
     int charge_percentage;
     float time_to_empty;
+    float gauge_avg_milliamps;
+    float gauge_vpack;
 
     // metadata
     bool emergency_charge_necessary;

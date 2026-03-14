@@ -212,10 +212,9 @@ uint16_t mps_read_word(uint8_t addr);
 
 float mps_word_to_ntc(uint16_t w);
 
-uint16_t mps_word_to_3200(uint16_t w);
-uint16_t mps_word_to_6400(uint16_t w);
-
-uint16_t mps_word_to_12800(uint16_t w);
+float mps_word_to_3200(uint16_t w);
+float mps_word_to_6400(uint16_t w);
+float mps_word_to_12800(uint16_t w);
 
 float mps_word_to_watt(uint16_t w);
 

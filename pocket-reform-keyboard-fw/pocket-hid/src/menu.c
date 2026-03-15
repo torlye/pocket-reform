@@ -13,8 +13,8 @@
 #include "pico/stdlib.h"
 #include "pico/bootrom.h"
 #include "hardware/watchdog.h"
-#include "tusb.h"
 #include <malloc.h>
+#include <stdio.h>
 
 static int current_menu_y = 0;
 static int current_scroll_y = 0;
@@ -132,9 +132,10 @@ int execute_menu_function(int keycode) {
   }
   else if (keycode == KEY_U) {
     // reset the USB stack
-    tud_disconnect();
-    sleep_ms(10);
-    tud_connect();
+    // FIXME
+    //tud_disconnect();
+    //sleep_ms(10);
+    //tud_connect();
   }
   else if (keycode == KEY_T) {
     render_tina();

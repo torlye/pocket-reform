@@ -12,8 +12,6 @@
 #include <string.h>
 #include <math.h>
 
-#include "tusb.h"
-
 #include "pico/time.h"
 #include "pico/stdlib.h"
 #include "pico/binary_info.h"
@@ -31,6 +29,7 @@
 #include "matrix.h"
 #include "keyboard.h"
 #include "pins.h"
+#include "tusb.h"
 
 #include "ws2812.pio.h"
 
@@ -83,9 +82,15 @@ static inline uint32_t board_millis(void) {
 }
 
 int main(void)
-{
-  set_sys_clock_48mhz();
-
+{  
+  //set_sys_clock_48mhz();
+  i2c_init(I2C_DEV, 400 * 1000);
+  gpio_set_function(PIN_SDA, GPIO_FUNC_I2C);
+  gpio_set_function(PIN_SCL, GPIO_FUNC_I2C);
+  bi_decl(bi_2pins_with_func(PIN_SDA, PIN_SCL, GPIO_FUNC_I2C));
+  gfx_init();
+  gfx_clear();
+  
   tusb_init();
 
   uart_init(UART_ID, BAUD_RATE);
@@ -102,6 +107,12 @@ int main(void)
   gpio_set_dir(PIN_LEDS_PWR_EN, true); // output
   gpio_put(PIN_LEDS_PWR_EN, 0);
 
+#ifdef VARIANT_RP2350A
+  gpio_init(PIN_LED_EN);
+  gpio_set_dir(PIN_LED_EN, true); // output
+  gpio_put(PIN_LED_EN, 1);
+#endif
+  
   /* Configure columns to output, bring low */
   gpio_init_mask(PIN_COL_MASK);
   gpio_set_dir_out_masked(PIN_COL_MASK);
@@ -116,23 +127,15 @@ int main(void)
   gpio_pull_down(PIN_ROW5);
   gpio_pull_down(PIN_ROW6);
 
-  i2c_init(i2c0, 400 * 1000);
-  gpio_set_function(PIN_SDA, GPIO_FUNC_I2C);
-  gpio_set_function(PIN_SCL, GPIO_FUNC_I2C);
-
-  bi_decl(bi_2pins_with_func(PIN_SDA, PIN_SCL, GPIO_FUNC_I2C));
-
   unsigned char buf[] = {0x7f, 0x00, 0x00, 0x00};
-  i2c_write_blocking(i2c0, ADDR_SENSOR, buf, 2, false);
+  i2c_write_blocking(I2C_DEV, ADDR_SENSOR, buf, 2, false);
 
   buf[0] = 0x05;
   buf[1] = 0x01;
-  i2c_write_blocking(i2c0, ADDR_SENSOR, buf, 2, false);
+  i2c_write_blocking(I2C_DEV, ADDR_SENSOR, buf, 2, false);
 
   led_init();
   led_turn_off();
-
-  gfx_init();
 
   // watchdog crash recovery
   if (watchdog_caused_reboot()) {
@@ -167,6 +170,8 @@ int main(void)
     led_set_rgb(KBD_DEFAULT_BACKLIGHT_COLOR);
   }
 
+  printf("after led_set_rgb\n");
+    
   unsigned int cycles = 0;
   while (1) {
     // the sleep time directly influences
@@ -495,13 +500,13 @@ static int poll_trackball()
 
   buf[0] = 0x02;
 
-  i2c_write_blocking_until(i2c0, ADDR_SENSOR, buf, 1, true, make_timeout_time_ms(2));
-  i2c_read_blocking_until(i2c0, ADDR_SENSOR, buf, 1, false, make_timeout_time_ms(2));
+  i2c_write_blocking_until(I2C_DEV, ADDR_SENSOR, buf, 1, true, make_timeout_time_ms(2));
+  i2c_read_blocking_until(I2C_DEV, ADDR_SENSOR, buf, 1, false, make_timeout_time_ms(2));
 
   if (buf[0] & 0xf0) {
     buf[0] = 0x03;
-    i2c_write_blocking_until(i2c0, ADDR_SENSOR, buf, 1, true, make_timeout_time_ms(2));
-    i2c_read_blocking_until(i2c0, ADDR_SENSOR, buf, 2, false, make_timeout_time_ms(2));
+    i2c_write_blocking_until(I2C_DEV, ADDR_SENSOR, buf, 1, true, make_timeout_time_ms(2));
+    i2c_read_blocking_until(I2C_DEV, ADDR_SENSOR, buf, 2, false, make_timeout_time_ms(2));
 
     tb_nx = (double)((int8_t)buf[0]);
     tb_ny = (double)((int8_t)buf[1]);
@@ -551,28 +556,6 @@ static void send_hid_report(uint8_t report_id)
       }
     }
     break;
-
-    case REPORT_ID_CONSUMER_CONTROL:
-    {
-      // use to avoid send multiple consecutive zero report
-      /*static bool has_consumer_key = false;
-
-      if ( btn )
-      {
-        // volume down
-        uint16_t volume_down = HID_USAGE_CONSUMER_VOLUME_DECREMENT;
-        tud_hid_report(REPORT_ID_CONSUMER_CONTROL, &volume_down, 2);
-        has_consumer_key = true;
-      }else
-      {
-        // send empty key report (release key) if previously has key pressed
-        uint16_t empty_key = 0;
-        if (has_consumer_key) tud_hid_report(REPORT_ID_CONSUMER_CONTROL, &empty_key, 2);
-        has_consumer_key = false;
-        }*/
-    }
-    break;
-
     case REPORT_ID_GAMEPAD:
     {
       // TODO: later

@@ -10,6 +10,7 @@ build:
       - scripts/update-keyboard-firmware.sh
       - pocket-reform-keyboard-fw/pocket-hid/build/pocket-hid.uf2
       - pocket-reform-keyboard-fw/pocket-hid/build/pocket-hid.cab
+      - pocket-reform-keyboard-fw/pocket-hid/build/pocket-hid-v2.uf2
   script:
     - echo "CI_COMMIT_TAG $CI_COMMIT_TAG"
     - ./install-fw-dependencies.sh
@@ -35,6 +36,10 @@ build:
     #
     - echo "Building sysctl firmware"
     - env --chdir=pocket-reform-sysctl-fw ./build.sh
+    #
+    - echo "Building keyboard v2 firmware"
+    - env --chdir=pocket-reform-keyboard-fw/pocket-hid ./build-fw2.sh
+    - cp pocket-reform-keyboard-fw/pocket-hid/build/pocket-hid.uf2 pocket-reform-keyboard-fw/pocket-hid/build/pocket-hid-v2.uf2
     #
     - echo "Building keyboard firmware"
     - env --chdir=pocket-reform-keyboard-fw/pocket-hid ./build.sh

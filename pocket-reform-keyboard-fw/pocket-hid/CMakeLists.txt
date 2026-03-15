@@ -1,38 +1,36 @@
 cmake_minimum_required(VERSION 3.17)
 
 if (NOT DEFINED ENV{PICO_SDK_PATH} AND (NOT PICO_SDK_PATH))
-       set(PICO_SDK_PATH "${CMAKE_SOURCE_DIR}/../../pico-sdk")
-       cmake_path(NORMAL_PATH PICO_SDK_PATH)
-       message("Using PICO_SDK_PATH=${PICO_SDK_PATH}")
+        set(PICO_SDK_PATH "${CMAKE_SOURCE_DIR}/../../pico-sdk")
+        cmake_path(NORMAL_PATH PICO_SDK_PATH)
+        message("Using PICO_SDK_PATH=${PICO_SDK_PATH}")
 endif()
+message("Using PICO_SDK_PATH=${PICO_SDK_PATH}")
 
-include(pico_sdk_import.cmake)
+include(lib/pico_sdk_import.cmake)
 set(SHARED_FW_INC "${CMAKE_CURRENT_LIST_DIR}/../../pocket-reform-shared-fw/inc")
 set(SHARED_FW_SRC "${CMAKE_CURRENT_LIST_DIR}/../../pocket-reform-shared-fw/src")
 set(SCRIPTS "${CMAKE_CURRENT_LIST_DIR}/../../scripts")
 
 set(PROJECT pocket-hid)
-
 project(${PROJECT} C CXX ASM)
 
 pico_sdk_init()
 
 add_executable(${PROJECT})
 
-# Example source
 target_sources(${PROJECT} PUBLIC
         src/main.c
         src/leds.c
         src/menu.c
         src/oled.c
         src/remote.c
-        src/usb_descriptors.c
-        "${CMAKE_CURRENT_BINARY_DIR}/inc-generated/ds20-descriptor.h"
-        "${SHARED_FW_SRC}/reset_interface.c"
+	      src/usb_descriptors.c
+	      "${CMAKE_CURRENT_BINARY_DIR}/inc-generated/ds20-descriptor.h"
+	      "${SHARED_FW_SRC}/reset_interface.c"
         )
 
-# Example include
-target_include_directories(${PROJECT} PUBLIC
+target_include_directories(${PROJECT} PRIVATE
         "${CMAKE_CURRENT_LIST_DIR}/inc"
         "${CMAKE_CURRENT_LIST_DIR}/src"
         "${CMAKE_CURRENT_BINARY_DIR}/inc-generated"
@@ -41,15 +39,18 @@ target_include_directories(${PROJECT} PUBLIC
 
 target_link_libraries(${PROJECT} PRIVATE
         pico_stdlib
-        pico_bootsel_via_double_reset
         hardware_i2c
         hardware_pwm
         hardware_pio
         hardware_watchdog
+        pico_stdio
         pico_unique_id
-        tinyusb_device
+       	tinyusb_device
 )
 
+# enable usb output, disable uart output
+# pico_enable_stdio_usb(${PROJECT} 1)
+pico_enable_stdio_uart(${PROJECT} 0)
 pico_add_extra_outputs(${PROJECT})
 
 target_compile_definitions(${PROJECT} PUBLIC PICO_RP2040_USB_DEVICE_ENUMERATION_FIX=1)

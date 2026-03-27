@@ -30,29 +30,20 @@ float mps_word_to_ntc(uint16_t w)
   return result;
 }
 
-uint16_t mps_word_to_12800(uint16_t w)
+float mps_word_to_12800(uint16_t w)
 {
-  return (w>>6) * 25;
+  return ((float)(w>>6)) * 25;
 }
 
-uint16_t mps_word_to_3200(uint16_t w)
+float mps_word_to_3200(uint16_t w)
 {
-  uint16_t result = (w>>8) * 25;
-  if (w & 0x80) {
-    result += 12;  // should be 12.5.
-  }
-  if (w & 0x40) {
-    result += 6;  // should be 6.25.
-  }
+  float result = ((float)(w>>6)) * 6.25;
   return result;
 }
 
-uint16_t mps_word_to_6400(uint16_t w)
+float mps_word_to_6400(uint16_t w)
 {
-  uint16_t result = (w>>7) * 25;
-  if (w & 0x40) {
-    result += 12;  // should be 12.5.
-  }
+  float result = ((float)(w>>6)) * 12.5;
   return result;
 }
 

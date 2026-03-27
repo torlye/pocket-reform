@@ -87,7 +87,7 @@ void handle_commands(char chr, battery_info_s* battery_info)
         // syntax error
         if (chr == '\r')
         {
-            printf("# [keyboard] [ERROR] syntax error\n");
+            //printf("# [keyboard] [ERROR] syntax error\n");
             snprintf(uart_buffer, UART_BUFSZ, "error:syntax\r\n");
             uart_puts(UART_ID, uart_buffer);
             uart_state.cmd_state = ST_EXPECT_DIGIT_0;
@@ -102,7 +102,7 @@ void handle_commands(char chr, battery_info_s* battery_info)
         }
         else if (chr == '\r')
         {
-            printf("# [keyboard] exec: %c %d\n", uart_state.remote_cmd, uart_state.cmd_number);
+            //printf("# [keyboard] exec: %c %d\n", uart_state.remote_cmd, uart_state.cmd_number);
             if (uart_state.echo)
             {
                 // FIXME
@@ -169,6 +169,9 @@ void handle_commands(char chr, battery_info_s* battery_info)
             else if (uart_state.remote_cmd == 'w')
             {
                 // wake SoC
+                gpio_put(PIN_DISP_RESET, 1);
+                gpio_put(PIN_3V3_ENABLE, 1);
+                gpio_put(PIN_1V1_ENABLE, 1);
                 som_wake();
                 snprintf(uart_buffer, UART_BUFSZ, "system: wake\r\n");
                 uart_puts(UART_ID, uart_buffer);
@@ -219,6 +222,40 @@ void handle_commands(char chr, battery_info_s* battery_info)
             {
                 // toggle serial echo
                 uart_state.echo = uart_state.cmd_number == 1 ? 1 : 0;
+            }
+            else if (uart_state.remote_cmd == 'G')
+            {
+                // set GPIO *high*
+                // cmd_number:
+                // 0: Display Panel Reset (active low)
+                switch (uart_state.cmd_number) {
+                case 0:
+                  gpio_put(PIN_DISP_RESET, 1);
+                  break;
+                case 1:
+                  gpio_put(PIN_3V3_ENABLE, 1);
+                  break;
+                case 2:
+                  gpio_put(PIN_1V1_ENABLE, 1);
+                  break;
+                }
+            }
+            else if (uart_state.remote_cmd == 'g')
+            {
+                // set GPIO *low*
+                // cmd_number:
+                // 0: Display Panel Reset (active low)
+                switch (uart_state.cmd_number) {
+                case 0:
+                  gpio_put(PIN_DISP_RESET, 0);
+                  break;
+                case 1:
+                  gpio_put(PIN_3V3_ENABLE, 0);
+                  break;
+                case 2:
+                  gpio_put(PIN_1V1_ENABLE, 0);
+                  break;
+                }
             }
             else
             {

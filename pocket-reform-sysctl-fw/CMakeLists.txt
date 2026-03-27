@@ -7,6 +7,7 @@ if (NOT DEFINED ENV{PICO_SDK_PATH} AND (NOT PICO_SDK_PATH))
 endif()
 
 include(lib/pico_sdk_import.cmake)
+include(lib/pico_extras_import.cmake)
 set(SHARED_FW_INC "${CMAKE_CURRENT_LIST_DIR}/../pocket-reform-shared-fw/inc")
 set(SHARED_FW_SRC "${CMAKE_CURRENT_LIST_DIR}/../pocket-reform-shared-fw/src")
 set(SCRIPTS "${CMAKE_CURRENT_LIST_DIR}/../scripts")
@@ -44,6 +45,7 @@ target_link_libraries(${PROJECT}
 	hardware_spi
 	hardware_rtc
 	hardware_pwm
+	hardware_sleep
 	pico_stdio
 	pico_time
 	pico_unique_id

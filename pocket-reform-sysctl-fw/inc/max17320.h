@@ -15,6 +15,7 @@ void max_write_buf(uint8_t addr, uint8_t size, const uint8_t *buf);
 float max_word_to_mv(uint16_t w);
 float max_word_to_pack_mv(uint16_t w);
 float max_word_to_ma(uint16_t w);
+float max_word_to_ma_signed(uint16_t w);
 float max_word_to_time(uint16_t w);
 float max_word_to_cap(uint16_t w);
 float max_word_to_percentage(uint16_t w);

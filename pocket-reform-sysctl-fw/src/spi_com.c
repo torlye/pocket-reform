@@ -154,6 +154,38 @@ void handle_spi_commands(battery_info_s *battery_info)
       brightness = 80;
     set_display_backlight(brightness);
   }
+  else if (spi_command == 'G') {
+    // set GPIO *high*
+    // cmd_number:
+    switch (spi_arg1) {
+    case 0:
+      // 0: Display Panel Reset (active low)
+      gpio_put(PIN_DISP_RESET, 1);
+      break;
+    case 1:
+      gpio_put(PIN_3V3_ENABLE, 1);
+      break;
+    case 2:
+      gpio_put(PIN_1V1_ENABLE, 1);
+      break;
+    }
+  }
+  else if (spi_command == 'g') {
+    // set GPIO *low*
+    // cmd_number:
+    switch (spi_arg1) {
+    case 0:
+      // 0: Display Panel Reset (active low)
+      gpio_put(PIN_DISP_RESET, 0);
+      break;
+    case 1:
+      gpio_put(PIN_3V3_ENABLE, 0);
+      break;
+    case 2:
+      gpio_put(PIN_1V1_ENABLE, 0);
+      break;
+    }
+  }
 
   spi_buf[SPI_BUF_LEN-1] = lpc_calc_checksum(spi_buf, SPI_BUF_LEN);
 

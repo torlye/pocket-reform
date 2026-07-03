@@ -1,3 +1,27 @@
+# MNT Pocket Reform: Swapped Ctrl and Hyper keys
+This fork modifies `pocket-reform-keyboard-fw` to swap the position of the **Left Ctrl** and **Hyper** keys on the keyboard.
+
+My muscle memory requires me to have the Ctrl key at the bottom left corner of the keyboard!
+
+Nothing else is modified at the moment.
+
+## First-time setup
+Run `./install-fw-dependencies.sh`
+
+## Building and flashing
+1. cd to `pocket-reform-keyboard-fw/pocket-hid`
+2. Run `./build.sh` to build
+3. Run the command `sudo sleep 5 && ./flash.sh`
+4. Enter your sudo password (if necessary) to begin the sleep
+5. Press Hyper+Enter and then x on the keyboard to enter firmware upload mode
+6. Wait for flashing to complete and for the controller to reset
+
+---
+
+Original README follows:
+
+---
+
 # MNT Pocket Reform (Research Project)
 
 This repository contains specifications, schematics, PCB and case designs, and firmware source code for the MNT Pocket Reform laptop.

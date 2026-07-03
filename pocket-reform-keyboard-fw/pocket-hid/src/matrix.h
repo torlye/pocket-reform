@@ -42,7 +42,7 @@
 
 // Fourth row
 #define MATRIX_DEFAULT_ROW_3 \
-  KEY_LEFTCTRL,\
+  KEY_COMPOSE,\
   KEY_A,\
   KEY_S,\
   KEY_D,\
@@ -72,7 +72,7 @@
 
 // Sixth row
 #define MATRIX_DEFAULT_ROW_5 \
-  KEY_COMPOSE,\
+  KEY_LEFTCTRL,\
   KEY_LEFTMETA,\
   KEY_LEFTALT,\
   KEY_BACKSLASH,\
@@ -124,7 +124,7 @@ uint8_t matrix_fn[KBD_MATRIX_SZ] = {
   KEY_RIGHTBRACE,
   KEY_SEMICOLON,
 
-  KEY_LEFTCTRL,
+  KEY_COMPOSE,
   KEY_A,
   KEY_S,
   KEY_D,
@@ -150,7 +150,7 @@ uint8_t matrix_fn[KBD_MATRIX_SZ] = {
   KEY_PAGEUP,
   KEY_RIGHTSHIFT,
 
-  KEY_COMPOSE,
+  KEY_LEFTCTRL,
   KEY_LEFTMETA,
   KEY_LEFTALT,
   KEY_BACKSLASH,

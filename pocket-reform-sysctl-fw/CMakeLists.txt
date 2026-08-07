@@ -7,6 +7,7 @@ if (NOT DEFINED ENV{PICO_SDK_PATH} AND (NOT PICO_SDK_PATH))
 endif()
 
 include(lib/pico_sdk_import.cmake)
+include(lib/pico_extras_import.cmake)
 set(SHARED_FW_INC "${CMAKE_CURRENT_LIST_DIR}/../pocket-reform-shared-fw/inc")
 set(SHARED_FW_SRC "${CMAKE_CURRENT_LIST_DIR}/../pocket-reform-shared-fw/src")
 set(SCRIPTS "${CMAKE_CURRENT_LIST_DIR}/../scripts")
@@ -19,6 +20,9 @@ pico_sdk_init()
 
 add_executable(${PROJECT}
 	src/sysctl.c
+	src/ext_gpio.c
+	src/altmode.c
+	src/kvstore.c
 	src/max17320.c
 	src/mp2650.c
 	src/fusb302b.c
@@ -26,6 +30,8 @@ add_executable(${PROJECT}
 	src/spi_com.c
 	src/uart_com.c
 	src/pd_com.c
+  src/cli.c
+  src/hwapi_pocket.c
 	src/usb_descriptors.c
 	"${CMAKE_CURRENT_BINARY_DIR}/inc-generated/ds20-descriptor.h"
 	"${SHARED_FW_SRC}/reset_interface.c"
@@ -44,6 +50,7 @@ target_link_libraries(${PROJECT}
 	hardware_spi
 	hardware_rtc
 	hardware_pwm
+	hardware_sleep
 	pico_stdio
 	pico_time
 	pico_unique_id
@@ -68,8 +75,8 @@ if (DEFINED ENV{MNTRE_FIRMWARE_VERSION} AND (NOT MNTRE_FIRMWARE_VERSION))
     message("Using MNTRE_FIRMWARE_VERSION from environment ('${MNTRE_FIRMWARE_VERSION}')")
 endif ()
 if (NOT MNTRE_FIRMWARE_VERSION)
-	string(TIMESTAMP TODAY "%m%d")
-	set(MNTRE_FIRMWARE_VERSION "${TODAY}")
+	string(TIMESTAMP TODAY "%Y%m%d")
+	set(MNTRE_FIRMWARE_VERSION "${TODAY}-dev")
     set(FWCAB_DEVELOPER_NAME "J. Random Hacker")
     if (DEFINED ENV{CI_COMMIT_BRANCH} AND (NOT MNTRE_FIRMWARE_BRANCH))
       set(MNTRE_FIRMWARE_BRANCH $ENV{CI_COMMIT_BRANCH})

@@ -1,4 +1,8 @@
-<p>Release 20250623</p>
+<p>Release 20260807</p>
 <ul>
-  <li>System Controller watchdog reset timeout increased to 10 seconds to avoid spurious resets of the device.</li>
+  <li>Adds extensive support for Pocket Mainboard 2.0 features, and detects Mainboard version.</li>
+  <li>Introduces System Controller API V4, unified across interrupt-serviced SPI, USB-ACM and keyboard UART.</li>
+  <li>Extends USB-C PD support to handle more devices like docks, adapters and active cables, and DisplayPort Alt-Mode on MB 2.0.</li>
+  <li>Exposes virtual GPIOs for improved handling of Display V1 and Display V2 resets and backlight control.</li>
+  <li>Improves brightness curve for Display V2 with more detail in lower brightness levels, and prevents flicker on some displays.</li>
 </ul>

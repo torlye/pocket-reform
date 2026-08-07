@@ -13,6 +13,8 @@
 #define ST_SYNTAX_ERROR 5
 #define ST_EXPECT_RETURN 6
 #define ST_EXPECT_MAGIC 7
+#define ST_EXPECT_KV_KEY_CHAR 8
+#define ST_EXPECT_KV_VALUE_CHAR 9
 
 void init_spi_client();
 

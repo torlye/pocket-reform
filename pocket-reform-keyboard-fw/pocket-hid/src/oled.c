@@ -1,7 +1,7 @@
 /*
   SPDX-License-Identifier: GPL-3.0-or-later
   MNT Pocket Reform Keyboard/Trackball Controller Firmware for RP2040
-  Copyright 2021-2024 MNT Research GmbH (mntre.com)
+  Copyright 2021-2026 MNT Research GmbH (mntre.com)
 */
 
 // OLED (SSD1306) rendering code. The OLED is interfaced via I2C.
@@ -15,7 +15,7 @@
 #define OLED_I2C_TIMEOUT 100
 
 static uint8_t oledbrt = 0;
-static struct CharacterMatrix display;
+static struct char_matrix display;
 
 // Write command sequence.
 static inline bool _send_cmd1(uint8_t cmd) {
@@ -105,7 +105,6 @@ done:
 bool gfx_off(void) {
   bool success = false;
 
-  //send_cmd1(InvertDisplay);
   send_cmd1(DisplayOff);
   success = true;
 
@@ -145,7 +144,7 @@ done:
   return;
 }
 
-void matrix_write_char_inner(struct CharacterMatrix *matrix, uint8_t c) {
+void matrix_write_char_inner(struct char_matrix *matrix, uint8_t c) {
   *matrix->cursor = c;
   ++matrix->cursor;
 
@@ -158,7 +157,7 @@ void matrix_write_char_inner(struct CharacterMatrix *matrix, uint8_t c) {
   }
 }
 
-void matrix_write_char(struct CharacterMatrix *matrix, uint8_t c) {
+void matrix_write_char(struct char_matrix *matrix, uint8_t c) {
   matrix->dirty = true;
 
   if (c == '\n') {
@@ -176,7 +175,7 @@ void matrix_write_char(struct CharacterMatrix *matrix, uint8_t c) {
 }
 
 void gfx_poke(uint8_t x, uint8_t y, uint8_t c) {
-	display.display[y][x] = c;
+  display.display[y][x] = c;
 }
 
 void gfx_poke_str(uint8_t x, uint8_t y, char* str) {
@@ -195,7 +194,19 @@ void gfx_write_char(uint8_t c) {
   matrix_write_char(&display, c);
 }
 
-void matrix_write(struct CharacterMatrix *matrix, const char *data) {
+void gfx_scroll_lines(uint8_t num_lines) {
+  if (num_lines>4) num_lines = 4;
+  for (int y=1; y<num_lines; y++) {
+    for (int x=0; x<21; x++) {
+      display.display[y-1][x] = display.display[y][x];
+    }
+  }
+  for (int x=0; x<21; x++) {
+    display.display[num_lines-1][x] = 0;
+  }
+}
+
+void matrix_write(struct char_matrix *matrix, const char *data) {
   const char *end = data + strlen(data);
   while (data < end) {
     matrix_write_char(matrix, *data);
@@ -203,32 +214,11 @@ void matrix_write(struct CharacterMatrix *matrix, const char *data) {
   }
 }
 
-void matrix_write_ln(struct CharacterMatrix *matrix, const char *data) {
-  char data_ln[strlen(data)+2];
-  snprintf(data_ln, sizeof(data_ln), "%s\n", data);
-  matrix_write(matrix, data_ln);
-}
-
 void gfx_write(const char *data) {
   matrix_write(&display, data);
 }
 
-void matrix_write_P(struct CharacterMatrix *matrix, const char *data) {
-  while (true) {
-    uint8_t c = *data;
-    if (c == 0) {
-      return;
-    }
-    matrix_write_char(matrix, c);
-    ++data;
-  }
-}
-
-void gfx_write_P(const char *data) {
-  matrix_write_P(&display, data);
-}
-
-void matrix_clear(struct CharacterMatrix *matrix) {
+void matrix_clear(struct char_matrix *matrix) {
   memset(matrix->display, ' ', sizeof(matrix->display));
   matrix->cursor = &matrix->display[0][0];
   matrix->dirty = true;
@@ -246,6 +236,14 @@ void gfx_clear_invert(void) {
   }
 }
 
+void gfx_invert_char(uint8_t x, uint8_t y) {
+  if (y > 3)
+    return;
+  if (x > 20)
+    return;
+  display.invert[y][x] = 1;
+}
+
 void gfx_invert_row(uint8_t y) {
   if (y>3) return;
   for (int x=0; x<21; x++) {
@@ -253,7 +251,7 @@ void gfx_invert_row(uint8_t y) {
   }
 }
 
-void matrix_render(struct CharacterMatrix *matrix) {
+void matrix_render(struct char_matrix *matrix) {
   gfx_on();
 
   // Move to the home position

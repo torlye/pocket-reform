@@ -1,9 +1,10 @@
 /*
   SPDX-License-Identifier: GPL-3.0-or-later
   MNT Pocket Reform Keyboard/Trackball Controller Firmware for RP2040
-  Copyright 2021-2024 MNT Research GmbH (mntre.com)
+  Copyright 2021-2026 MNT Research GmbH (mntre.com)
 */
 
+#include "edit.h"
 #include "menu.h"
 #include "oled.h"
 #include "remote.h"
@@ -14,6 +15,7 @@
 #include "pico/bootrom.h"
 #include "hardware/watchdog.h"
 #include "tusb.h"
+#include "pins.h"
 #include <malloc.h>
 
 static int current_menu_y = 0;
@@ -24,8 +26,8 @@ static int8_t logo_timeout_ticks = 0;
 #ifdef KBD_MODE_STANDALONE
 // TODO
 #else
-#define MENU_NUM_ITEMS 8
-const MenuItem menu_items[] = {
+#define MENU_NUM_ITEMS 9
+const struct menu_item menu_items[MENU_NUM_ITEMS] = {
   { "Exit Menu         ESC", KEY_ESC },
   { "Power On            1", KEY_1 },
   { "Power Off           0", KEY_0 },
@@ -34,6 +36,7 @@ const MenuItem menu_items[] = {
   { "System Status       s", KEY_S },
   { "Reset Keyboard      r", KEY_R },
   { "Reset USB           u", KEY_U },
+  { "Console             c", KEY_C },
 };
 #endif
 
@@ -96,13 +99,24 @@ int execute_menu_row_function(int y) {
 
   if (y>=0 && y<MENU_NUM_ITEMS) {
     current_menu_page = MENU_PAGE_OTHER;
-    return execute_menu_function(menu_items[y].keycode);
+    return input_menu_key(menu_items[y].keycode, 0);
   }
-  return execute_menu_function(KEY_ESC);
+  return input_menu_key(KEY_ESC, 0);
 }
 
 // returns 1 for navigation function (stay in menu mode), 0 for terminal function
-int execute_menu_function(int keycode) {
+int input_menu_key(uint8_t keycode, uint8_t shift) {
+  if (current_menu_page == MENU_PAGE_CONSOLE) {
+    // user is inside of a screen that handles its own inputs
+    if (keycode == KEY_ESC) {
+      gfx_clear();
+      gfx_flush();
+      return 0; // exits menu mode in main.c
+    }
+    edit_input_key(keycode, shift);
+    return 1;
+  }
+  
   if (keycode == KEY_0) {
     // TODO: are you sure? (port from kbd4)
     led_turn_off();
@@ -113,16 +127,19 @@ int execute_menu_function(int keycode) {
   }
   else if (keycode == KEY_1) {
     if (remote_turn_on_som()) {
+      gpio_put(PIN_LEDS_PWR_EN, 1);
+      anim_hello();
       // the keyboard backlight turning on
       // is a visual signal that people are used
       // to--so if the remembered brightess was
       // too dark, revert to the default
+      sleep_ms(300);
       if (led_get_brightness() < 0x20) {
         led_set_rgb(KBD_DEFAULT_BACKLIGHT_COLOR);
-      } else {
+      }
+      for (int i=0; i<3; i++) {
         led_turn_on();
       }
-      anim_hello();
     }
     return 0;
   }
@@ -146,7 +163,7 @@ int execute_menu_function(int keycode) {
     remote_wake_som();
   }
   else if (keycode == KEY_H) {
-    // turn-on hint page
+    // turn on hint page
     gfx_clear();
     gfx_poke_str(0,1,"Press \x8a + \x8b for menu.");
     gfx_poke_str(0,2,"Hold to power up.");
@@ -215,6 +232,12 @@ int execute_menu_function(int keycode) {
   else if (keycode == KEY_L) {
     anim_hello();
     return 0;
+  }
+  else if (keycode == KEY_C) {
+    // console
+    current_menu_page = MENU_PAGE_CONSOLE;
+    edit_setup();
+    return 2;
   }
 
   gfx_clear();

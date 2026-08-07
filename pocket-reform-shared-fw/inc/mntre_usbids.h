@@ -11,5 +11,5 @@
 #define USB_PID_RASPBERRYPI_PICO_SDK_CDC      0x000A
 
 #define USB_STR_MANUFACTURER_MNT                        "MNT"
-#define USB_STR_PRODUCT_MNT_POCKET_REFORM_INPUT_10      "Pocket Reform Input 1.0"
-#define USB_STR_PRODUCT_MNT_POCKET_REFORM_SYSCTL_10     "Pocket Reform System Controller 1.0"
+#define USB_STR_PRODUCT_MNT_POCKET_REFORM_INPUT_10      "Pocket Reform Input 2.0"
+#define USB_STR_PRODUCT_MNT_POCKET_REFORM_SYSCTL_10     "Pocket Reform System Controller 2.0"

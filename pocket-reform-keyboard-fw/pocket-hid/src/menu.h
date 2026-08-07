@@ -7,22 +7,25 @@
 #ifndef _MENU_H_
 #define _MENU_H_
 
-typedef struct MenuItem {
+#include <stdint.h>
+
+struct menu_item {
   const char* title;
   int keycode;
-} MenuItem;
+};
 
 #define MENU_PAGE_NONE 0
 #define MENU_PAGE_OTHER 1
 #define MENU_PAGE_BATTERY_STATUS 2
 #define MENU_PAGE_MNT_LOGO 3
+#define MENU_PAGE_CONSOLE 4
 
 void reset_and_render_menu(void);
 void reset_menu(void);
 void render_menu(int y);
 void refresh_menu_page(void);
 int execute_menu_row_function(int y);
-int execute_menu_function(int keycode);
+int input_menu_key(uint8_t keycode, uint8_t shift);
 void render_tina(void);
 void anim_hello(void);
 void anim_goodbye(void);

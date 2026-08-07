@@ -1,9 +1,8 @@
 #ifndef _POCKET_SYSCTL_H
 #define _POCKET_SYSCTL_H
 
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
+#include <stdint.h>
+
 #include "pico/stdlib.h"
 #include "pico/binary_info.h"
 #include "hardware/i2c.h"
@@ -18,8 +17,7 @@
 
 // #define OTG_AS_5V // WARNING: defining this requires the hardware mod described in https://source.mnt.re/reform/pocket-reform/-/issues/3
 // #define FACTORY_MODE // turn device on immediately after starting sysctl
-// #define ACM_ENABLED // usb serial control for debugging
-// #define PREF_DISPLAY_V2 // backlight control for second type of display, TOP070F01A (not LT070ME05000)
+#define ACM_ENABLED // usb serial control for debugging
 
 #define FW_STRING1 "PREF1SYS"
 #define FW_STRING2 "R1"
@@ -32,6 +30,7 @@
 #define PIN_KBD_UART_TX 4
 #define PIN_KBD_UART_RX 5
 #define PIN_WOWWAN 6
+// TODO: FIXME: DISP_2_PWM on v20
 #define PIN_DISP_EN 7
 #define PIN_SOM_MOSI 8
 #define PIN_SOM_SS0 9
@@ -51,11 +50,19 @@
 #define PIN_SOM_WAKE 19
 #define PIN_MODEM_RESET 20
 #define PIN_1V1_ENABLE 23
+// 3V3_ENABLE on v10, kickstart (power on button) DP HPD output on v20
 #define PIN_3V3_ENABLE 24
+#define PIN_V20_DP_HPD 24
+// 5V_ENABLE on v10, kickstart (power on button) input on v20
 #define PIN_5V_ENABLE 25
 #define PIN_PHONE_DPR 27
+// USB_SRC/PWREN_LATCH on v10, USB_SRC1/USB_SRC2 on v20
 #define PIN_USB_SRC_ENABLE 28
+#define PIN_USB_SRC1_ENABLE 28
 #define PIN_PWREN_LATCH 29
+#define PIN_USB_SRC2_ENABLE 29
+// NC on v10, EDL/USB bootloader enable on v20
+#define PIN_USB_LOADER_SW 26
 
 // FUSB302B USB-PD controller
 #define FUSB_ADDR 0x22
@@ -66,8 +73,14 @@
 // MP2650 charger
 // https://www.monolithicpower.com/en/documentview/productdocument/index/version/2/document_type/Datasheet/lang/en/sku/MP2650GV/document_id/9664/
 #define MPS_ADDR 0x5c
+#define TMUX_ADDR 0x54
+// PCA9536DP GPIO extender (for USWITCHes)
+#define PCA9536_ADDR 0x41
+// PCA9557PW GPIO extender
+#define PCA9557_ADDR 0x19
+// TODO eeprom: 0x50/0x58
 
-#define I2C_TIMEOUT (1000 * 500)
+#define I2C_TIMEOUT (1000 * 20)
 
 #define UART_ID uart1
 #define BAUD_RATE 115200
@@ -85,42 +98,52 @@
 
 typedef struct battery_info_s
 {
-    bool som_is_powered;
+  bool som_is_powered;
 
-    // reported by charger
-    float battery_volts;
-    float battery_amps;
-    float input_volts;
+  // reported by charger
+  float battery_volts;
+  float battery_amps;
+  float input_volts;
+  int cell_max_mah;
 
-    // reported by balancer
-    float cell1_volts;
-    float cell2_volts;
-    int charge_percentage;
-    float time_to_empty;
+  // reported by balancer
+  float cell1_volts;
+  float cell2_volts;
+  int charge_percentage;
+  float time_to_empty;
+  float gauge_avg_milliamps;
+  float gauge_vpack;
 
-    // metadata
-    bool emergency_charge_necessary;
-    bool print_pack_info;
-    uint16_t max17320_devname;
-    uint16_t ticks;
+  // metadata
+  bool emergency_charge_necessary;
+  bool print_pack_info;
+  uint16_t max17320_devname;
+  uint16_t ticks;
 } battery_info_s;
 
 #include "fusb302b.h"
 #include "pd.h"
-#include "uart_com.h"
-#include "spi_com.h"
 #include "max17320.h"
 #include "mp2650.h"
+#include "ext_gpio.h"
 
 // Shared functions with communication classes
+int mb_version();
 void som_wake();
 void turn_som_power_on();
 void turn_som_power_off();
+void set_display_v2_backlight_unlock(int on);
 void set_display_backlight(int percent);
+void set_display_backlight_freq(int freq);
 
-void usb_host_5v_enable();
-void usb_host_5v_disable();
+void usb_host_5v_set(int port, int enable);
+void set_usb_mode(int port, int mode);
 void charger_enable_charge(int current);
 void charger_disable_charge();
+void enter_powersave(void);
+
+// Recommended to call these around any i2c transactions
+void sysctl_enable_irqs();
+void sysctl_disable_irqs();
 
 #endif

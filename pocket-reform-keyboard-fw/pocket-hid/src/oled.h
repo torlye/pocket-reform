@@ -61,7 +61,7 @@ enum ssd1306_cmds {
 #define MatrixRows (DisplayHeight / FontHeight)
 #define MatrixCols (DisplayWidth / FontWidth)
 
-struct CharacterMatrix {
+struct char_matrix {
   uint8_t display[MatrixRows][MatrixCols];
   uint8_t invert[MatrixRows][MatrixCols];
   uint8_t *cursor;
@@ -72,26 +72,24 @@ void gfx_poke(uint8_t x, uint8_t y, uint8_t c);
 void gfx_poke_str(uint8_t x, uint8_t y, char* str);
 void gfx_clear_invert(void);
 void gfx_invert_row(uint8_t y);
+void gfx_invert_char(uint8_t x, uint8_t y);
 bool gfx_init();
-void gfx_task(void);
 bool gfx_off(void);
 bool gfx_on(void);
 void gfx_flush(void);
 void gfx_clear(void);
 void gfx_write_char(uint8_t c);
 void gfx_write(const char *data);
-void gfx_write_P(const char *data);
 void gfx_clear_screen(void);
 void gfx_contrast(uint8_t c);
 void gfx_precharge(uint8_t c);
+void gfx_scroll_lines(uint8_t num_lines);
 
-void matrix_clear(struct CharacterMatrix *matrix);
-void matrix_write_char_inner(struct CharacterMatrix *matrix, uint8_t c);
-void matrix_write_char(struct CharacterMatrix *matrix, uint8_t c);
-void matrix_write(struct CharacterMatrix *matrix, const char *data);
-void matrix_write_ln(struct CharacterMatrix *matrix, const char *data);
-void matrix_write_P(struct CharacterMatrix *matrix, const char *data);
-void matrix_render(struct CharacterMatrix *matrix);
+void matrix_clear(struct char_matrix *matrix);
+void matrix_write_char_inner(struct char_matrix *matrix, uint8_t c);
+void matrix_write_char(struct char_matrix *matrix, uint8_t c);
+void matrix_write(struct char_matrix *matrix, const char *data);
+void matrix_render(struct char_matrix *matrix);
 void matrix_render_direct(const uint8_t* bitmap);
 
 void oled_brightness_inc(void);

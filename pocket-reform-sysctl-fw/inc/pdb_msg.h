@@ -31,21 +31,21 @@
  * the statement in the previous paragraph invalid.
  */
 union pd_msg {
-    struct {
-        uint8_t _pad1[2];
-        uint8_t bytes[30];
-    } __attribute__((packed));
-    struct {
-        uint8_t _pad2[2];
-        uint16_t hdr;
-        union {
-            uint32_t obj[7];
-            struct {
-                uint16_t exthdr;
-                uint8_t data[26];
-            };
-        };
-    } __attribute__((packed));
+  struct {
+    uint8_t _pad1[2];
+    uint8_t bytes[30];
+  } __attribute__((packed));
+  struct {
+    uint8_t _pad2[2];
+    uint16_t hdr;
+    union {
+      uint32_t obj[7];
+      struct {
+        uint16_t exthdr;
+        uint8_t data[26];
+      };
+    };
+  } __attribute__((packed));
 };
 
 

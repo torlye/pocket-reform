@@ -17,7 +17,7 @@
 #define UART_ID uart1
 
 // received by uart
-#define RESPONSE_MAX 128
+#define RESPONSE_MAX 256
 static char response[RESPONSE_MAX];
 static int uart_rx_i = 0;
 static int uart_print_response = 0;
@@ -77,7 +77,10 @@ void remote_on_uart_rx() {
           term_x=0;
           term_y++;
           if (term_y>=3) {
-            term_y=0;
+	    // scroll up 1 line
+	    gfx_scroll_lines(3);
+	    gfx_flush();
+            term_y=2;
           }
         }
       }
@@ -106,8 +109,8 @@ int remote_try_command(const char* cmd, int print_response) {
     sleep_ms(10);
     timeout++;
     if (timeout > 10) {
-      gfx_poke(0,0,'T');
-      gfx_flush();
+      //gfx_poke(0,0,'T');
+      //gfx_flush();
       ok = 0;
       break;
     }
@@ -118,7 +121,6 @@ int remote_try_command(const char* cmd, int print_response) {
   };
 
   uart_print_response = 0;
-
   return ok;
 }
 

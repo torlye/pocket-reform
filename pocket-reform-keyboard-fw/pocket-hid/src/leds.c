@@ -41,19 +41,19 @@ void led_task(uint32_t color) {
   uint8_t r = (color >> 16) & 0xff;
   uint32_t pixel_grb = g<<16 | r<<8 | b;
 
+  // since PCBA V1.5: toggle LED power switch
+  if (pixel_grb == 0) {
+    gpio_put(PIN_LEDS_PWR_EN, 0);
+  } else {
+    gpio_put(PIN_LEDS_PWR_EN, 1);
+  }
+
   for (int y=0; y<KBD_ROWS; y++) {
     int w = KBD_COLS;
     if (y==5) w = 4;
     for (int x=0; x<w; x++) {
       pio_sm_put_blocking(pio0, 0, pixel_grb << 8u);
     }
-  }
-
-  // since PCBA V1.5: toggle LED power switch
-  if (pixel_grb == 0) {
-    gpio_put(PIN_LEDS_PWR_EN, 0);
-  } else {
-    gpio_put(PIN_LEDS_PWR_EN, 1);
   }
 }
 

@@ -26,6 +26,7 @@ target_sources(${PROJECT} PUBLIC
         src/menu.c
         src/oled.c
         src/remote.c
+        src/edit.c
         src/usb_descriptors.c
         "${CMAKE_CURRENT_BINARY_DIR}/inc-generated/ds20-descriptor.h"
         "${SHARED_FW_SRC}/reset_interface.c"

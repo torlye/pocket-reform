@@ -242,7 +242,6 @@
 #define FUSB_FIFO_RX_SOP1DB 0x80
 #define FUSB_FIFO_RX_SOP2DB 0x60
 
-
 /*
  * FUSB status union
  *
@@ -250,25 +249,27 @@
  * the FUSB302B status and interrupt flags.
  */
 union fusb_status {
-    uint8_t bytes[7];
-    struct {
-        uint8_t status0a;
-        uint8_t status1a;
-        uint8_t interrupta;
-        uint8_t interruptb;
-        uint8_t status0;
-        uint8_t status1;
-        uint8_t interrupt;
-    };
+  uint8_t bytes[7];
+  struct {
+    uint8_t status0a;
+    uint8_t status1a;
+    uint8_t interrupta;
+    uint8_t interruptb;
+    uint8_t status0;
+    uint8_t status1;
+    uint8_t interrupt;
+  };
 };
-
 
 /* FUSB functions */
 
+bool fusb_probe();
 bool fusb_read_buf(uint8_t addr, uint8_t size, uint8_t *buf);
 bool fusb_write_byte(uint8_t addr, uint8_t byte);
 bool fusb_write_buf(uint8_t addr, uint8_t size, const uint8_t *buf);
 bool fusb_send_message(const union pd_msg *msg);
+bool fusb_send_message_prime(const union pd_msg *msg);
+bool fusb_send_message_prime_prime(const union pd_msg *msg);
 bool fusb_read_message(union pd_msg *msg);
 
 #endif /* PDB_FUSB302B_H */

@@ -1,237 +1,281 @@
 #include "uart_com.h"
 #include "pd_com.h"
+#include "cli.h"
+#include "sysctl.h"
+#include "hardware/uart.h"
+#include <stdio.h>
 
-void handle_uart_commands(battery_info_s* battery_info)
-{
+static struct cli_context uart_cli_ctx;
+
+void uart_com_init() {
+  cli_init(&uart_cli_ctx);
+}
+
+void handle_uart_commands() {
   // prevent endless loop
-  int uart_max = 8;
-  while (uart_is_readable(UART_ID) && uart_max > 0)
-  {
-    handle_commands(uart_getc(UART_ID), battery_info);
+  int uart_max = 32;
+  uint64_t cli_err = 0;
+  while (uart_is_readable(UART_ID) && uart_max > 0) {
+    //handle_commands(uart_getc(UART_ID), battery_info);
+
+    char c = uart_getc(UART_ID);
+    // substitute \r for \n
+    if (c == 13) c = 10;
+    cli_char(&uart_cli_ctx, c);
+    if (cli_get_out_pos(&uart_cli_ctx)) {
+      uart_puts(UART_ID, cli_get_out(&uart_cli_ctx));
+      printf("# [kbd<] %s\n", cli_get_out(&uart_cli_ctx));
+      cli_err = cli_get_err(&uart_cli_ctx);
+      cli_reset_out(&uart_cli_ctx);
+    }
     uart_max--;
+  }
+  if (cli_err) {
+    printf("# cli err %llu\n", cli_err);
+    cli_reset(&uart_cli_ctx);
+    cli_reset_out(&uart_cli_ctx);
   }
 }
 
 /**
  * UART commands from the keyboard
  */
-void handle_commands(char chr, battery_info_s* battery_info)
-{
-    static uart_state_s uart_state = {0};
+/*
+void handle_commands_old(char chr, battery_info_s *battery_info) {
+  static uart_state_s uart_state = { 0 };
 
-    char uart_buffer[UART_BUFSZ+1] = {0};
+  char uart_buffer[UART_BUFSZ + 1] = { 0 };
 
-    if (uart_state.echo)
-    {
-        snprintf(uart_buffer, UART_BUFSZ, "%c", chr);
+  if (uart_state.echo) {
+    snprintf(uart_buffer, UART_BUFSZ, "%c", chr);
+    uart_puts(UART_ID, uart_buffer);
+  }
+
+  // states:
+  // 0-3 digits of optional command argument
+  // 4   command letter expected
+  // 5   syntax error (unexpected character)
+  // 6   command letter entered
+
+  if (uart_state.cmd_state <= ST_EXPECT_DIGIT_3) {
+    // read number or command
+    if (chr >= '0' && chr <= '9') {
+      if (uart_state.cmd_number == CMD_NUMBER_INVALID) {
+        uart_state.cmd_number = 0;
+      }
+      uart_state.cmd_number *= 10;
+      uart_state.cmd_number += (chr - '0');
+      uart_state.cmd_state++;
+    } else if ((chr >= 'a' && chr <= 'z') || (chr >= 'A' && chr <= 'Z')) {
+      // command entered instead of digit
+      uart_state.remote_cmd = chr;
+      uart_state.cmd_state = ST_EXPECT_RETURN;
+    } else if (chr == '\n' || chr == ' ') {
+      // ignore newlines or spaces
+    } else if (chr == '\r') {
+      snprintf(uart_buffer, UART_BUFSZ, "error:syntax\r\n");
+      uart_puts(UART_ID, uart_buffer);
+      uart_state.cmd_state = ST_EXPECT_DIGIT_0;
+      uart_state.cmd_number = CMD_NUMBER_INVALID;
+    } else {
+      // syntax error
+      uart_state.cmd_state = ST_SYNTAX_ERROR;
+    }
+  } else if (uart_state.cmd_state == ST_EXPECT_CMD) {
+    // read command
+    if ((chr >= 'a' && chr <= 'z') || (chr >= 'A' && chr <= 'Z')) {
+      uart_state.remote_cmd = chr;
+      uart_state.cmd_state = ST_EXPECT_RETURN;
+    } else {
+      uart_state.cmd_state = ST_SYNTAX_ERROR;
+    }
+  } else if (uart_state.cmd_state == ST_SYNTAX_ERROR) {
+    // syntax error
+    if (chr == '\r') {
+      //printf("# [keyboard] [ERROR] syntax error\n");
+      snprintf(uart_buffer, UART_BUFSZ, "error:syntax\r\n");
+      uart_puts(UART_ID, uart_buffer);
+      uart_state.cmd_state = ST_EXPECT_DIGIT_0;
+      uart_state.cmd_number = CMD_NUMBER_INVALID;
+    }
+  } else if (uart_state.cmd_state == ST_EXPECT_RETURN) {
+    if (chr == '\n' || chr == ' ') {
+      // ignore newlines or spaces
+    } else if (chr == '\r') {
+      //printf("# [keyboard] exec: %c %d\n", uart_state.remote_cmd, uart_state.cmd_number);
+      if (uart_state.echo) {
+        // FIXME
+        snprintf(uart_buffer, UART_BUFSZ, "\n");
         uart_puts(UART_ID, uart_buffer);
-    }
+      }
 
-    // states:
-    // 0-3 digits of optional command argument
-    // 4   command letter expected
-    // 5   syntax error (unexpected character)
-    // 6   command letter entered
+      // execute
+      if (uart_state.remote_cmd == 'p') {
+        // toggle system power and/or reset imx
+        if (uart_state.cmd_number == 0) {
+          turn_som_power_off();
+          snprintf(uart_buffer, UART_BUFSZ, "system: off\r\n");
+          uart_puts(UART_ID, uart_buffer);
+        } else if (uart_state.cmd_number == 2) {
+          // reset_som();
+          snprintf(uart_buffer, UART_BUFSZ, "system: reset\r\n");
+          uart_puts(UART_ID, uart_buffer);
+        } else if (uart_state.cmd_number == 1) {
+          turn_som_power_on();
+          snprintf(uart_buffer, UART_BUFSZ, "system: on\r\n");
+          uart_puts(UART_ID, uart_buffer);
+        }
+      } else if (uart_state.remote_cmd == 'a') {
+        // TODO
+        // get system current (mA)
+        snprintf(uart_buffer, UART_BUFSZ, "%d\r\n", 0);
+        uart_puts(UART_ID, uart_buffer);
+      } else if (uart_state.remote_cmd == 'v') {
+        // TODO
+        // get cell voltage
+        snprintf(uart_buffer, UART_BUFSZ, "%d\r\n", 0);
+        uart_puts(UART_ID, uart_buffer);
+      } else if (uart_state.remote_cmd == 'V') {
+        // TODO
+        // get system voltage
+        snprintf(uart_buffer, UART_BUFSZ, "%d\r\n", 0);
+        uart_puts(UART_ID, uart_buffer);
+      } else if (uart_state.remote_cmd == 's') {
+        snprintf(uart_buffer, UART_BUFSZ,
+                 "MNT Pocket Reform    " FW_STRING1 FW_STRING2 "%s\r\n",
+                 MNTRE_FIRMWARE_VERSION);
+        uart_puts(UART_ID, uart_buffer);
+      } else if (uart_state.remote_cmd == 'u') {
+        // TODO
+        // turn reporting to i.MX on or off
+      } else if (uart_state.remote_cmd == 'w') {
+        // wake SoC
+        gpio_put(PIN_DISP_RESET, 1);
+        gpio_put(PIN_3V3_ENABLE, 1);
+        gpio_put(PIN_1V1_ENABLE, 1);
+        som_wake();
+        snprintf(uart_buffer, UART_BUFSZ, "system: wake\r\n");
+        uart_puts(UART_ID, uart_buffer);
+      } else if (uart_state.remote_cmd == 'c') {
+        // get status of cells, current, voltage, fuel gauge
+        int mA = (int)(battery_info->battery_amps * 1000.0);
+        char mA_sign = ' ';
+        if (mA < 0) {
+          mA = -mA;
+          mA_sign = '-';
+        }
+        int mV = (int)(battery_info->battery_volts * 1000.0);
+        snprintf(
+                 uart_buffer, UART_BUFSZ,
+                 "%02d %02d %02d %02d %02d %02d %02d %02d mA%c%04dmV%05d %3d%% P%d\r\n",
+                 (int)(battery_info->cell1_volts / 100),
+                 (int)(battery_info->cell2_volts / 100), (int)(0), (int)(0),
+                 (int)(0), (int)(0), (int)(0), (int)(0), mA_sign, mA, mV,
+                 battery_info->charge_percentage,
+                 battery_info->som_is_powered ? 1 : 0);
 
-    if (uart_state.cmd_state <= ST_EXPECT_DIGIT_3)
-    {
-        // read number or command
-        if (chr >= '0' && chr <= '9')
-        {
-            if (uart_state.cmd_number == CMD_NUMBER_INVALID)
-            {
-                uart_state.cmd_number = 0;
-            }
-            uart_state.cmd_number *= 10;
-            uart_state.cmd_number += (chr - '0');
-            uart_state.cmd_state++;
+        uart_puts(UART_ID, uart_buffer);
+      } else if (uart_state.remote_cmd == 'S') {
+        // TODO
+        // get charger system cycles in current state
+        snprintf(uart_buffer, UART_BUFSZ, "%d\r\n", 0);
+        uart_puts(UART_ID, uart_buffer);
+      } else if (uart_state.remote_cmd == 'C') {
+        // TODO
+        // get battery capacity (mAh)
+        snprintf(uart_buffer, UART_BUFSZ, "%d/%d/%d\r\n", 0, 0, 0);
+        uart_puts(UART_ID, uart_buffer);
+      } else if (uart_state.remote_cmd == 'e') {
+        // toggle serial echo
+        uart_state.echo = uart_state.cmd_number == 1 ? 1 : 0;
+      } else if (uart_state.remote_cmd == 'G') {
+        // set GPIO *high*
+        // cmd_number:
+        // 0: Display Panel Reset (active low)
+        switch (uart_state.cmd_number) {
+        case 0:
+          gpio_put(PIN_DISP_RESET, 1);
+          break;
+        case 1:
+          gpio_put(PIN_3V3_ENABLE, 1);
+          break;
+        case 2:
+          gpio_put(PIN_1V1_ENABLE, 1);
+          break;
         }
-        else if ((chr >= 'a' && chr <= 'z') || (chr >= 'A' && chr <= 'Z'))
-        {
-            // command entered instead of digit
-            uart_state.remote_cmd = chr;
-            uart_state.cmd_state = ST_EXPECT_RETURN;
+      } else if (uart_state.remote_cmd == 'g') {
+        // set GPIO *low*
+        // cmd_number:
+        // 0: Display Panel Reset (active low)
+        switch (uart_state.cmd_number) {
+        case 0:
+          gpio_put(PIN_DISP_RESET, 0);
+          break;
+        case 1:
+          gpio_put(PIN_3V3_ENABLE, 0);
+          break;
+        case 2:
+          gpio_put(PIN_1V1_ENABLE, 0);
+          break;
         }
-        else if (chr == '\n' || chr == ' ')
-        {
-            // ignore newlines or spaces
-        }
-        else if (chr == '\r')
-        {
-            snprintf(uart_buffer, UART_BUFSZ, "error:syntax\r\n");
-            uart_puts(UART_ID, uart_buffer);
-            uart_state.cmd_state = ST_EXPECT_DIGIT_0;
-            uart_state.cmd_number = CMD_NUMBER_INVALID;
-        }
-        else
-        {
-            // syntax error
-            uart_state.cmd_state = ST_SYNTAX_ERROR;
-        }
-    }
-    else if (uart_state.cmd_state == ST_EXPECT_CMD)
-    {
-        // read command
-        if ((chr >= 'a' && chr <= 'z') || (chr >= 'A' && chr <= 'Z'))
-        {
-            uart_state.remote_cmd = chr;
-            uart_state.cmd_state = ST_EXPECT_RETURN;
-        }
-        else
-        {
-            uart_state.cmd_state = ST_SYNTAX_ERROR;
-        }
-    }
-    else if (uart_state.cmd_state == ST_SYNTAX_ERROR)
-    {
-        // syntax error
-        if (chr == '\r')
-        {
-            printf("# [keyboard] [ERROR] syntax error\n");
-            snprintf(uart_buffer, UART_BUFSZ, "error:syntax\r\n");
-            uart_puts(UART_ID, uart_buffer);
-            uart_state.cmd_state = ST_EXPECT_DIGIT_0;
-            uart_state.cmd_number = CMD_NUMBER_INVALID;
-        }
-    }
-    else if (uart_state.cmd_state == ST_EXPECT_RETURN)
-    {
-        if (chr == '\n' || chr == ' ')
-        {
-            // ignore newlines or spaces
-        }
-        else if (chr == '\r')
-        {
-            printf("# [keyboard] exec: %c %d\n", uart_state.remote_cmd, uart_state.cmd_number);
-            if (uart_state.echo)
-            {
-                // FIXME
-                snprintf(uart_buffer, UART_BUFSZ, "\n");
-                uart_puts(UART_ID, uart_buffer);
-            }
+      } else if (uart_state.remote_cmd == '?') {
+        // read kv value
+        uart_state.kv_key_len = uart_state.cmd_number;
+        uart_state.kv_count = 0;
+        uart_state.cmd_state = ST_EXPECT_KV_KEY_CHAR;
+      } else if (uart_state.remote_cmd == '!') {
+        // read kv value
+        uart_state.kv_value_len = uart_state.cmd_number;
+        uart_state.kv_count = 0;
+        uart_state.cmd_state = ST_EXPECT_KV_VALUE_CHAR;
+      } else {
+        snprintf(uart_buffer, UART_BUFSZ, "error:command\r\n");
+        uart_puts(UART_ID, uart_buffer);
+      }
 
-            // execute
-            if (uart_state.remote_cmd == 'p')
-            {
-                // toggle system power and/or reset imx
-                if (uart_state.cmd_number == 0)
-                {
-                    turn_som_power_off();
-                    snprintf(uart_buffer, UART_BUFSZ, "system: off\r\n");
-                    uart_puts(UART_ID, uart_buffer);
-                }
-                else if (uart_state.cmd_number == 2)
-                {
-                    // reset_som();
-                    snprintf(uart_buffer, UART_BUFSZ, "system: reset\r\n");
-                    uart_puts(UART_ID, uart_buffer);
-                }
-                else if (uart_state.cmd_number == 1)
-                {
-                    turn_som_power_on();
-                    snprintf(uart_buffer, UART_BUFSZ, "system: on\r\n");
-                    uart_puts(UART_ID, uart_buffer);
-                }
-            }
-            else if (uart_state.remote_cmd == 'a')
-            {
-                // TODO
-                // get system current (mA)
-                snprintf(uart_buffer, UART_BUFSZ, "%d\r\n", 0);
-                uart_puts(UART_ID, uart_buffer);
-            }
-            else if (uart_state.remote_cmd == 'v')
-            {
-                // TODO
-                // get cell voltage
-                snprintf(uart_buffer, UART_BUFSZ, "%d\r\n", 0);
-                uart_puts(UART_ID, uart_buffer);
-            }
-            else if (uart_state.remote_cmd == 'V')
-            {
-                // TODO
-                // get system voltage
-                snprintf(uart_buffer, UART_BUFSZ, "%d\r\n", 0);
-                uart_puts(UART_ID, uart_buffer);
-            }
-            else if (uart_state.remote_cmd == 's')
-            {
-                char tmp[9];
-                strlcpy(tmp, MNTRE_FIRMWARE_VERSION, sizeof(tmp));
-                snprintf(uart_buffer, UART_BUFSZ, "MNT Pocket Reform   " FW_STRING1 FW_STRING2 "%s\r\n", MNTRE_FIRMWARE_VERSION);
-                uart_puts(UART_ID, uart_buffer);
-            }
-            else if (uart_state.remote_cmd == 'u')
-            {
-                // TODO
-                // turn reporting to i.MX on or off
-            }
-            else if (uart_state.remote_cmd == 'w')
-            {
-                // wake SoC
-                som_wake();
-                snprintf(uart_buffer, UART_BUFSZ, "system: wake\r\n");
-                uart_puts(UART_ID, uart_buffer);
-            }
-            else if (uart_state.remote_cmd == 'c')
-            {
-                // get status of cells, current, voltage, fuel gauge
-                int mA = (int)(battery_info->battery_amps * 1000.0);
-                char mA_sign = ' ';
-                if (mA < 0)
-                {
-                    mA = -mA;
-                    mA_sign = '-';
-                }
-                int mV = (int)(battery_info->battery_volts * 1000.0);
-                snprintf(uart_buffer, UART_BUFSZ, "%02d %02d %02d %02d %02d %02d %02d %02d mA%c%04dmV%05d %3d%% P%d\r\n",
-                        (int)(battery_info->cell1_volts / 100),
-                        (int)(battery_info->cell2_volts / 100),
-                        (int)(0),
-                        (int)(0),
-                        (int)(0),
-                        (int)(0),
-                        (int)(0),
-                        (int)(0),
-                        mA_sign,
-                        mA,
-                        mV,
-                        battery_info->charge_percentage,
-                        battery_info->som_is_powered ? 1 : 0);
-
-                uart_puts(UART_ID, uart_buffer);
-            }
-            else if (uart_state.remote_cmd == 'S')
-            {
-                // TODO
-                // get charger system cycles in current state
-                snprintf(uart_buffer, UART_BUFSZ, "%d\r\n", 0);
-                uart_puts(UART_ID, uart_buffer);
-            }
-            else if (uart_state.remote_cmd == 'C')
-            {
-                // TODO
-                // get battery capacity (mAh)
-                snprintf(uart_buffer, UART_BUFSZ, "%d/%d/%d\r\n", 0, 0, 0);
-                uart_puts(UART_ID, uart_buffer);
-            }
-            else if (uart_state.remote_cmd == 'e')
-            {
-                // toggle serial echo
-                uart_state.echo = uart_state.cmd_number == 1 ? 1 : 0;
-            }
-            else
-            {
-                snprintf(uart_buffer, UART_BUFSZ, "error:command\r\n");
-                uart_puts(UART_ID, uart_buffer);
-            }
-
-            uart_state.cmd_state = ST_EXPECT_DIGIT_0;
-            uart_state.cmd_number = CMD_NUMBER_INVALID;
-        }
-        else
-        {
-            uart_state.cmd_state = ST_SYNTAX_ERROR;
-        }
+      uart_state.cmd_state = ST_EXPECT_DIGIT_0;
+      uart_state.cmd_number = CMD_NUMBER_INVALID;
+    } else {
+      uart_state.cmd_state = ST_SYNTAX_ERROR;
     }
+    // end of ST_EXPECT_RETURN
+  } else if (uart_state.cmd_state == ST_EXPECT_KV_KEY_CHAR) {
+    if (uart_state.kv_count < uart_state.kv_key_len) {
+      uart_state.kv_key[uart_state.kv_count] = chr;
+      uart_state.kv_count++;
+    } else {
+      // key read, respond
+      char val_str[KV_VALUE_STR_LEN];
+      int slot = kv_lookup_str((uint8_t*)uart_state.kv_key, uart_state.kv_key_len);
+      int val_len = kv_get_value_str(slot, val_str);
+      if (val_len > 0) {
+        snprintf(uart_buffer, UART_BUFSZ, "%04d:%s\r\n", val_len, val_str);
+      } else {
+        snprintf(uart_buffer, UART_BUFSZ, "error:command\r\n");
+      }
+      uart_puts(UART_ID, uart_buffer);
+      // done.
+      // we keep the kv_key around for the '!' command.
+      uart_state.cmd_state = ST_EXPECT_DIGIT_0;
+      uart_state.cmd_number = CMD_NUMBER_INVALID;
+    }
+  } else if (uart_state.cmd_state == ST_EXPECT_KV_VALUE_CHAR) {
+    if (uart_state.kv_count < uart_state.kv_value_len) {
+      uart_state.kv_value[uart_state.kv_count] = chr;
+      uart_state.kv_count++;
+    } else {
+      // value read, store
+      int result = kv_update_str((uint8_t*)uart_state.kv_key, uart_state.kv_key_len, (uint8_t*)uart_state.kv_value, uart_state.kv_value_len);
+      // acknowledge
+      if (result >= 0) {
+        snprintf(uart_buffer, UART_BUFSZ, "stored:%d\r\n", result);
+      } else {
+        snprintf(uart_buffer, UART_BUFSZ, "error:%d\r\n", result);
+      }
+      // done
+      uart_state.cmd_state = ST_EXPECT_DIGIT_0;
+      uart_state.cmd_number = CMD_NUMBER_INVALID;
+    }
+  }
 }
+*/

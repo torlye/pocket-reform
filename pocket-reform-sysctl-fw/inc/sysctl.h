@@ -133,6 +133,7 @@ void som_wake();
 void turn_som_power_on();
 void turn_som_power_off();
 void set_display_v2_backlight_unlock(int on);
+int get_display_v2_backlight_unlocked();
 void set_display_backlight(int percent);
 void set_display_backlight_freq(int freq);
 

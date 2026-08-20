@@ -5,6 +5,7 @@
 #include "cli.h"
 // TODO: move battery_info_s to pocket specific file?
 #include "ext_gpio.h"
+#include "hardware/timer.h"
 #include "sysctl.h"
 #include <stdint.h>
 #include <stdio.h>
@@ -92,7 +93,8 @@ uint64_t hwapi_set_backlight([[maybe_unused]] struct cli_context* ctx, uint64_t 
   if (brightness > 100) brightness = 100;
   // rescale 0..100% to 0..70% with a nice curve that has more detail/steps in the dark area
   double scaled = 0.72 + 23.1 * tan(0.0125 * ((double)brightness));
-  if (scaled > 70.0) scaled = 70.0;
+  // FIXME clip at 63% due to a bunch of sensitive panels
+  if (scaled > 63.0) scaled = 63.0;
 
   // it could be that sysctl fw was updated without a reboot.
   // if there is a driver running that sends this command,
@@ -134,6 +136,19 @@ uint64_t hwapi_set_gpio([[maybe_unused]] struct cli_context* ctx, uint64_t id, u
       } else {
         gpio_ext_disable(GPIO_EXT_DISP_RESET_N);
       }
+    }
+    if (get_display_v2_backlight_unlocked()) {
+      // is sysctl controlling the backlight?
+      // then turn it off during reset (display sleeping)
+      if (!high) {
+        hwapi_set_backlight(ctx, 0);
+      }
+      // it will be back turned on by gpio 8.
+      // we lock brightness control now, otherwise
+      // barebox might stay dark after
+      // a warm reboot when it issues a reset
+      // but no backlight setting
+      set_display_v2_backlight_unlock(0);
     }
     break;
   }
@@ -189,6 +204,11 @@ uint64_t hwapi_set_gpio([[maybe_unused]] struct cli_context* ctx, uint64_t id, u
   }
   case 8: {
     set_display_v2_backlight_unlock(high);
+    if (high) {
+      // set initial brightness after first unlock, will be
+      // scaled by hwapi_set_backlight
+      hwapi_set_backlight(ctx, 100);
+    }
     break;
   }
   case 9: {

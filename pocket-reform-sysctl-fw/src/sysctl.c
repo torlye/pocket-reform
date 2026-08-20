@@ -102,6 +102,10 @@ void set_display_v2_backlight_unlock(int on) {
   display_v2_backlight_function = on;
 }
 
+int get_display_v2_backlight_unlocked() {
+  return display_v2_backlight_function;
+}
+
 void set_display_backlight_freq(int freq) {
   if (freq < 0) freq = 0;
   backlight_freq = freq;
@@ -119,12 +123,15 @@ void set_display_backlight(int percent) {
   gpio_set_function(PIN_DISP_EN, GPIO_FUNC_PWM);
   pwm_set_freq_duty(pwm_gpio_to_slice_num(PIN_DISP_EN), pwm_gpio_to_channel(PIN_DISP_EN), backlight_freq, percent);
 
-  // caveat: latch needs to be always-on
-  // for brightnesses other than full brightness to work
-  if (percent == 0 || percent == 100) {
-    gpio_put(PIN_PWREN_LATCH, 0);
-  } else {
-    gpio_put(PIN_PWREN_LATCH, 1);
+  if (mb_version() < 2) {
+    // caveat: latch needs to be always-on
+    // for brightnesses other than full brightness to work
+    if (percent == 0 || percent == 100) {
+      gpio_put(PIN_PWREN_LATCH, 1);
+      gpio_put(PIN_PWREN_LATCH, 0);
+    } else {
+      gpio_put(PIN_PWREN_LATCH, 1);
+    }
   }
 }
 
@@ -723,9 +730,12 @@ void turn_som_power_off() {
   clear_boot_magic();
 
   // Display
+  gpio_put(PIN_DISP_RESET, 0);
+  // has an effect only on dispv2
+  set_display_backlight(0);
+  set_display_v2_backlight_unlock(0);
   gpio_set_function(PIN_DISP_EN, GPIO_FUNC_SIO);
   gpio_put(PIN_DISP_EN, 0);
-  gpio_put(PIN_DISP_RESET, 0);
 
   // Modem
   gpio_put(PIN_FLIGHTMODE, 0);  // active low
@@ -737,12 +747,6 @@ void turn_som_power_off() {
   gpio_put(PIN_5V_ENABLE, 0);
   gpio_put(PIN_3V3_ENABLE, 0);
   gpio_put(PIN_1V1_ENABLE, 0);
-
-  // has an effect only on dispv2
-  set_display_backlight(0);
-  set_display_v2_backlight_unlock(0);
-  gpio_set_function(PIN_DISP_EN, GPIO_FUNC_SIO);
-  gpio_put(PIN_DISP_EN, 0);
 
   // Latch power enables
   gpio_put(PIN_PWREN_LATCH, 1);

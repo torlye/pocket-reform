@@ -634,6 +634,10 @@ void tud_hid_report_complete_cb(uint8_t instance, uint8_t const* report, uint16_
   (void) instance;
   (void) len;
 
+  if (tud_hid_get_protocol() == HID_PROTOCOL_BOOT) {
+    return;
+  }
+
   uint8_t next_report_id = report[0] + 1;
 
   if (next_report_id < REPORT_ID_COUNT) {

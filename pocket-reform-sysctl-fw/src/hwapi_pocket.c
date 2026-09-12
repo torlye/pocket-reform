@@ -282,7 +282,7 @@ uint64_t hwapi_soc_post_suspend([[maybe_unused]] struct cli_context* ctx) {
 uint64_t hwapi_get_cell_mv([[maybe_unused]] struct cli_context* ctx, uint64_t cell_id) {
   if (cell_id == 1) return battery_info->cell1_volts;
   // TODO misnomer, actually mV
-  return battery_info->cell1_volts;
+  return battery_info->cell2_volts;
 }
 
 uint64_t hwapi_get_pack_mv([[maybe_unused]] struct cli_context* ctx /*uint64_t pack_id*/) {

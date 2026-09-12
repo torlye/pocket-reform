@@ -724,7 +724,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
       }
       else if (cmd == strnstr(cmd, CMD_OLED_BITMAP, 4)) {
         // render a monochrome (1-bit) bitmap to the OLED display
-        matrix_render_direct(&buffer[4]);
+        matrix_render_direct(&buffer[4], bufsize - 4);
       }
       else if (cmd == strnstr(cmd, CMD_RGB_BITMAP, 4)) {
         // set a row of keyboard LEDs at once as 12 "pixels"

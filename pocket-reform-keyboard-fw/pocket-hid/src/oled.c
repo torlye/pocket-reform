@@ -282,7 +282,7 @@ done:
 }
 
 // bitmap[0] needs to be 0x40!
-void matrix_render_direct(const uint8_t* bitmap) {
+void matrix_render_direct(const uint8_t* bitmap, uint16_t len) {
   gfx_on();
 
   // Move to the home position
@@ -291,7 +291,7 @@ void matrix_render_direct(const uint8_t* bitmap) {
 
   // FIXME
   //bitmap[0] = 0x40;
-  i2c_write_blocking_until(i2c0, SSD1306_ADDRESS, bitmap, 1 + MatrixRows * DisplayWidth, false, make_timeout_time_ms(OLED_I2C_TIMEOUT));
+  i2c_write_blocking_until(i2c0, SSD1306_ADDRESS, bitmap, len, false, make_timeout_time_ms(OLED_I2C_TIMEOUT));
 
 done:
   return;

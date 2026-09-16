@@ -9,7 +9,7 @@ mps_reg_adc_t mps_reg_adc;
 
 uint8_t mps_read_byte(uint8_t addr) {
   sysctl_disable_irqs();
-  uint8_t buf;
+  uint8_t buf = 0;
   i2c_write_timeout_us(i2c0, MPS_ADDR, &addr, 1, true, I2C_TIMEOUT);
   i2c_read_timeout_us(i2c0, MPS_ADDR, &buf, 1, false, I2C_TIMEOUT);
   sysctl_enable_irqs();
@@ -18,7 +18,7 @@ uint8_t mps_read_byte(uint8_t addr) {
 
 uint16_t mps_read_word(uint8_t addr) {
   sysctl_disable_irqs();
-  uint8_t buf[2];
+  uint8_t buf[2] = {0};
   i2c_write_timeout_us(i2c0, MPS_ADDR, &addr, 1, true, I2C_TIMEOUT);
   i2c_read_timeout_us(i2c0, MPS_ADDR, buf, 2, false, I2C_TIMEOUT);
   uint16_t result = ((uint16_t)buf[1]<<8) | (uint16_t)buf[0];

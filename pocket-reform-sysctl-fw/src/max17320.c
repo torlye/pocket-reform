@@ -2,7 +2,7 @@
 
 uint8_t max_read_byte(uint8_t addr) {
   sysctl_disable_irqs();
-  uint8_t buf;
+  uint8_t buf = 0;
   i2c_write_timeout_us(i2c0, MAX_ADDR1, &addr, 1, true, I2C_TIMEOUT);
   i2c_read_timeout_us(i2c0, MAX_ADDR1, &buf, 1, false, I2C_TIMEOUT);
   sysctl_enable_irqs();
@@ -11,7 +11,7 @@ uint8_t max_read_byte(uint8_t addr) {
 
 uint16_t max_read_word(uint8_t addr) {
   sysctl_disable_irqs();
-  uint8_t buf[2];
+  uint8_t buf[2] = {0};
   i2c_write_timeout_us(i2c0, MAX_ADDR1, &addr, 1, true, I2C_TIMEOUT);
   i2c_read_timeout_us(i2c0, MAX_ADDR1, buf, 2, false, I2C_TIMEOUT);
   uint16_t result = ((uint16_t)buf[1]<<8) | (uint16_t)buf[0];
@@ -21,7 +21,7 @@ uint16_t max_read_word(uint8_t addr) {
 
 uint16_t max_read_word_100(uint8_t addr) {
   sysctl_disable_irqs();
-  uint8_t buf[2];
+  uint8_t buf[2] = {0};
   i2c_write_timeout_us(i2c0, MAX_ADDR2, &addr, 1, true, I2C_TIMEOUT);
   i2c_read_timeout_us(i2c0, MAX_ADDR2, buf, 2, false, I2C_TIMEOUT);
   uint16_t result = ((uint16_t)buf[1]<<8) | (uint16_t)buf[0];

@@ -583,22 +583,7 @@ static void send_hid_report(uint8_t report_id)
 
     case REPORT_ID_CONSUMER_CONTROL:
     {
-      // use to avoid send multiple consecutive zero report
-      /*static bool has_consumer_key = false;
-
-      if ( btn )
-      {
-        // volume down
-        uint16_t volume_down = HID_USAGE_CONSUMER_VOLUME_DECREMENT;
-        tud_hid_report(REPORT_ID_CONSUMER_CONTROL, &volume_down, 2);
-        has_consumer_key = true;
-      }else
-      {
-        // send empty key report (release key) if previously has key pressed
-        uint16_t empty_key = 0;
-        if (has_consumer_key) tud_hid_report(REPORT_ID_CONSUMER_CONTROL, &empty_key, 2);
-        has_consumer_key = false;
-        }*/
+      // TODO: later
     }
     break;
 

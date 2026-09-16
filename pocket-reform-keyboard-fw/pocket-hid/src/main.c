@@ -539,10 +539,17 @@ static void send_hid_report(uint8_t report_id)
     return;
   }
 
+  // Boot Protocol has a single, fixed keyboard report with no Report ID
+  // and no mouse/consumer/gamepad usages.
+  if (tud_hid_get_protocol() == HID_PROTOCOL_BOOT && report_id != REPORT_ID_KEYBOARD) {
+    return;
+  }
+
   switch (report_id) {
     case REPORT_ID_KEYBOARD:
     {
-      tud_hid_keyboard_report(REPORT_ID_KEYBOARD, 0, pressed_scancodes);
+      bool boot_protocol = tud_hid_get_protocol() == HID_PROTOCOL_BOOT;
+      tud_hid_keyboard_report(boot_protocol ? 0 : REPORT_ID_KEYBOARD, 0, pressed_scancodes);
     }
     break;
 

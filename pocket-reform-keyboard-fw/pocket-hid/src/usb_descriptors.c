@@ -180,7 +180,7 @@ static const uint8_t usbd_desc_cfg[USBD_DESC_LEN] = {
         USBD_CONFIGURATION_DESCRIPTOR_ATTRIBUTE, USBD_MAX_POWER_MA),
 
     // Interface number, string index, protocol, report descriptor len, EP In address, size & polling interval
-    TUD_HID_DESCRIPTOR(USBD_ITF_HID, 0, HID_ITF_PROTOCOL_NONE, sizeof(desc_hid_report), EPNUM_HID, CFG_TUD_HID_EP_BUFSIZE, 5),
+    TUD_HID_DESCRIPTOR(USBD_ITF_HID, 0, HID_ITF_PROTOCOL_KEYBOARD, sizeof(desc_hid_report), EPNUM_HID, CFG_TUD_HID_EP_BUFSIZE, 5),
 
     MNTRE_RESET_TUD_DESCRIPTOR(USBD_ITF_MNTRE_RESET, USBD_STR_MNTRE_RESET)
 };

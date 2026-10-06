@@ -539,10 +539,17 @@ static void send_hid_report(uint8_t report_id)
     return;
   }
 
+  // Boot Protocol has a single, fixed keyboard report with no Report ID
+  // and no mouse/consumer/gamepad usages.
+  if (tud_hid_get_protocol() == HID_PROTOCOL_BOOT && report_id != REPORT_ID_KEYBOARD) {
+    return;
+  }
+
   switch (report_id) {
     case REPORT_ID_KEYBOARD:
     {
-      tud_hid_keyboard_report(REPORT_ID_KEYBOARD, 0, pressed_scancodes);
+      bool boot_protocol = tud_hid_get_protocol() == HID_PROTOCOL_BOOT;
+      tud_hid_keyboard_report(boot_protocol ? 0 : REPORT_ID_KEYBOARD, 0, pressed_scancodes);
     }
     break;
 
@@ -576,22 +583,7 @@ static void send_hid_report(uint8_t report_id)
 
     case REPORT_ID_CONSUMER_CONTROL:
     {
-      // use to avoid send multiple consecutive zero report
-      /*static bool has_consumer_key = false;
-
-      if ( btn )
-      {
-        // volume down
-        uint16_t volume_down = HID_USAGE_CONSUMER_VOLUME_DECREMENT;
-        tud_hid_report(REPORT_ID_CONSUMER_CONTROL, &volume_down, 2);
-        has_consumer_key = true;
-      }else
-      {
-        // send empty key report (release key) if previously has key pressed
-        uint16_t empty_key = 0;
-        if (has_consumer_key) tud_hid_report(REPORT_ID_CONSUMER_CONTROL, &empty_key, 2);
-        has_consumer_key = false;
-        }*/
+      // TODO: later
     }
     break;
 
@@ -626,6 +618,10 @@ void tud_hid_report_complete_cb(uint8_t instance, uint8_t const* report, uint16_
 {
   (void) instance;
   (void) len;
+
+  if (tud_hid_get_protocol() == HID_PROTOCOL_BOOT) {
+    return;
+  }
 
   uint8_t next_report_id = report[0] + 1;
 
@@ -713,7 +709,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
       }
       else if (cmd == strnstr(cmd, CMD_OLED_BITMAP, 4)) {
         // render a monochrome (1-bit) bitmap to the OLED display
-        matrix_render_direct(&buffer[4]);
+        matrix_render_direct(&buffer[4], bufsize - 4);
       }
       else if (cmd == strnstr(cmd, CMD_RGB_BITMAP, 4)) {
         // set a row of keyboard LEDs at once as 12 "pixels"

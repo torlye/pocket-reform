@@ -142,13 +142,13 @@ uint64_t hwapi_set_gpio([[maybe_unused]] struct cli_context* ctx, uint64_t id, u
       // then turn it off during reset (display sleeping)
       if (!high) {
         hwapi_set_backlight(ctx, 0);
+        // it will be back turned on by gpio 8.
+        // we lock brightness control now, otherwise
+        // barebox might stay dark after
+        // a warm reboot when it issues a reset
+        // but no backlight setting
+        set_display_v2_backlight_unlock(0);
       }
-      // it will be back turned on by gpio 8.
-      // we lock brightness control now, otherwise
-      // barebox might stay dark after
-      // a warm reboot when it issues a reset
-      // but no backlight setting
-      set_display_v2_backlight_unlock(0);
     }
     break;
   }
@@ -207,7 +207,7 @@ uint64_t hwapi_set_gpio([[maybe_unused]] struct cli_context* ctx, uint64_t id, u
     if (high) {
       // set initial brightness after first unlock, will be
       // scaled by hwapi_set_backlight
-      hwapi_set_backlight(ctx, 100);
+      hwapi_set_backlight(ctx, 70);
     }
     break;
   }
@@ -282,7 +282,7 @@ uint64_t hwapi_soc_post_suspend([[maybe_unused]] struct cli_context* ctx) {
 uint64_t hwapi_get_cell_mv([[maybe_unused]] struct cli_context* ctx, uint64_t cell_id) {
   if (cell_id == 1) return battery_info->cell1_volts;
   // TODO misnomer, actually mV
-  return battery_info->cell1_volts;
+  return battery_info->cell2_volts;
 }
 
 uint64_t hwapi_get_pack_mv([[maybe_unused]] struct cli_context* ctx /*uint64_t pack_id*/) {

@@ -3,7 +3,13 @@ This fork modifies `pocket-reform-keyboard-fw` to swap the position of the **Lef
 
 My muscle memory requires me to have the Ctrl key at the bottom left corner of the keyboard!
 
-This fork also adds key combinations for volume up (**Hyper-V**) and volume down (**Hyper-C**).
+This fork also adds a few new key combinations:
+
+| Shortcut | Function     |
+|----------|--------------|
+| HYPER+V  | Volume up    |
+| HYPER+C  | Volume down  |
+| HYPER+;  | Print screen |
 
 ## First-time setup
 Run `./install-fw-dependencies.sh`
